@@ -309,11 +309,22 @@ textarea{resize:vertical;min-height:72px;}
       <button class="mclose" onclick="closeOv('ov-pt')">×</button>
     </div>
     <div class="sec">Dados Pessoais</div>
-    <div class="fr"><div class="fg"><label>Nome completo *</label><input id="pt-nome" placeholder="Nome do paciente"></div><div class="fg"><label>Data de nascimento</label><input id="pt-nasc" type="date"></div></div>
-    <div class="fr3"><div class="fg"><label>Gênero</label><select id="pt-genero"><option value="">—</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Outro</option></select></div><div class="fg"><label>Cidade</label><input id="pt-cidade" placeholder="Cidade"></div><div class="fg"><label>Escolaridade</label><select id="pt-esc"><option value="">—</option><option>Fundamental</option><option>Médio</option><option>Superior incompleto</option><option>Superior completo</option><option>Pós-graduação</option></select></div></div>
+    <div class="fr"><div class="fg"><label>Nome completo *</label><input id="pt-nome" placeholder="Nome do paciente"></div><div class="fg"><label>Data de nascimento</label><input id="pt-nasc" type="date" oninput="calcIdade();checkMenorIdade()"></div></div>
+    <div class="fr3"><div class="fg"><label>Idade</label><input id="pt-idade" placeholder="Calculada automaticamente" readonly style="background:#f5f0eb;color:var(--muted);cursor:default;"></div><div class="fg"><label>CPF</label><input id="pt-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div><div class="fg"><label>Gênero</label><select id="pt-genero"><option value="">—</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Outro</option></select></div></div>
+    <div class="fr3"><div class="fg"><label>Profissão</label><input id="pt-profissao" placeholder="Ex: Professora, Estudante..."></div><div class="fg"><label>Cidade</label><input id="pt-cidade" placeholder="Cidade"></div><div class="fg"><label>Escolaridade</label><select id="pt-esc"><option value="">—</option><option>Fundamental</option><option>Médio</option><option>Superior incompleto</option><option>Superior completo</option><option>Pós-graduação</option></select></div></div>
     <div class="fr"><div class="fg"><label>WhatsApp</label><input id="pt-wpp" placeholder="(11) 99999-9999"></div><div class="fg"><label>E-mail</label><input id="pt-email" type="email" placeholder="email@exemplo.com"></div></div>
     <div class="fr"><div class="fg"><label>Contato de emergência</label><input id="pt-emerg" placeholder="Nome · Telefone"></div><div class="fg"><label>Valor da sessão (R$)</label><input id="pt-valor" type="number" placeholder="Ex: 110"></div></div>
     <div class="fr"><div class="fg"><label>Status</label><select id="pt-status"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div><div class="fg"><label>Início do acompanhamento</label><input id="pt-inicio" type="date"></div></div>
+
+    <!-- SEÇÃO MÃE / RESPONSÁVEL (aparece só para menores) -->
+    <div id="sec-mae" style="display:none;">
+      <div class="sec" style="color:var(--terra);border-color:var(--terra);">👶 Dados da Mãe / Responsável</div>
+      <div class="fr"><div class="fg"><label>Nome da mãe / responsável *</label><input id="pt-mae-nome" placeholder="Nome completo"></div><div class="fg"><label>CPF da mãe / responsável</label><input id="pt-mae-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div></div>
+      <div class="fr"><div class="fg"><label>Data de nascimento (mãe)</label><input id="pt-mae-nasc" type="date"></div><div class="fg"><label>Profissão (mãe)</label><input id="pt-mae-profissao" placeholder="Ex: Professora..."></div></div>
+      <div class="fr"><div class="fg"><label>WhatsApp (mãe)</label><input id="pt-mae-wpp" placeholder="(11) 99999-9999"></div><div class="fg"><label>E-mail (mãe)</label><input id="pt-mae-email" type="email" placeholder="email@exemplo.com"></div></div>
+      <div class="fr"><div class="fg"><label>Estado civil (mãe)</label><select id="pt-mae-civil"><option value="">—</option><option>Solteira</option><option>Casada</option><option>Divorciada</option><option>Viúva</option><option>União estável</option></select></div><div class="fg"><label>Escolaridade (mãe)</label><select id="pt-mae-esc"><option value="">—</option><option>Fundamental</option><option>Médio</option><option>Superior incompleto</option><option>Superior completo</option><option>Pós-graduação</option></select></div></div>
+      <div class="fg"><label>Observações sobre a família</label><textarea id="pt-mae-obs" placeholder="Dinâmica familiar, contexto relevante..." style="min-height:56px;"></textarea></div>
+    </div>
     <div style="display:flex;gap:10px;margin-top:10px;">
       <button class="btn btn-primary" style="flex:1" onclick="savePt()">Salvar paciente</button>
       <button class="btn btn-secondary" onclick="closeOv('ov-pt')">Cancelar</button>
@@ -828,10 +839,32 @@ function filterPts(v){ renderPts(v); }
 function openNewPt(){
   editId=null;
   document.getElementById('ov-pt-title').textContent='Novo Paciente';
-  ['pt-nome','pt-cidade','pt-wpp','pt-email','pt-emerg','pt-valor'].forEach(i=>document.getElementById(i).value='');
-  ['pt-nasc','pt-inicio'].forEach(i=>document.getElementById(i).value='');
-  ['pt-genero','pt-esc','pt-status'].forEach(i=>document.getElementById(i).value=i==='pt-status'?'ativo':'');
+  ['pt-nome','pt-cidade','pt-wpp','pt-email','pt-emerg','pt-valor','pt-cpf','pt-profissao','pt-idade','pt-mae-nome','pt-mae-cpf','pt-mae-wpp','pt-mae-email','pt-mae-profissao','pt-mae-obs'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+  ['pt-nasc','pt-inicio','pt-mae-nasc'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+  ['pt-genero','pt-esc','pt-status','pt-mae-civil','pt-mae-esc'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=i==='pt-status'?'ativo':''; });
+  document.getElementById('sec-mae').style.display='none';
   openOv('ov-pt');
+}
+function calcIdade(){
+  const nasc=document.getElementById('pt-nasc').value;
+  const idadeEl=document.getElementById('pt-idade');
+  if(!nasc){ idadeEl.value=''; return; }
+  const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5));
+  idadeEl.value=anos>=0?anos+' anos':'';
+}
+function checkMenorIdade(){
+  const nasc=document.getElementById('pt-nasc').value;
+  const sec=document.getElementById('sec-mae');
+  if(!nasc){ sec.style.display='none'; return; }
+  const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5));
+  sec.style.display=(anos>=0&&anos<18)?'block':'none';
+}
+function maskCPF(el){
+  let v=el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+  else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
+  else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
+  el.value=v;
 }
 function editCurPt(){
   const p=getP(curId); if(!p) return;
@@ -848,12 +881,40 @@ function editCurPt(){
   document.getElementById('pt-valor').value=p.valor||'';
   document.getElementById('pt-status').value=p.status||'ativo';
   document.getElementById('pt-inicio').value=p.inicio||'';
+  document.getElementById('pt-cpf').value=p.cpf||'';
+  document.getElementById('pt-profissao').value=p.profissao||'';
+  calcIdade();
+  // dados da mãe
+  const mae=p.mae||{};
+  document.getElementById('pt-mae-nome').value=mae.nome||'';
+  document.getElementById('pt-mae-cpf').value=mae.cpf||'';
+  document.getElementById('pt-mae-nasc').value=mae.nasc||'';
+  document.getElementById('pt-mae-profissao').value=mae.profissao||'';
+  document.getElementById('pt-mae-wpp').value=mae.wpp||'';
+  document.getElementById('pt-mae-email').value=mae.email||'';
+  document.getElementById('pt-mae-civil').value=mae.civil||'';
+  document.getElementById('pt-mae-esc').value=mae.esc||'';
+  document.getElementById('pt-mae-obs').value=mae.obs||'';
+  checkMenorIdade();
   closeOv('ov-view'); openOv('ov-pt');
 }
 function savePt(){
   const nome=document.getElementById('pt-nome').value.trim();
   if(!nome){ alert('Informe o nome do paciente.'); return; }
-  const data={nome,nasc:document.getElementById('pt-nasc').value,genero:document.getElementById('pt-genero').value,cidade:document.getElementById('pt-cidade').value,esc:document.getElementById('pt-esc').value,wpp:document.getElementById('pt-wpp').value,email:document.getElementById('pt-email').value,emerg:document.getElementById('pt-emerg').value,valor:document.getElementById('pt-valor').value,status:document.getElementById('pt-status').value,inicio:document.getElementById('pt-inicio').value};
+  const nasc=document.getElementById('pt-nasc').value;
+  const anos=nasc?Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5)):null;
+  const mae=(anos!==null&&anos<18)?{
+    nome:document.getElementById('pt-mae-nome').value,
+    cpf:document.getElementById('pt-mae-cpf').value,
+    nasc:document.getElementById('pt-mae-nasc').value,
+    profissao:document.getElementById('pt-mae-profissao').value,
+    wpp:document.getElementById('pt-mae-wpp').value,
+    email:document.getElementById('pt-mae-email').value,
+    civil:document.getElementById('pt-mae-civil').value,
+    esc:document.getElementById('pt-mae-esc').value,
+    obs:document.getElementById('pt-mae-obs').value
+  }:null;
+  const data={nome,nasc,genero:document.getElementById('pt-genero').value,cidade:document.getElementById('pt-cidade').value,esc:document.getElementById('pt-esc').value,wpp:document.getElementById('pt-wpp').value,email:document.getElementById('pt-email').value,emerg:document.getElementById('pt-emerg').value,valor:document.getElementById('pt-valor').value,status:document.getElementById('pt-status').value,inicio:document.getElementById('pt-inicio').value,cpf:document.getElementById('pt-cpf').value,profissao:document.getElementById('pt-profissao').value,mae};
   if(editId){ Object.assign(getP(editId),data); }
   else{ pts.push({id:'p'+Date.now(),...data,anamnese:{},formulacao:{},sessions:[],payments:[]}); }
   save(); renderPts(); closeOv('ov-pt');
@@ -864,7 +925,7 @@ function openPt(id){
   curId=id; const p=getP(id);
   document.getElementById('vw-nome').textContent=p.nome;
   const age=p.nasc?Math.floor((Date.now()-new Date(p.nasc+'T12:00'))/(365.25*864e5))+'a':'';
-  document.getElementById('vw-meta').textContent=[age,p.genero,p.cidade,p.valor?'R$ '+p.valor+'/sessão':''].filter(Boolean).join(' · ');
+  document.getElementById('vw-meta').textContent=[age,p.genero,p.profissao,p.cidade,p.cpf?'CPF: '+p.cpf:'',p.valor?'R$ '+p.valor+'/sessão':''].filter(Boolean).join(' · ');
   const a=p.anamnese||{};
   ['queixa','tempo','surgiu','espera','antecedentes','onde','quandocomquem','pensamentos-sit','imagens','reacao','evitacao','outros-sint','infancia','cresceu','faminfancia','trauma','acomp','diag','meds','intern','suic','alcool','sono','alim','civil','social','motiv','obs','sint-ansi-outros','sint-dep-outros'].forEach(k=>{ const el=document.getElementById('a-'+k); if(el) el.value=a[k]||''; });
   document.getElementById('a-data').value=a.data||'';
