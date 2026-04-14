@@ -11,47 +11,49 @@
   --terra:#C4724A; --terra-light:#FAF0EA; --brown:#3A2A1E; --brown-mid:#8A6E5E;
   --muted:#AE9A8E; --border:rgba(58,42,30,0.09); --shadow:0 2px 16px rgba(58,42,30,0.08);
   --red:#D95B5B; --green:#5B9E7A; --yellow:#E6A83A;
+  --input-bg:#F7F3EE; --topbar-bg:#3A2A1E; --topbar-text:#FAF3EE;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
+[data-theme="dark"] {
+  --bg:#1A1410; --card:#251C15; --sage:#6B8E7E; --sage-light:#1E2E28; --sage-dark:#7AB89A;
+  --terra:#D4825A; --terra-light:#2A1E16; --brown:#EDE4DC; --brown-mid:#BBA898;
+  --muted:#7A6A60; --border:rgba(237,228,220,0.09); --shadow:0 2px 16px rgba(0,0,0,0.35);
+  --red:#E07070; --green:#6BBF8A; --yellow:#ECBA50;
+  --input-bg:#1E1610; --topbar-bg:#120E0A; --topbar-text:#FAF3EE;
+}
+*{margin:0;padding:0;box-sizing:border-box;transition:background-color .2s,color .2s,border-color .2s;}
 body{background:var(--bg);color:var(--brown);font-family:'DM Sans',sans-serif;min-height:100vh;}
-/* TOPBAR */
-.topbar{background:var(--brown);color:#FAF3EE;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;}
+.topbar{background:var(--topbar-bg);color:var(--topbar-text);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;}
 .brand{font-family:'Lora',serif;font-size:17px;}
 .brand small{display:block;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;}
-/* NAV */
 .nav{background:var(--card);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:200;}
 .nav::-webkit-scrollbar{display:none;}
 .nav-tab{padding:13px 18px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;user-select:none;}
 .nav-tab.active{color:var(--sage-dark);border-bottom-color:var(--sage-dark);}
-/* PAGES */
 .page{display:none;padding:20px;max-width:860px;margin:0 auto;}
 .page.active{display:block;}
-/* BUTTONS */
 .btn{padding:9px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .18s;display:inline-flex;align-items:center;gap:6px;}
 .btn-primary{background:var(--sage-dark);color:#fff;}
-.btn-primary:hover{background:var(--sage);}
+.btn-primary:hover{opacity:.88;}
 .btn-secondary{background:var(--sage-light);color:var(--sage-dark);}
-.btn-secondary:hover{background:#d5e8e0;}
-.btn-danger{background:#fdeaea;color:var(--red);}
+.btn-secondary:hover{opacity:.85;}
+.btn-danger{background:var(--terra-light);color:var(--red);}
 .btn-terra{background:var(--terra);color:#fff;}
-.btn-terra:hover{background:#b5623a;}
+.btn-terra:hover{opacity:.88;}
 .btn-sm{padding:6px 12px;font-size:12px;}
 .btn-ai{background:linear-gradient(135deg,#4E7A6A,#7A5C8E);color:#fff;}
 .btn-ai:hover{opacity:.9;}
-/* CARD */
+.btn-dark{background:rgba(255,255,255,0.12);color:var(--topbar-text);border:none;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.btn-dark:hover{background:rgba(255,255,255,0.2);}
 .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:20px;margin-bottom:14px;}
 .card-title{font-family:'Lora',serif;font-size:16px;margin-bottom:14px;color:var(--brown);}
-/* FORM */
 .fg{margin-bottom:12px;}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px;font-weight:500;}
-input,textarea,select{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--brown);transition:border .2s;outline:none;}
-input:focus,textarea:focus,select:focus{border-color:var(--sage);background:#fff;}
+input,textarea,select{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--input-bg);color:var(--brown);transition:border .2s,background .2s,color .2s;outline:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--sage);background:var(--card);}
 textarea{resize:vertical;min-height:72px;}
-/* SECTION DIVIDER */
 .sec{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:600;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
-/* PATIENT LIST */
 .search-wrap{position:relative;margin-bottom:14px;}
 .search-wrap input{padding-left:34px;}
 .search-wrap::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;}
@@ -63,8 +65,7 @@ textarea{resize:vertical;min-height:72px;}
 .pt-meta{font-size:12px;color:var(--muted);margin-top:2px;}
 .badge{font-size:10px;padding:3px 8px;border-radius:99px;font-weight:500;}
 .badge-active{background:var(--sage-light);color:var(--sage-dark);}
-.badge-inactive{background:#f5f5f5;color:#999;}
-/* MODAL */
+.badge-inactive{background:var(--terra-light);color:var(--muted);}
 .overlay{display:none;position:fixed;inset:0;background:rgba(30,20,12,.55);z-index:500;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);}
 .overlay.open{display:flex;}
 @media(min-width:620px){.overlay{align-items:center;}}
@@ -74,42 +75,40 @@ textarea{resize:vertical;min-height:72px;}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
 .modal-title{font-family:'Lora',serif;font-size:19px;}
 .mclose{font-size:22px;cursor:pointer;color:var(--muted);background:none;border:none;padding:4px;}
-/* INNER TABS */
 .itabs{display:flex;gap:0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px;flex-wrap:wrap;}
 .itab{flex:1;padding:8px 6px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;color:var(--muted);background:transparent;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
 .itab.active{background:var(--sage-dark);color:#fff;}
 .icontent{display:none;}
 .icontent.active{display:block;}
-/* SESSIONS */
-.sess-card{border:1.5px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px;}
+.sess-card{border:1.5px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px;background:var(--card);}
 .sess-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .sess-date{font-size:13px;font-weight:600;color:var(--sage-dark);}
 .humor-badge{font-size:11px;padding:2px 10px;border-radius:99px;background:var(--sage-light);color:var(--sage-dark);}
 .sess-body{font-size:13px;color:var(--brown-mid);line-height:1.65;white-space:pre-wrap;}
-/* HUMOR SCALE */
 .humor-scale{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
 .humor-opt{padding:6px 12px;border-radius:99px;border:1.5px solid var(--border);font-size:12px;cursor:pointer;transition:all .2s;background:var(--bg);}
 .humor-opt.sel{border-color:var(--sage-dark);background:var(--sage-dark);color:#fff;}
-/* PAYMENTS */
-.pay-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:10px;border:1.5px solid var(--border);margin-bottom:7px;}
+.pay-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:10px;border:1.5px solid var(--border);margin-bottom:7px;background:var(--card);}
 .pay-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .dot-pago{background:var(--green);}
 .dot-pendente{background:var(--yellow);}
-/* FINANCEIRO */
 .fin-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;}
 .fin-box{background:var(--card);border-radius:12px;padding:14px 15px;box-shadow:var(--shadow);}
 .fin-box .fl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
 .fin-box .fv{font-family:'Lora',serif;font-size:21px;}
-/* AI BLOCK */
-.ai-block{background:linear-gradient(135deg,#f0ede8,#eaf2ee);border-radius:12px;padding:16px;margin-top:12px;border:1.5px solid rgba(78,122,106,.2);}
+.ai-block{background:var(--sage-light);border-radius:12px;padding:16px;margin-top:12px;border:1.5px solid rgba(78,122,106,.2);}
 .ai-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--sage-dark);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
 .ai-text{font-size:13px;color:var(--brown);line-height:1.75;white-space:pre-wrap;}
 .ai-loading{color:var(--muted);font-size:13px;font-style:italic;}
-/* FORMULAÇÃO */
+
+/* AI FILL TEXTAREA */
+.ai-fill-box{background:var(--card);border:1.5px solid var(--sage);border-radius:12px;padding:14px;margin-bottom:14px;}
+.ai-fill-box textarea{min-height:100px;border-color:var(--border);}
+.ai-fill-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;}
+
 .form-caso-block{background:var(--bg);border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid var(--sage);}
 .form-caso-title{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--sage-dark);font-weight:600;margin-bottom:6px;}
 .form-caso-text{font-size:13px;color:var(--brown-mid);line-height:1.7;white-space:pre-wrap;}
-/* SUDS SCALE */
 .suds-wrap{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
 .suds-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;color:var(--brown-mid);}
 .suds-btn:hover{border-color:var(--sage);}
@@ -118,25 +117,21 @@ textarea{resize:vertical;min-height:72px;}
 .suds-3{background:#93c49a!important;color:var(--brown)!important;}.suds-4{background:#b8d4a0!important;color:var(--brown)!important;}
 .suds-5{background:#d4c87a!important;color:var(--brown)!important;}.suds-6{background:#e0b05a!important;}
 .suds-7{background:#e08840!important;}.suds-8{background:#d06030!important;}.suds-9{background:#c04020!important;}.suds-10{background:#a02010!important;}
-/* CHECKBOX GROUP */
 .check-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
-.check-pill{padding:5px 11px;border-radius:99px;border:1.5px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);transition:all .2s;user-select:none;}
+.check-pill{padding:5px 11px;border-radius:99px;border:1.5px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);transition:all .2s;user-select:none;color:var(--brown);}
 .check-pill.sel{background:var(--sage-dark);color:#fff;border-color:var(--sage-dark);}
-/* WHATSAPP BTN */
 .btn-wpp{background:#25D366;color:#fff;}
 .btn-wpp:hover{background:#1ebe5a;}
-/* AGENDA */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .cal-nav-title{font-family:'Lora',serif;font-size:19px;}
 .cal-nav-btn{background:var(--sage-light);border:none;color:var(--sage-dark);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-.cal-nav-btn:hover{background:#d5e8e0;}
+.cal-nav-btn:hover{opacity:.8;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:20px;}
 .cal-dow{text-align:center;font-size:11px;color:var(--muted);font-weight:600;padding:6px 0;text-transform:uppercase;letter-spacing:.5px;}
 .cal-day{min-height:52px;border-radius:10px;padding:6px;background:var(--card);border:1.5px solid transparent;cursor:pointer;transition:all .2s;position:relative;}
 .cal-day:hover{border-color:var(--sage);background:var(--sage-light);}
 .cal-day.today{border-color:var(--sage-dark);background:var(--sage-light);}
 .cal-day.other-month{opacity:.35;}
-.cal-day.has-events{background:#fff;}
 .cal-day-num{font-size:13px;font-weight:500;margin-bottom:3px;}
 .cal-day.today .cal-day-num{color:var(--sage-dark);font-weight:700;}
 .cal-dot-wrap{display:flex;flex-wrap:wrap;gap:2px;}
@@ -152,7 +147,6 @@ textarea{resize:vertical;min-height:72px;}
 .agenda-name{font-weight:600;font-size:14px;}
 .agenda-meta{font-size:12px;color:var(--muted);margin-top:2px;}
 .agenda-actions{display:flex;gap:6px;}
-/* PRINT */
 @media print{
   .topbar,.nav,.btn,.itabs,.overlay,.mark-btn{display:none!important;}
   .page{display:block!important;padding:0;}
@@ -164,14 +158,13 @@ textarea{resize:vertical;min-height:72px;}
   .page{padding:14px;}
   .itab{font-size:10px;padding:7px 4px;}
 }
-/* LOGIN SCREEN */
-.login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:var(--brown);padding:32px 20px;position:fixed;inset:0;z-index:9999;}
+.login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:var(--topbar-bg);padding:32px 20px;position:fixed;inset:0;z-index:9999;}
 .login-screen.show{display:flex;}
 .login-card{background:var(--card);border-radius:20px;padding:40px 32px;max-width:380px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.3);}
 .login-logo{font-size:48px;margin-bottom:16px;}
 .login-title{font-family:'Lora',serif;font-size:24px;color:var(--brown);margin-bottom:6px;}
 .login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6;}
-.btn-google{background:#fff;color:#3A2A1E;border:1.5px solid var(--border);width:100%;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.btn-google{background:var(--card);color:var(--brown);border:1.5px solid var(--border);width:100%;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;font-family:'DM Sans',sans-serif;}
 .btn-google:hover{background:var(--bg);border-color:var(--sage);transform:translateY(-1px);}
 .login-err{font-size:12px;color:var(--red);margin-top:12px;display:none;}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;vertical-align:middle;}
@@ -181,7 +174,6 @@ textarea{resize:vertical;min-height:72px;}
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
 <div class="login-screen show" id="login-screen">
   <div class="login-card">
     <div class="login-logo">🌿</div>
@@ -200,6 +192,7 @@ textarea{resize:vertical;min-height:72px;}
   <div class="brand">🌿 Meu Consultório <small>Psicologia · TCC</small></div>
   <div style="display:flex;align-items:center;gap:8px;">
     <span id="sync-status" style="font-size:11px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px;"><span class="sync-dot" id="sync-dot"></span><span id="sync-label">Sincronizado</span></span>
+    <button class="btn-dark" onclick="toggleDark()" id="dark-btn" title="Alternar modo escuro">🌙</button>
     <button class="btn btn-secondary btn-sm" onclick="openNewPt()">+ Novo Paciente</button>
     <button class="btn btn-danger btn-sm" onclick="logout()" title="Sair" style="padding:6px 10px;">↪</button>
   </div>
@@ -234,8 +227,6 @@ textarea{resize:vertical;min-height:72px;}
     </div>
     <button class="btn btn-primary" onclick="openNovoAgend()">+ Agendar</button>
   </div>
-
-  <!-- CALENDÁRIO -->
   <div class="card" style="padding:16px;">
     <div class="cal-nav">
       <button class="cal-nav-btn" onclick="mudaMes(-1)">‹</button>
@@ -244,8 +235,6 @@ textarea{resize:vertical;min-height:72px;}
     </div>
     <div class="cal-grid" id="cal-grid"></div>
   </div>
-
-  <!-- SESSÕES DO DIA SELECIONADO -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
     <div style="font-family:'Lora',serif;font-size:16px;" id="agenda-dia-title">Hoje</div>
     <button class="btn btn-secondary btn-sm" onclick="irParaHoje()">Hoje</button>
@@ -253,7 +242,8 @@ textarea{resize:vertical;min-height:72px;}
   <div class="agenda-list" id="agenda-list"></div>
 </div>
 
-<!-- PAGE FINANCEIRO --><div class="page" id="page-financeiro">
+<!-- PAGE FINANCEIRO -->
+<div class="page" id="page-financeiro">
   <div style="font-family:'Lora',serif;font-size:21px;margin-bottom:4px;">Financeiro</div>
   <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Visão geral dos pagamentos</div>
   <div class="fin-grid">
@@ -310,13 +300,11 @@ textarea{resize:vertical;min-height:72px;}
     </div>
     <div class="sec">Dados Pessoais</div>
     <div class="fr"><div class="fg"><label>Nome completo *</label><input id="pt-nome" placeholder="Nome do paciente"></div><div class="fg"><label>Data de nascimento</label><input id="pt-nasc" type="date" oninput="calcIdade();checkMenorIdade()"></div></div>
-    <div class="fr3"><div class="fg"><label>Idade</label><input id="pt-idade" placeholder="Calculada automaticamente" readonly style="background:#f5f0eb;color:var(--muted);cursor:default;"></div><div class="fg"><label>CPF</label><input id="pt-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div><div class="fg"><label>Gênero</label><select id="pt-genero"><option value="">—</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Outro</option></select></div></div>
+    <div class="fr3"><div class="fg"><label>Idade</label><input id="pt-idade" placeholder="Calculada automaticamente" readonly style="cursor:default;"></div><div class="fg"><label>CPF</label><input id="pt-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div><div class="fg"><label>Gênero</label><select id="pt-genero"><option value="">—</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Outro</option></select></div></div>
     <div class="fr3"><div class="fg"><label>Profissão</label><input id="pt-profissao" placeholder="Ex: Professora, Estudante..."></div><div class="fg"><label>Cidade</label><input id="pt-cidade" placeholder="Cidade"></div><div class="fg"><label>Escolaridade</label><select id="pt-esc"><option value="">—</option><option>Fundamental</option><option>Médio</option><option>Superior incompleto</option><option>Superior completo</option><option>Pós-graduação</option></select></div></div>
     <div class="fr"><div class="fg"><label>WhatsApp</label><input id="pt-wpp" placeholder="(11) 99999-9999"></div><div class="fg"><label>E-mail</label><input id="pt-email" type="email" placeholder="email@exemplo.com"></div></div>
     <div class="fr"><div class="fg"><label>Contato de emergência</label><input id="pt-emerg" placeholder="Nome · Telefone"></div><div class="fg"><label>Valor da sessão (R$)</label><input id="pt-valor" type="number" placeholder="Ex: 110"></div></div>
     <div class="fr"><div class="fg"><label>Status</label><select id="pt-status"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div><div class="fg"><label>Início do acompanhamento</label><input id="pt-inicio" type="date"></div></div>
-
-    <!-- SEÇÃO MÃE / RESPONSÁVEL (aparece só para menores) -->
     <div id="sec-mae" style="display:none;">
       <div class="sec" style="color:var(--terra);border-color:var(--terra);">👶 Dados da Mãe / Responsável</div>
       <div class="fr"><div class="fg"><label>Nome da mãe / responsável *</label><input id="pt-mae-nome" placeholder="Nome completo"></div><div class="fg"><label>CPF da mãe / responsável</label><input id="pt-mae-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div></div>
@@ -349,6 +337,7 @@ textarea{resize:vertical;min-height:72px;}
     </div>
     <div class="itabs">
       <button class="itab active" onclick="switchTab('anamnese',this)">📋 Anamnese</button>
+      <button class="itab" onclick="switchTab('anam-infantil',this)">👶 Infantil</button>
       <button class="itab" onclick="switchTab('sessoes',this)">📝 Sessões</button>
       <button class="itab" onclick="switchTab('formulacao',this)">🧠 Formulação</button>
       <button class="itab" onclick="switchTab('pagamentos',this)">💰 Pagamentos</button>
@@ -356,8 +345,18 @@ textarea{resize:vertical;min-height:72px;}
       <button class="itab" onclick="switchTab('contrato',this)">📑 Contrato</button>
     </div>
 
-    <!-- ANAMNESE -->
+    <!-- ANAMNESE ADULTO -->
     <div class="icontent active" id="tab-anamnese">
+      <!-- AI FILL BOX -->
+      <div class="ai-fill-box">
+        <div class="ai-label">✨ Preencher anamnese com IA</div>
+        <textarea id="ai-fill-anamnese-texto" placeholder="Descreva o que foi relatado na entrevista de forma livre... A IA vai preencher os campos automaticamente."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button class="btn btn-ai btn-sm" onclick="preencherAnamneseIA()">✨ Preencher com IA</button>
+          <span class="ai-fill-hint">Cole ou escreva o relato — a IA identifica e preenche cada campo.</span>
+        </div>
+        <div id="ai-fill-anamnese-status" style="display:none;" class="ai-loading" style="margin-top:6px;"></div>
+      </div>
 
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
         <div class="sec" style="margin:0;border:none;">Dados da Anamnese</div>
@@ -382,16 +381,7 @@ textarea{resize:vertical;min-height:72px;}
       <div class="fg"><label>Tem imagens associadas a esse momento? Quais?</label><textarea id="a-imagens" placeholder="Descreva imagens mentais, memórias ou cenas que surgem..."></textarea></div>
       <div class="fg"><label>Quais emoções surgem?</label>
         <div class="check-group" id="emocoes-check">
-          <span class="check-pill" onclick="togglePill(this)">Ansiedade</span>
-          <span class="check-pill" onclick="togglePill(this)">Tristeza</span>
-          <span class="check-pill" onclick="togglePill(this)">Raiva</span>
-          <span class="check-pill" onclick="togglePill(this)">Medo</span>
-          <span class="check-pill" onclick="togglePill(this)">Vergonha</span>
-          <span class="check-pill" onclick="togglePill(this)">Culpa</span>
-          <span class="check-pill" onclick="togglePill(this)">Frustração</span>
-          <span class="check-pill" onclick="togglePill(this)">Vazio</span>
-          <span class="check-pill" onclick="togglePill(this)">Pânico</span>
-          <span class="check-pill" onclick="togglePill(this)">Irritação</span>
+          <span class="check-pill" onclick="togglePill(this)">Ansiedade</span><span class="check-pill" onclick="togglePill(this)">Tristeza</span><span class="check-pill" onclick="togglePill(this)">Raiva</span><span class="check-pill" onclick="togglePill(this)">Medo</span><span class="check-pill" onclick="togglePill(this)">Vergonha</span><span class="check-pill" onclick="togglePill(this)">Culpa</span><span class="check-pill" onclick="togglePill(this)">Frustração</span><span class="check-pill" onclick="togglePill(this)">Vazio</span><span class="check-pill" onclick="togglePill(this)">Pânico</span><span class="check-pill" onclick="togglePill(this)">Irritação</span>
         </div>
         <input id="a-emocoes-outras" placeholder="Outras emoções..." style="margin-top:6px;">
       </div>
@@ -401,31 +391,13 @@ textarea{resize:vertical;min-height:72px;}
       <div class="sec">Sintomas</div>
       <div class="fg"><label>Sintomas de ansiedade</label>
         <div class="check-group" id="sint-ansi-check">
-          <span class="check-pill" onclick="togglePill(this)">Taquicardia</span>
-          <span class="check-pill" onclick="togglePill(this)">Sudorese</span>
-          <span class="check-pill" onclick="togglePill(this)">Tremores</span>
-          <span class="check-pill" onclick="togglePill(this)">Falta de ar</span>
-          <span class="check-pill" onclick="togglePill(this)">Tensão muscular</span>
-          <span class="check-pill" onclick="togglePill(this)">Insônia</span>
-          <span class="check-pill" onclick="togglePill(this)">Inquietação</span>
-          <span class="check-pill" onclick="togglePill(this)">Dificuldade de concentração</span>
-          <span class="check-pill" onclick="togglePill(this)">Preocupação excessiva</span>
-          <span class="check-pill" onclick="togglePill(this)">Ataques de pânico</span>
+          <span class="check-pill" onclick="togglePill(this)">Taquicardia</span><span class="check-pill" onclick="togglePill(this)">Sudorese</span><span class="check-pill" onclick="togglePill(this)">Tremores</span><span class="check-pill" onclick="togglePill(this)">Falta de ar</span><span class="check-pill" onclick="togglePill(this)">Tensão muscular</span><span class="check-pill" onclick="togglePill(this)">Insônia</span><span class="check-pill" onclick="togglePill(this)">Inquietação</span><span class="check-pill" onclick="togglePill(this)">Dificuldade de concentração</span><span class="check-pill" onclick="togglePill(this)">Preocupação excessiva</span><span class="check-pill" onclick="togglePill(this)">Ataques de pânico</span>
         </div>
         <input id="a-sint-ansi-outros" placeholder="Outros sintomas de ansiedade..." style="margin-top:6px;">
       </div>
       <div class="fg"><label>Sintomas depressivos</label>
         <div class="check-group" id="sint-dep-check">
-          <span class="check-pill" onclick="togglePill(this)">Humor deprimido</span>
-          <span class="check-pill" onclick="togglePill(this)">Anedonia</span>
-          <span class="check-pill" onclick="togglePill(this)">Fadiga</span>
-          <span class="check-pill" onclick="togglePill(this)">Baixa autoestima</span>
-          <span class="check-pill" onclick="togglePill(this)">Desesperança</span>
-          <span class="check-pill" onclick="togglePill(this)">Isolamento social</span>
-          <span class="check-pill" onclick="togglePill(this)">Choro fácil</span>
-          <span class="check-pill" onclick="togglePill(this)">Pensamentos negativos</span>
-          <span class="check-pill" onclick="togglePill(this)">Alteração do apetite</span>
-          <span class="check-pill" onclick="togglePill(this)">Dificuldade de concentração</span>
+          <span class="check-pill" onclick="togglePill(this)">Humor deprimido</span><span class="check-pill" onclick="togglePill(this)">Anedonia</span><span class="check-pill" onclick="togglePill(this)">Fadiga</span><span class="check-pill" onclick="togglePill(this)">Baixa autoestima</span><span class="check-pill" onclick="togglePill(this)">Desesperança</span><span class="check-pill" onclick="togglePill(this)">Isolamento social</span><span class="check-pill" onclick="togglePill(this)">Choro fácil</span><span class="check-pill" onclick="togglePill(this)">Pensamentos negativos</span><span class="check-pill" onclick="togglePill(this)">Alteração do apetite</span><span class="check-pill" onclick="togglePill(this)">Dificuldade de concentração</span>
         </div>
         <input id="a-sint-dep-outros" placeholder="Outros sintomas depressivos..." style="margin-top:6px;">
       </div>
@@ -457,6 +429,122 @@ textarea{resize:vertical;min-height:72px;}
       </div>
     </div>
 
+    <!-- ANAMNESE INFANTIL -->
+    <div class="icontent" id="tab-anam-infantil">
+
+      <!-- AI FILL BOX INFANTIL -->
+      <div class="ai-fill-box">
+        <div class="ai-label">✨ Preencher anamnese infantil com IA</div>
+        <textarea id="ai-fill-infantil-texto" placeholder="Descreva livremente o que foi relatado na entrevista com os responsáveis e com a criança... A IA vai preencher os campos automaticamente."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button class="btn btn-ai btn-sm" onclick="preencherAnamneseInfantilIA()">✨ Preencher com IA</button>
+          <span class="ai-fill-hint">Cole ou escreva o relato — a IA identifica e preenche cada campo.</span>
+        </div>
+        <div id="ai-fill-infantil-status" style="display:none;" class="ai-loading" style="margin-top:6px;"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+        <div class="sec" style="margin:0;border:none;">Anamnese Infantil</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label style="margin:0;white-space:nowrap;">Data:</label>
+          <input id="ai-data" type="date" style="width:auto;">
+        </div>
+      </div>
+
+      <div class="sec">Queixa Principal</div>
+      <div class="fg"><label>Queixa trazida pelo responsável</label><textarea id="ai-queixa-resp" placeholder="O que os responsáveis relatam como principal problema..."></textarea></div>
+      <div class="fg"><label>O que a criança diz sobre o motivo de vir à terapia</label><textarea id="ai-queixa-crianca" placeholder="Narrativa da criança, se houver..."></textarea></div>
+      <div class="fr"><div class="fg"><label>Há quanto tempo o problema ocorre?</label><input id="ai-tempo" placeholder="Ex: 6 meses, desde os 5 anos..."></div><div class="fg"><label>Como surgiu / o que desencadeou?</label><input id="ai-surgiu" placeholder="Eventos, mudanças, situações..."></div></div>
+      <div class="fg"><label>O que já foi tentado para resolver?</label><textarea id="ai-tentativas" placeholder="Estratégias dos responsáveis, outros tratamentos..."></textarea></div>
+
+      <div class="sec">Análise do Problema (TCC Infantil)</div>
+      <div class="fg"><label>Situações que disparam o problema (antecedentes)</label><textarea id="ai-antecedentes" placeholder="O que acontece antes do comportamento/sintoma aparecer?"></textarea></div>
+      <div class="fg"><label>Onde ocorre com mais intensidade?</label>
+        <div class="check-group" id="ai-onde-check">
+          <span class="check-pill" onclick="togglePill(this)">Em casa</span><span class="check-pill" onclick="togglePill(this)">Na escola</span><span class="check-pill" onclick="togglePill(this)">Com a família</span><span class="check-pill" onclick="togglePill(this)">Com amigos</span><span class="check-pill" onclick="togglePill(this)">Em lugares públicos</span><span class="check-pill" onclick="togglePill(this)">No quarto sozinho(a)</span><span class="check-pill" onclick="togglePill(this)">Em todos os ambientes</span>
+        </div>
+      </div>
+      <div class="fg"><label>O que a criança pensa / fala quando o problema ocorre?</label><textarea id="ai-pensamentos" placeholder="Pensamentos automáticos, falas recorrentes..."></textarea></div>
+      <div class="fg"><label>Quais emoções surgem?</label>
+        <div class="check-group" id="ai-emocoes-check">
+          <span class="check-pill" onclick="togglePill(this)">Medo</span><span class="check-pill" onclick="togglePill(this)">Tristeza</span><span class="check-pill" onclick="togglePill(this)">Raiva</span><span class="check-pill" onclick="togglePill(this)">Vergonha</span><span class="check-pill" onclick="togglePill(this)">Culpa</span><span class="check-pill" onclick="togglePill(this)">Ansiedade</span><span class="check-pill" onclick="togglePill(this)">Irritação</span><span class="check-pill" onclick="togglePill(this)">Insegurança</span><span class="check-pill" onclick="togglePill(this)">Solidão</span><span class="check-pill" onclick="togglePill(this)">Confusão</span>
+        </div>
+      </div>
+      <div class="fg"><label>Como a criança reage e se comporta?</label><textarea id="ai-reacao" placeholder="Chora, agride, foge, fica paralisada, se isola..."></textarea></div>
+      <div class="fg"><label>O que faz para evitar ou aliviar?</label><textarea id="ai-evitacao" placeholder="Estratégias de evitação, comportamentos compensatórios..."></textarea></div>
+      <div class="fg"><label>Qual a consequência no ambiente?</label><textarea id="ai-consequencia" placeholder="Como os outros reagem? O que muda após o episódio?"></textarea></div>
+
+      <div class="sec">Sintomas</div>
+      <div class="fg"><label>Sintomas de ansiedade</label>
+        <div class="check-group" id="ai-sint-ansi-check">
+          <span class="check-pill" onclick="togglePill(this)">Choro frequente</span><span class="check-pill" onclick="togglePill(this)">Medos intensos</span><span class="check-pill" onclick="togglePill(this)">Recusa escolar</span><span class="check-pill" onclick="togglePill(this)">Queixas somáticas</span><span class="check-pill" onclick="togglePill(this)">Pesadelos</span><span class="check-pill" onclick="togglePill(this)">Insônia</span><span class="check-pill" onclick="togglePill(this)">Apego excessivo</span><span class="check-pill" onclick="togglePill(this)">Tiques</span><span class="check-pill" onclick="togglePill(this)">Fobia específica</span>
+        </div>
+      </div>
+      <div class="fg"><label>Sintomas comportamentais / externalizantes</label>
+        <div class="check-group" id="ai-sint-ext-check">
+          <span class="check-pill" onclick="togglePill(this)">Agressividade física</span><span class="check-pill" onclick="togglePill(this)">Agressividade verbal</span><span class="check-pill" onclick="togglePill(this)">Birras intensas</span><span class="check-pill" onclick="togglePill(this)">Desobediência frequente</span><span class="check-pill" onclick="togglePill(this)">Hiperatividade</span><span class="check-pill" onclick="togglePill(this)">Impulsividade</span><span class="check-pill" onclick="togglePill(this)">Desatenção</span><span class="check-pill" onclick="togglePill(this)">Mentiras recorrentes</span>
+        </div>
+      </div>
+      <div class="fg"><label>Sintomas internalizantes / depressivos</label>
+        <div class="check-group" id="ai-sint-int-check">
+          <span class="check-pill" onclick="togglePill(this)">Tristeza persistente</span><span class="check-pill" onclick="togglePill(this)">Isolamento social</span><span class="check-pill" onclick="togglePill(this)">Perda de interesse em brincadeiras</span><span class="check-pill" onclick="togglePill(this)">Baixa autoestima</span><span class="check-pill" onclick="togglePill(this)">Fala em morte</span><span class="check-pill" onclick="togglePill(this)">Regressão de comportamento</span>
+        </div>
+      </div>
+      <div class="fg"><label>Outros sintomas relevantes</label><textarea id="ai-outros-sint" placeholder="Enurese, encoprese, autolesão, comportamento sexual inadequado para a idade..."></textarea></div>
+
+      <div class="sec">Histórico de Desenvolvimento</div>
+      <div class="fg"><label>Gestação e parto</label><textarea id="ai-gestacao" placeholder="Planejada, intercorrências, tipo de parto, prematuridade..."></textarea></div>
+      <div class="fr"><div class="fg"><label>Marcos motores</label><textarea id="ai-marcos-motor" placeholder="Sentou, andou — dentro do esperado?"></textarea></div><div class="fg"><label>Marcos de linguagem</label><textarea id="ai-marcos-ling" placeholder="Primeiras palavras, frases, atrasos..."></textarea></div></div>
+      <div class="fg"><label>Como foi a adaptação escolar?</label><textarea id="ai-adapt-escolar" placeholder="Choro, recusa, adaptação tranquila..."></textarea></div>
+      <div class="fg"><label>Histórico de separações ou perdas significativas</label><textarea id="ai-perdas" placeholder="Morte de familiar, separação dos pais, mudanças..."></textarea></div>
+
+      <div class="sec">Saúde</div>
+      <div class="fr"><div class="fg"><label>Diagnóstico(s) anterior(es)</label><input id="ai-diag" placeholder="TDAH, TEA, ansiedade..."></div><div class="fg"><label>Medicações em uso</label><input id="ai-meds" placeholder="Nome, dose, desde quando"></div></div>
+      <div class="fg"><label>Já realizou acompanhamento psicológico?</label><select id="ai-acomp"><option value="">—</option><option>Sim</option><option>Não</option></select></div>
+      <div class="fg"><label>Outros acompanhamentos profissionais</label>
+        <div class="check-group" id="ai-profissionais-check">
+          <span class="check-pill" onclick="togglePill(this)">Psiquiatra</span><span class="check-pill" onclick="togglePill(this)">Neurologista</span><span class="check-pill" onclick="togglePill(this)">Fonoaudiólogo(a)</span><span class="check-pill" onclick="togglePill(this)">Terapeuta ocupacional</span><span class="check-pill" onclick="togglePill(this)">Psicopedagogo(a)</span>
+        </div>
+      </div>
+
+      <div class="sec">Escola e Vida Social</div>
+      <div class="fg"><label>Desempenho escolar</label><select id="ai-desempenho"><option value="">—</option><option>Ótimo</option><option>Bom</option><option>Regular</option><option>Abaixo do esperado</option><option>Com dificuldades significativas</option></select></div>
+      <div class="fg"><label>Dificuldades de aprendizagem</label><textarea id="ai-dif-aprendizagem" placeholder="Leitura, escrita, matemática, atenção em sala..."></textarea></div>
+      <div class="fg"><label>Como é o relacionamento com colegas?</label><textarea id="ai-colegas" placeholder="Tem amigos, é isolada(o), tem conflitos frequentes..."></textarea></div>
+      <div class="fg"><label>Situações de bullying</label><select id="ai-bullying"><option value="">—</option><option>Não há relatos</option><option>Sofre bullying</option><option>Pratica bullying</option><option>Ambos</option></select></div>
+
+      <div class="sec">Rotina e Hábitos</div>
+      <div class="fr"><div class="fg"><label>Qualidade do sono</label><select id="ai-sono"><option value="">—</option><option>Boa</option><option>Regular</option><option>Ruim</option><option>Insônia</option><option>Pesadelos frequentes</option></select></div><div class="fg"><label>Alimentação</label><select id="ai-alim"><option value="">—</option><option>Boa</option><option>Regular</option><option>Seletividade alimentar</option><option>Recusa alimentar</option></select></div></div>
+      <div class="fg"><label>Interesses e brincadeiras preferidas</label><textarea id="ai-interesses" placeholder="O que gosta de fazer, jogos, temas de interesse..."></textarea></div>
+      <div class="fg"><label>Uso de telas</label><input id="ai-telas" placeholder="Horas por dia, tipos de conteúdo..."></div>
+
+      <div class="sec">Dinâmica Familiar</div>
+      <div class="fg"><label>Como os responsáveis descrevem a criança?</label><textarea id="ai-descricao-crianca" placeholder="Adjetivos, características, como a veem..."></textarea></div>
+      <div class="fg"><label>Estilo parental predominante</label><select id="ai-estilo-parental"><option value="">—</option><option>Autoritativo (firme e afetuoso)</option><option>Autoritário (rígido)</option><option>Permissivo</option><option>Superprotetor</option><option>Negligente</option><option>Inconsistente</option></select></div>
+      <div class="fg"><label>Como os responsáveis lidam com os comportamentos-problema?</label><textarea id="ai-resposta-pais" placeholder="Punem, ignoram, cedem, dialogam..."></textarea></div>
+      <div class="fg"><label>Há conflitos familiares que impactam a criança?</label><textarea id="ai-conflitos-fam" placeholder="Brigas frequentes, separação em andamento, tensão no lar..."></textarea></div>
+      <div class="fg"><label>Histórico familiar de transtornos psicológicos / psiquiátricos</label><textarea id="ai-hist-familiar" placeholder="Ansiedade, depressão, TDAH, alcoolismo..."></textarea></div>
+
+      <div class="sec">Fatores de Risco e Proteção</div>
+      <div class="fg"><label>Fatores de proteção</label><textarea id="ai-protecao" placeholder="Vínculos afetivos saudáveis, pontos fortes, habilidades..."></textarea></div>
+      <div class="fg"><label>Indicadores de violência, abuso ou negligência</label><textarea id="ai-risco-abuso" placeholder="Relatos, comportamentos suspeitos, marcas físicas..."></textarea></div>
+      <div class="fg"><label>Ideação suicida / autolesão</label><select id="ai-ideacao"><option value="">—</option><option>Não há relatos</option><option>Fala em morte de forma passiva</option><option>Expressou desejo de morrer</option><option>Autolesão presente</option><option>Tentativa anterior</option></select></div>
+
+      <div class="sec">Motivação para o Tratamento</div>
+      <div class="fg"><label>O que os responsáveis esperam alcançar?</label><textarea id="ai-expectativa-resp" placeholder="Objetivos trazidos pela família..."></textarea></div>
+      <div class="fg"><label>O que a criança gostaria de mudar?</label><textarea id="ai-expectativa-crianca" placeholder="Perspectiva da criança, se verbalizar..."></textarea></div>
+      <div class="fg"><label>Motivação dos responsáveis</label><select id="ai-motivacao-resp"><option value="">—</option><option>Alta — buscaram ativamente</option><option>Moderada</option><option>Baixa — vieram por indicação</option><option>Relutantes / resistentes</option></select></div>
+
+      <div class="sec">Observações Clínicas</div>
+      <div class="fg"><label>Comportamento da criança durante a entrevista</label><textarea id="ai-obs-entrevista" placeholder="Postura, contato visual, linguagem, cooperação, humor observado..."></textarea></div>
+      <div class="fg"><label>Hipótese diagnóstica inicial</label><input id="ai-hipotese" placeholder="CID-11 / DSM-5 — provisória"></div>
+      <div class="fg"><label>Observações gerais</label><textarea id="ai-obs-gerais" placeholder="Qualquer informação relevante não contemplada acima..."></textarea></div>
+
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="saveAnamInfantil()">💾 Salvar anamnese infantil</button>
+      </div>
+    </div>
+
     <!-- SESSÕES -->
     <div class="icontent" id="tab-sessoes">
       <div class="card" style="padding:16px;margin-bottom:14px;">
@@ -476,17 +564,7 @@ textarea{resize:vertical;min-height:72px;}
         <div class="fg">
           <label>SUDs — Nível de sofrimento subjetivo (0–10)</label>
           <div class="suds-wrap" id="suds-scale">
-            <button class="suds-btn suds-0" onclick="selSuds(this,0)">0</button>
-            <button class="suds-btn suds-1" onclick="selSuds(this,1)">1</button>
-            <button class="suds-btn suds-2" onclick="selSuds(this,2)">2</button>
-            <button class="suds-btn suds-3" onclick="selSuds(this,3)">3</button>
-            <button class="suds-btn suds-4" onclick="selSuds(this,4)">4</button>
-            <button class="suds-btn suds-5" onclick="selSuds(this,5)">5</button>
-            <button class="suds-btn suds-6" onclick="selSuds(this,6)">6</button>
-            <button class="suds-btn suds-7" onclick="selSuds(this,7)">7</button>
-            <button class="suds-btn suds-8" onclick="selSuds(this,8)">8</button>
-            <button class="suds-btn suds-9" onclick="selSuds(this,9)">9</button>
-            <button class="suds-btn suds-10" onclick="selSuds(this,10)">10</button>
+            <button class="suds-btn suds-0" onclick="selSuds(this,0)">0</button><button class="suds-btn suds-1" onclick="selSuds(this,1)">1</button><button class="suds-btn suds-2" onclick="selSuds(this,2)">2</button><button class="suds-btn suds-3" onclick="selSuds(this,3)">3</button><button class="suds-btn suds-4" onclick="selSuds(this,4)">4</button><button class="suds-btn suds-5" onclick="selSuds(this,5)">5</button><button class="suds-btn suds-6" onclick="selSuds(this,6)">6</button><button class="suds-btn suds-7" onclick="selSuds(this,7)">7</button><button class="suds-btn suds-8" onclick="selSuds(this,8)">8</button><button class="suds-btn suds-9" onclick="selSuds(this,9)">9</button><button class="suds-btn suds-10" onclick="selSuds(this,10)">10</button>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;"><span>0 = Sem sofrimento</span><span>10 = Máximo sofrimento</span></div>
         </div>
@@ -521,27 +599,21 @@ textarea{resize:vertical;min-height:72px;}
         </div>
         <button class="btn btn-ai btn-sm" onclick="gerarFormulacao()">✨ Gerar / Atualizar com IA</button>
       </div>
-
-      <!-- Análise Funcional -->
       <div class="sec">Análise Funcional</div>
       <div class="fr"><div class="fg"><label>Situação / Gatilho</label><textarea id="f-gatilho" placeholder="Situações que desencadeiam os sintomas..."></textarea></div><div class="fg"><label>Pensamentos automáticos</label><textarea id="f-pensamentos" placeholder="Pensamentos que surgem..."></textarea></div></div>
       <div class="fr3"><div class="fg"><label>Crenças intermediárias</label><textarea id="f-crenças-int" placeholder="Regras, pressupostos, atitudes..."></textarea></div><div class="fg"><label>Crenças nucleares</label><textarea id="f-crenças-nuc" placeholder="Crenças centrais sobre si, o outro e o mundo..."></textarea></div><div class="fg"><label>Emoções</label><textarea id="f-emocoes" placeholder="Emoções associadas..."></textarea></div></div>
       <div class="fr"><div class="fg"><label>Comportamentos / Respostas</label><textarea id="f-comportamento" placeholder="O que o paciente faz diante dos gatilhos..."></textarea></div><div class="fg"><label>Consequências</label><textarea id="f-consequencias" placeholder="O que mantém o padrão..."></textarea></div></div>
-
       <div class="sec">Impressões Clínicas</div>
       <div class="fg"><label>Hipótese diagnóstica inicial</label><textarea id="f-hipotese" placeholder="Ex: Transtorno de ansiedade generalizada (F41.1)..."></textarea></div>
       <div class="fg"><label>Observações sobre o paciente</label><textarea id="f-obs-clinicas" placeholder="Impressões clínicas, aspectos do vínculo, resistências observadas..."></textarea></div>
-
       <div class="sec">Plano Terapêutico</div>
       <div class="fg"><label>Objetivos terapêuticos</label><textarea id="f-objetivos" placeholder="Metas de curto, médio e longo prazo..."></textarea></div>
       <div class="fg"><label>Estratégias e técnicas previstas</label><textarea id="f-estrategias" placeholder="Ex: reestruturação cognitiva, experimentos comportamentais, psicoeducação..."></textarea></div>
       <div class="fg"><label>Estimativa de duração</label><input id="f-duracao" placeholder="Ex: 20-30 sessões"></div>
-
       <div id="ai-formulacao-block" style="display:none;" class="ai-block">
         <div class="ai-label">✨ Formulação gerada pela IA</div>
         <div class="ai-text" id="ai-formulacao-text"></div>
       </div>
-
       <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="saveForm()">💾 Salvar formulação</button>
         <button class="btn btn-ai" onclick="gerarFormulacao()">✨ Gerar com IA</button>
@@ -567,8 +639,6 @@ textarea{resize:vertical;min-height:72px;}
           <div style="font-size:12px;color:var(--muted);margin-top:2px;">Gerados conforme normas do CRP</div>
         </div>
       </div>
-
-      <!-- Seletor de tipo de documento -->
       <div class="fg">
         <label>Tipo de documento</label>
         <select id="doc-tipo" onchange="trocaDoc()">
@@ -582,16 +652,11 @@ textarea{resize:vertical;min-height:72px;}
           <option value="parecer">Parecer Psicológico</option>
         </select>
       </div>
-
-      <!-- Campos extras dependendo do tipo -->
       <div id="doc-campos-extra"></div>
-
       <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
         <button class="btn btn-ai" onclick="gerarDocumentoIA()">✨ Gerar com IA</button>
         <button class="btn btn-secondary" onclick="preencherDocManual()">✏️ Preencher manualmente</button>
       </div>
-
-      <!-- Área de edição do documento -->
       <div id="doc-editor-wrap" style="display:none;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
           <div style="font-size:12px;color:var(--muted);">Revise e edite o documento abaixo:</div>
@@ -600,10 +665,9 @@ textarea{resize:vertical;min-height:72px;}
             <button class="btn btn-primary btn-sm" onclick="imprimirDoc()">🖨️ Imprimir</button>
           </div>
         </div>
-        <div id="doc-preview" style="background:white;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:1.9;min-height:300px;" contenteditable="true"></div>
+        <div id="doc-preview" style="background:white;color:#222;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:1.9;min-height:300px;" contenteditable="true"></div>
         <div style="font-size:11px;color:var(--muted);margin-top:8px;">💡 Clique no texto acima para editar diretamente antes de imprimir.</div>
       </div>
-
       <div id="ai-doc-loading" style="display:none;" class="ai-block">
         <div class="ai-label">✨ Gerando documento...</div>
         <div class="ai-loading">Aguarde enquanto a IA elabora o documento conforme as normas do CRP...</div>
@@ -622,32 +686,14 @@ textarea{resize:vertical;min-height:72px;}
           <button class="btn btn-secondary btn-sm" onclick="imprimirContrato()">🖨️ Imprimir</button>
         </div>
       </div>
-
       <div class="sec">Dados para o contrato</div>
-      <div class="fr">
-        <div class="fg"><label>Seu nome completo (psicóloga)</label><input id="ct-psi-nome" placeholder="Dra. Nome Sobrenome"></div>
-        <div class="fg"><label>Nº CRP</label><input id="ct-crp" placeholder="Ex: CRP 06/123456"></div>
-      </div>
-      <div class="fr">
-        <div class="fg"><label>Valor da sessão (R$)</label><input id="ct-valor" type="number" placeholder="Ex: 110"></div>
-        <div class="fg"><label>Frequência</label><select id="ct-freq"><option value="semanal">Semanal</option><option value="quinzenal">Quinzenal</option><option value="mensal">Mensal</option></select></div>
-      </div>
-      <div class="fr">
-        <div class="fg"><label>Dia e horário das sessões</label><input id="ct-horario" placeholder="Ex: Terças, 14h"></div>
-        <div class="fg"><label>Modalidade</label><select id="ct-modalidade"><option>Online</option><option>Presencial</option></select></div>
-      </div>
-      <div class="fg"><label>Prazo para cancelamento sem cobrança</label>
-        <select id="ct-cancel">
-          <option value="24">24 horas de antecedência</option>
-          <option value="48">48 horas de antecedência</option>
-          <option value="72">72 horas de antecedência</option>
-        </select>
-      </div>
+      <div class="fr"><div class="fg"><label>Seu nome completo (psicóloga)</label><input id="ct-psi-nome" placeholder="Dra. Nome Sobrenome"></div><div class="fg"><label>Nº CRP</label><input id="ct-crp" placeholder="Ex: CRP 06/123456"></div></div>
+      <div class="fr"><div class="fg"><label>Valor da sessão (R$)</label><input id="ct-valor" type="number" placeholder="Ex: 110"></div><div class="fg"><label>Frequência</label><select id="ct-freq"><option value="semanal">Semanal</option><option value="quinzenal">Quinzenal</option><option value="mensal">Mensal</option></select></div></div>
+      <div class="fr"><div class="fg"><label>Dia e horário das sessões</label><input id="ct-horario" placeholder="Ex: Terças, 14h"></div><div class="fg"><label>Modalidade</label><select id="ct-modalidade"><option>Online</option><option>Presencial</option></select></div></div>
+      <div class="fg"><label>Prazo para cancelamento sem cobrança</label><select id="ct-cancel"><option value="24">24 horas de antecedência</option><option value="48">48 horas de antecedência</option><option value="72">72 horas de antecedência</option></select></div>
       <div class="fg"><label>Forma de pagamento</label><input id="ct-pagamento" placeholder="Ex: PIX até 24h antes da sessão"></div>
       <div class="fg"><label>Observações adicionais</label><textarea id="ct-obs" placeholder="Outras cláusulas ou informações relevantes..."></textarea></div>
-
       <button class="btn btn-primary" style="margin-bottom:14px;" onclick="gerarContratoIA()">✨ Gerar contrato completo</button>
-
       <div id="contrato-editor-wrap" style="display:none;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
           <div style="font-size:12px;color:var(--muted);">Revise e edite antes de imprimir:</div>
@@ -656,7 +702,7 @@ textarea{resize:vertical;min-height:72px;}
             <button class="btn btn-primary btn-sm" onclick="imprimirContrato()">🖨️ Imprimir</button>
           </div>
         </div>
-        <div id="contrato-preview" style="background:white;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:1.9;min-height:300px;" contenteditable="true"></div>
+        <div id="contrato-preview" style="background:white;color:#222;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:1.9;min-height:300px;" contenteditable="true"></div>
         <div style="font-size:11px;color:var(--muted);margin-top:8px;">💡 Clique no texto acima para editar diretamente antes de imprimir.</div>
       </div>
     </div>
@@ -671,20 +717,10 @@ textarea{resize:vertical;min-height:72px;}
       <div class="modal-title">💬 Lembrete via WhatsApp</div>
       <button class="mclose" onclick="closeOv('ov-wpp')">×</button>
     </div>
-    <div class="fg"><label>Tipo de mensagem</label>
-      <select id="wpp-tipo" onchange="gerarMsgWpp()">
-        <option value="lembrete">Lembrete de sessão</option>
-        <option value="confirmacao">Pedido de confirmação</option>
-        <option value="reagendamento">Reagendamento</option>
-        <option value="cobranca">Cobrança pendente</option>
-        <option value="boas-vindas">Boas-vindas (1ª sessão)</option>
-      </select>
-    </div>
+    <div class="fg"><label>Tipo de mensagem</label><select id="wpp-tipo" onchange="gerarMsgWpp()"><option value="lembrete">Lembrete de sessão</option><option value="confirmacao">Pedido de confirmação</option><option value="reagendamento">Reagendamento</option><option value="cobranca">Cobrança pendente</option><option value="boas-vindas">Boas-vindas (1ª sessão)</option></select></div>
     <div class="fg"><label>Data da sessão</label><input id="wpp-data" type="date" onchange="gerarMsgWpp()"></div>
     <div class="fg"><label>Horário</label><input id="wpp-hora" type="time" value="09:00" onchange="gerarMsgWpp()"></div>
-    <div class="fg"><label>Mensagem (edite se quiser)</label>
-      <textarea id="wpp-msg" style="min-height:120px;"></textarea>
-    </div>
+    <div class="fg"><label>Mensagem (edite se quiser)</label><textarea id="wpp-msg" style="min-height:120px;"></textarea></div>
     <div style="display:flex;gap:10px;margin-top:10px;">
       <button class="btn btn-wpp" style="flex:1" onclick="abrirWpp()">💬 Abrir WhatsApp</button>
       <button class="btn btn-secondary" onclick="closeOv('ov-wpp')">Cancelar</button>
@@ -699,38 +735,11 @@ textarea{resize:vertical;min-height:72px;}
       <div class="modal-title" id="ov-agend-title">Novo Agendamento</div>
       <button class="mclose" onclick="closeOv('ov-agend')">×</button>
     </div>
-    <div class="fg"><label>Paciente *</label>
-      <select id="ag-pt"><option value="">Selecione o paciente...</option></select>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>Data *</label><input id="ag-data" type="date"></div>
-      <div class="fg"><label>Horário *</label><input id="ag-hora" type="time" value="09:00"></div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>Duração</label>
-        <select id="ag-dur">
-          <option value="50">50 min (padrão)</option>
-          <option value="60">60 min</option>
-          <option value="90">90 min</option>
-        </select>
-      </div>
-      <div class="fg"><label>Tipo</label>
-        <select id="ag-tipo">
-          <option value="Online">Online</option>
-          <option value="Presencial">Presencial</option>
-        </select>
-      </div>
-    </div>
-    <div class="fg"><label>Status</label>
-      <select id="ag-status">
-        <option value="agendado">Agendado</option>
-        <option value="confirmed">Confirmado</option>
-        <option value="cancelled">Cancelado</option>
-      </select>
-    </div>
-    <div class="fg"><label>Observações</label>
-      <input id="ag-obs" placeholder="Ex: link da sessão, lembrete...">
-    </div>
+    <div class="fg"><label>Paciente *</label><select id="ag-pt"><option value="">Selecione o paciente...</option></select></div>
+    <div class="fr"><div class="fg"><label>Data *</label><input id="ag-data" type="date"></div><div class="fg"><label>Horário *</label><input id="ag-hora" type="time" value="09:00"></div></div>
+    <div class="fr"><div class="fg"><label>Duração</label><select id="ag-dur"><option value="50">50 min (padrão)</option><option value="60">60 min</option><option value="90">90 min</option></select></div><div class="fg"><label>Tipo</label><select id="ag-tipo"><option value="Online">Online</option><option value="Presencial">Presencial</option></select></div></div>
+    <div class="fg"><label>Status</label><select id="ag-status"><option value="agendado">Agendado</option><option value="confirmed">Confirmado</option><option value="cancelled">Cancelado</option></select></div>
+    <div class="fg"><label>Observações</label><input id="ag-obs" placeholder="Ex: link da sessão, lembrete..."></div>
     <div style="display:flex;gap:10px;margin-top:10px;">
       <button class="btn btn-primary" style="flex:1" onclick="saveAgend()">Salvar agendamento</button>
       <button class="btn btn-secondary" onclick="closeOv('ov-agend')">Cancelar</button>
@@ -739,37 +748,44 @@ textarea{resize:vertical;min-height:72px;}
 </div>
 
 <script>
+// ── DARK MODE ──────────────────────────────────────────────────────────────
+function toggleDark(){
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme', isDark?'light':'dark');
+  document.getElementById('dark-btn').textContent = isDark?'🌙':'☀️';
+  localStorage.setItem('theme', isDark?'light':'dark');
+}
+(function(){
+  const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  if(saved==='dark'){
+    document.documentElement.setAttribute('data-theme','dark');
+    document.addEventListener('DOMContentLoaded',()=>{ const b=document.getElementById('dark-btn'); if(b) b.textContent='☀️'; });
+  }
+})();
+
 // ── STATE ──────────────────────────────────────────────────────────────────
 let pts = JSON.parse(localStorage.getItem('pts_v2')||'[]');
 let curId = null, editId = null, selHumorVal = '', selSudsVal = null;
 function getP(id){ return pts.find(p=>p.id===id); }
-// Fallback save (substituído pelo Firebase após login)
 function save(){ localStorage.setItem('pts_v2', JSON.stringify(pts)); }
 function saveAgends(){ localStorage.setItem('agendamentos', JSON.stringify(agendamentos)); }
 
 // ── CHECKBOX PILLS ─────────────────────────────────────────────────────────
 function togglePill(el){ el.classList.toggle('sel'); }
 function getPills(containerId){ return Array.from(document.querySelectorAll('#'+containerId+' .check-pill.sel')).map(e=>e.textContent).join(', '); }
-function setPills(containerId, val){
-  document.querySelectorAll('#'+containerId+' .check-pill').forEach(p=>{ p.classList.toggle('sel', val&&val.includes(p.textContent)); });
-}
+function setPills(containerId, val){ document.querySelectorAll('#'+containerId+' .check-pill').forEach(p=>{ p.classList.toggle('sel', val&&val.includes(p.textContent)); }); }
 
 // ── SUDS ───────────────────────────────────────────────────────────────────
-function selSuds(el,v){
-  document.querySelectorAll('.suds-btn').forEach(b=>b.classList.remove('sel'));
-  el.classList.add('sel'); selSudsVal=v;
-}
+function selSuds(el,v){ document.querySelectorAll('.suds-btn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); selSudsVal=v; }
 
 // ── WHATSAPP ───────────────────────────────────────────────────────────────
 function enviarWpp(){
   const p=getP(curId); if(!p) return;
   const today=new Date().toISOString().split('T')[0];
   document.getElementById('wpp-data').value=today;
-  // try to find next appointment
   const prox=agendamentos.filter(a=>a.ptId===curId&&a.data>=today&&a.status!=='cancelled').sort((a,b)=>a.data.localeCompare(b.data))[0];
   if(prox){ document.getElementById('wpp-data').value=prox.data; document.getElementById('wpp-hora').value=prox.hora; }
-  gerarMsgWpp();
-  openOv('ov-wpp');
+  gerarMsgWpp(); openOv('ov-wpp');
 }
 function gerarMsgWpp(){
   const p=getP(curId); if(!p) return;
@@ -778,13 +794,7 @@ function gerarMsgWpp(){
   const hora=document.getElementById('wpp-hora').value;
   const dataFmt=data?fmtDate(data):'';
   const nome=p.nome.split(' ')[0];
-  const msgs={
-    'lembrete':`Olá, ${nome}! 🌿\n\nPassando para lembrar da sua sessão:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n📱 Modalidade: Online\n\nQualquer dúvida, estou à disposição! 😊`,
-    'confirmacao':`Olá, ${nome}! 🌿\n\nGostaria de confirmar nossa sessão:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n\nVocê confirma presença? Por favor, me avise! 😊`,
-    'reagendamento':`Olá, ${nome}! 🌿\n\nPreciso reagendar nossa sessão que estava prevista para ${dataFmt}.\n\nPoderia me informar sua disponibilidade para reagendarmos? 😊`,
-    'cobranca':`Olá, ${nome}! 🌿\n\nPassando para avisar que há uma sessão com pagamento pendente.\n\nQuando puder, realize o pagamento via PIX. Qualquer dúvida, me avise! 😊`,
-    'boas-vindas':`Olá, ${nome}! 🌿\n\nEstou animada para começarmos nossa jornada terapêutica juntos!\n\nSua primeira sessão está agendada para:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n📱 Modalidade: Online\n\nVou enviar o link com antecedência. Até lá! 😊`
-  };
+  const msgs={'lembrete':`Olá, ${nome}! 🌿\n\nPassando para lembrar da sua sessão:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n📱 Modalidade: Online\n\nQualquer dúvida, estou à disposição! 😊`,'confirmacao':`Olá, ${nome}! 🌿\n\nGostaria de confirmar nossa sessão:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n\nVocê confirma presença? Por favor, me avise! 😊`,'reagendamento':`Olá, ${nome}! 🌿\n\nPreciso reagendar nossa sessão que estava prevista para ${dataFmt}.\n\nPoderia me informar sua disponibilidade para reagendarmos? 😊`,'cobranca':`Olá, ${nome}! 🌿\n\nPassando para avisar que há uma sessão com pagamento pendente.\n\nQuando puder, realize o pagamento via PIX. Qualquer dúvida, me avise! 😊`,'boas-vindas':`Olá, ${nome}! 🌿\n\nEstou animada para começarmos nossa jornada terapêutica juntos!\n\nSua primeira sessão está agendada para:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n📱 Modalidade: Online\n\nVou enviar o link com antecedência. Até lá! 😊`};
   document.getElementById('wpp-msg').value=msgs[tipo]||'';
 }
 function abrirWpp(){
@@ -792,8 +802,7 @@ function abrirWpp(){
   const wpp=p.wpp?p.wpp.replace(/\D/g,''):'';
   const msg=encodeURIComponent(document.getElementById('wpp-msg').value);
   const url=wpp?`https://wa.me/55${wpp}?text=${msg}`:`https://wa.me/?text=${msg}`;
-  window.open(url,'_blank');
-  closeOv('ov-wpp');
+  window.open(url,'_blank'); closeOv('ov-wpp');
 }
 
 // ── PAGES ──────────────────────────────────────────────────────────────────
@@ -806,11 +815,7 @@ function showPage(n,el){
   if(n==='carneLeao'){ setMonthNow(); renderCL(); }
   if(n==='agenda') initAgenda();
 }
-function setMonthNow(){
-  const d=new Date();
-  document.getElementById('cl-mes').value=d.getMonth();
-  document.getElementById('cl-ano').value=d.getFullYear();
-}
+function setMonthNow(){ const d=new Date(); document.getElementById('cl-mes').value=d.getMonth(); document.getElementById('cl-ano').value=d.getFullYear(); }
 
 // ── PATIENT LIST ───────────────────────────────────────────────────────────
 function renderPts(f=''){
@@ -818,7 +823,7 @@ function renderPts(f=''){
   const lbl=document.getElementById('pt-count');
   lbl.textContent=pts.length?`${pts.length} paciente${pts.length>1?'s':''} cadastrado${pts.length>1?'s':''}`:'Nenhum paciente cadastrado';
   const filtered=pts.filter(p=>p.nome.toLowerCase().includes(f.toLowerCase()));
-  if(!filtered.length){ el.innerHTML=`<div class="empty"><div class="empty-icon">🌱</div><h3>${pts.length?'Nenhum resultado':'Ainda sem pacientes'}</h3><p>${pts.length?'Tente outro nome.':'Clique em "+ Novo" para começar.'}</p></div>`; return; }
+  if(!filtered.length){ el.innerHTML=`<div style="text-align:center;padding:32px 0;color:var(--muted);">${pts.length?'Nenhum resultado encontrado.':'Clique em "+ Novo" para começar.'}</div>`; return; }
   el.innerHTML=filtered.map(p=>{
     const sess=(p.sessions||[]).length;
     const pend=(p.payments||[]).filter(x=>x.status==='pendente').reduce((a,b)=>a+parseFloat(b.valor||0),0);
@@ -845,27 +850,9 @@ function openNewPt(){
   document.getElementById('sec-mae').style.display='none';
   openOv('ov-pt');
 }
-function calcIdade(){
-  const nasc=document.getElementById('pt-nasc').value;
-  const idadeEl=document.getElementById('pt-idade');
-  if(!nasc){ idadeEl.value=''; return; }
-  const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5));
-  idadeEl.value=anos>=0?anos+' anos':'';
-}
-function checkMenorIdade(){
-  const nasc=document.getElementById('pt-nasc').value;
-  const sec=document.getElementById('sec-mae');
-  if(!nasc){ sec.style.display='none'; return; }
-  const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5));
-  sec.style.display=(anos>=0&&anos<18)?'block':'none';
-}
-function maskCPF(el){
-  let v=el.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
-  else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
-  else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
-  el.value=v;
-}
+function calcIdade(){ const nasc=document.getElementById('pt-nasc').value; const idadeEl=document.getElementById('pt-idade'); if(!nasc){ idadeEl.value=''; return; } const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5)); idadeEl.value=anos>=0?anos+' anos':''; }
+function checkMenorIdade(){ const nasc=document.getElementById('pt-nasc').value; const sec=document.getElementById('sec-mae'); if(!nasc){ sec.style.display='none'; return; } const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5)); sec.style.display=(anos>=0&&anos<18)?'block':'none'; }
+function maskCPF(el){ let v=el.value.replace(/\D/g,'').slice(0,11); if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4'); else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3'); else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2'); el.value=v; }
 function editCurPt(){
   const p=getP(curId); if(!p) return;
   editId=p.id;
@@ -884,7 +871,6 @@ function editCurPt(){
   document.getElementById('pt-cpf').value=p.cpf||'';
   document.getElementById('pt-profissao').value=p.profissao||'';
   calcIdade();
-  // dados da mãe
   const mae=p.mae||{};
   document.getElementById('pt-mae-nome').value=mae.nome||'';
   document.getElementById('pt-mae-cpf').value=mae.cpf||'';
@@ -903,20 +889,10 @@ function savePt(){
   if(!nome){ alert('Informe o nome do paciente.'); return; }
   const nasc=document.getElementById('pt-nasc').value;
   const anos=nasc?Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5)):null;
-  const mae=(anos!==null&&anos<18)?{
-    nome:document.getElementById('pt-mae-nome').value,
-    cpf:document.getElementById('pt-mae-cpf').value,
-    nasc:document.getElementById('pt-mae-nasc').value,
-    profissao:document.getElementById('pt-mae-profissao').value,
-    wpp:document.getElementById('pt-mae-wpp').value,
-    email:document.getElementById('pt-mae-email').value,
-    civil:document.getElementById('pt-mae-civil').value,
-    esc:document.getElementById('pt-mae-esc').value,
-    obs:document.getElementById('pt-mae-obs').value
-  }:null;
+  const mae=(anos!==null&&anos<18)?{nome:document.getElementById('pt-mae-nome').value,cpf:document.getElementById('pt-mae-cpf').value,nasc:document.getElementById('pt-mae-nasc').value,profissao:document.getElementById('pt-mae-profissao').value,wpp:document.getElementById('pt-mae-wpp').value,email:document.getElementById('pt-mae-email').value,civil:document.getElementById('pt-mae-civil').value,esc:document.getElementById('pt-mae-esc').value,obs:document.getElementById('pt-mae-obs').value}:null;
   const data={nome,nasc,genero:document.getElementById('pt-genero').value,cidade:document.getElementById('pt-cidade').value,esc:document.getElementById('pt-esc').value,wpp:document.getElementById('pt-wpp').value,email:document.getElementById('pt-email').value,emerg:document.getElementById('pt-emerg').value,valor:document.getElementById('pt-valor').value,status:document.getElementById('pt-status').value,inicio:document.getElementById('pt-inicio').value,cpf:document.getElementById('pt-cpf').value,profissao:document.getElementById('pt-profissao').value,mae};
   if(editId){ Object.assign(getP(editId),data); }
-  else{ pts.push({id:'p'+Date.now(),...data,anamnese:{},formulacao:{},sessions:[],payments:[]}); }
+  else{ pts.push({id:'p'+Date.now(),...data,anamnese:{},anamneseInfantil:{},formulacao:{},sessions:[],payments:[]}); }
   save(); renderPts(); closeOv('ov-pt');
 }
 
@@ -932,13 +908,31 @@ function openPt(id){
   setPills('emocoes-check', a.emocoes||'');
   setPills('sint-ansi-check', a.sintAnsi||'');
   setPills('sint-dep-check', a.sintDep||'');
+  // load anamnese infantil
+  const ai=p.anamneseInfantil||{};
+  const aiFields=['queixa-resp','queixa-crianca','tempo','surgiu','tentativas','antecedentes','pensamentos','reacao','evitacao','consequencia','outros-sint','gestacao','marcos-motor','marcos-ling','adapt-escolar','perdas','diag','meds','descricao-crianca','resposta-pais','conflitos-fam','hist-familiar','protecao','risco-abuso','expectativa-resp','expectativa-crianca','obs-entrevista','hipotese','obs-gerais','interesses','telas','dif-aprendizagem','colegas'];
+  aiFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=ai[k]||''; });
+  document.getElementById('ai-data').value=ai.data||'';
+  if(document.getElementById('ai-acomp')) document.getElementById('ai-acomp').value=ai.acomp||'';
+  if(document.getElementById('ai-desempenho')) document.getElementById('ai-desempenho').value=ai.desempenho||'';
+  if(document.getElementById('ai-bullying')) document.getElementById('ai-bullying').value=ai.bullying||'';
+  if(document.getElementById('ai-sono')) document.getElementById('ai-sono').value=ai.sono||'';
+  if(document.getElementById('ai-alim')) document.getElementById('ai-alim').value=ai.alim||'';
+  if(document.getElementById('ai-estilo-parental')) document.getElementById('ai-estilo-parental').value=ai.estiloParental||'';
+  if(document.getElementById('ai-ideacao')) document.getElementById('ai-ideacao').value=ai.ideacao||'';
+  if(document.getElementById('ai-motivacao-resp')) document.getElementById('ai-motivacao-resp').value=ai.motivacaoResp||'';
+  setPills('ai-onde-check', ai.onde||'');
+  setPills('ai-emocoes-check', ai.emocoes||'');
+  setPills('ai-sint-ansi-check', ai.sintAnsi||'');
+  setPills('ai-sint-ext-check', ai.sintExt||'');
+  setPills('ai-sint-int-check', ai.sintInt||'');
+  setPills('ai-profissionais-check', ai.profissionais||'');
   const f=p.formulacao||{};
   ['gatilho','pensamentos','crenças-int','crenças-nuc','emocoes','comportamento','consequencias','hipotese','obs-clinicas','objetivos','estrategias','duracao'].forEach(k=>{ const el=document.getElementById('f-'+k); if(el) el.value=f[k]||''; });
   const today=new Date().toISOString().split('T')[0];
   document.getElementById('s-data').value=today;
   document.getElementById('pay-data').value=today;
   if(p.valor) document.getElementById('pay-val').value=p.valor;
-  // pre-fill contract valor
   if(p.valor){ const ctv=document.getElementById('ct-valor'); if(ctv) ctv.value=p.valor; }
   document.getElementById('ai-evolucao-block').style.display='none';
   document.getElementById('ai-formulacao-block').style.display='none';
@@ -963,6 +957,216 @@ function saveAnam(){
   setTimeout(()=>{ btn.textContent='💾 Salvar anamnese'; btn.style.background=''; },2000);
 }
 
+// ── ANAMNESE INFANTIL ──────────────────────────────────────────────────────
+function saveAnamInfantil(){
+  const p=getP(curId); const ai={};
+  const fields=['queixa-resp','queixa-crianca','tempo','surgiu','tentativas','antecedentes','pensamentos','reacao','evitacao','consequencia','outros-sint','gestacao','marcos-motor','marcos-ling','adapt-escolar','perdas','diag','meds','descricao-crianca','resposta-pais','conflitos-fam','hist-familiar','protecao','risco-abuso','expectativa-resp','expectativa-crianca','obs-entrevista','hipotese','obs-gerais','interesses','telas','dif-aprendizagem','colegas'];
+  fields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) ai[k]=el.value; });
+  ai.data=document.getElementById('ai-data').value;
+  ai.acomp=document.getElementById('ai-acomp')?.value||'';
+  ai.desempenho=document.getElementById('ai-desempenho')?.value||'';
+  ai.bullying=document.getElementById('ai-bullying')?.value||'';
+  ai.sono=document.getElementById('ai-sono')?.value||'';
+  ai.alim=document.getElementById('ai-alim')?.value||'';
+  ai.estiloParental=document.getElementById('ai-estilo-parental')?.value||'';
+  ai.ideacao=document.getElementById('ai-ideacao')?.value||'';
+  ai.motivacaoResp=document.getElementById('ai-motivacao-resp')?.value||'';
+  ai.onde=getPills('ai-onde-check');
+  ai.emocoes=getPills('ai-emocoes-check');
+  ai.sintAnsi=getPills('ai-sint-ansi-check');
+  ai.sintExt=getPills('ai-sint-ext-check');
+  ai.sintInt=getPills('ai-sint-int-check');
+  ai.profissionais=getPills('ai-profissionais-check');
+  p.anamneseInfantil=ai; save();
+  const btn=event.target; btn.textContent='✓ Salvo!'; btn.style.background='var(--green)';
+  setTimeout(()=>{ btn.textContent='💾 Salvar anamnese infantil'; btn.style.background=''; },2000);
+}
+
+// ── IA ─────────────────────────────────────────────────────────────────────
+async function callAI(prompt){
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+  const data=await resp.json();
+  return data.content.map(c=>c.text||'').join('');
+}
+
+// ── PREENCHER ANAMNESE ADULTO COM IA ───────────────────────────────────────
+async function preencherAnamneseIA(){
+  const texto=document.getElementById('ai-fill-anamnese-texto').value.trim();
+  if(!texto){ alert('Escreva o relato da entrevista primeiro.'); return; }
+  const btn=event.target; btn.textContent='⏳ Analisando...'; btn.disabled=true;
+  const status=document.getElementById('ai-fill-anamnese-status');
+  status.style.display='block'; status.textContent='A IA está lendo o relato e preenchendo os campos...';
+  const prompt=`Você é uma psicóloga clínica especialista em TCC. Com base no relato abaixo de uma entrevista de anamnese, extraia as informações e retorne SOMENTE um JSON válido (sem markdown, sem explicações, apenas o JSON) com os campos preenchidos.
+
+RELATO:
+${texto}
+
+Retorne um JSON com exatamente estas chaves (deixe em branco se não encontrar a informação):
+{
+  "queixa": "",
+  "tempo": "",
+  "surgiu": "",
+  "espera": "",
+  "antecedentes": "",
+  "onde": "",
+  "quandocomquem": "",
+  "pensamentos_sit": "",
+  "imagens": "",
+  "emocoes": "",
+  "reacao": "",
+  "evitacao": "",
+  "outros_sint": "",
+  "sintAnsi": "",
+  "sintDep": "",
+  "infancia": "",
+  "cresceu": "",
+  "faminfancia": "",
+  "trauma": "",
+  "acomp": "",
+  "diag": "",
+  "meds": "",
+  "intern": "",
+  "suic": "",
+  "alcool": "",
+  "sono": "",
+  "alim": "",
+  "civil": "",
+  "social": "",
+  "motiv": "",
+  "obs": ""
+}
+Para "emocoes" e "sintAnsi" e "sintDep": coloque apenas os itens separados por vírgula, escolhendo entre as opções existentes quando possível.
+Para "acomp", "intern", "suic": use apenas "Sim" ou "Não" quando mencionado.
+Para "sono": use apenas "Boa", "Regular", "Ruim" ou "Insônia".
+Para "alim": use apenas "Boa", "Regular" ou "Ruim".
+Para "civil": use apenas "Solteiro(a)", "Namorando", "Casado(a)", "Divorciado(a)" ou "Viúvo(a)".`;
+
+  try{
+    const text=await callAI(prompt);
+    const clean=text.replace(/```json|```/g,'').trim();
+    const dados=JSON.parse(clean);
+    // preencher campos
+    const map={'queixa':'a-queixa','tempo':'a-tempo','surgiu':'a-surgiu','espera':'a-espera','antecedentes':'a-antecedentes','onde':'a-onde','quandocomquem':'a-quandocomquem','pensamentos_sit':'a-pensamentos-sit','imagens':'a-imagens','reacao':'a-reacao','evitacao':'a-evitacao','outros_sint':'a-outros-sint','infancia':'a-infancia','cresceu':'a-cresceu','faminfancia':'a-faminfancia','trauma':'a-trauma','diag':'a-diag','meds':'a-meds','alcool':'a-alcool','social':'a-social','motiv':'a-motiv','obs':'a-obs'};
+    Object.entries(map).forEach(([k,id])=>{ const el=document.getElementById(id); if(el&&dados[k]) el.value=dados[k]; });
+    if(dados.acomp) document.getElementById('a-acomp').value=dados.acomp;
+    if(dados.intern) document.getElementById('a-intern').value=dados.intern;
+    if(dados.suic) document.getElementById('a-suic').value=dados.suic;
+    if(dados.sono) document.getElementById('a-sono').value=dados.sono;
+    if(dados.alim) document.getElementById('a-alim').value=dados.alim;
+    if(dados.civil) document.getElementById('a-civil').value=dados.civil;
+    if(dados.emocoes) setPills('emocoes-check', dados.emocoes);
+    if(dados.sintAnsi) setPills('sint-ansi-check', dados.sintAnsi);
+    if(dados.sintDep) setPills('sint-dep-check', dados.sintDep);
+    status.textContent='✓ Campos preenchidos com sucesso! Revise e ajuste o que precisar.';
+    status.style.color='var(--green)';
+  }catch(e){
+    status.textContent='Erro ao processar. Tente novamente.';
+    status.style.color='var(--red)';
+  }
+  btn.textContent='✨ Preencher com IA'; btn.disabled=false;
+}
+
+// ── PREENCHER ANAMNESE INFANTIL COM IA ────────────────────────────────────
+async function preencherAnamneseInfantilIA(){
+  const texto=document.getElementById('ai-fill-infantil-texto').value.trim();
+  if(!texto){ alert('Escreva o relato da entrevista primeiro.'); return; }
+  const btn=event.target; btn.textContent='⏳ Analisando...'; btn.disabled=true;
+  const status=document.getElementById('ai-fill-infantil-status');
+  status.style.display='block'; status.textContent='A IA está lendo o relato e preenchendo os campos...';
+  const prompt=`Você é uma psicóloga clínica especialista em TCC infantil. Com base no relato abaixo de uma entrevista de anamnese infantil, extraia as informações e retorne SOMENTE um JSON válido (sem markdown, sem explicações, apenas o JSON) com os campos preenchidos.
+
+RELATO:
+${texto}
+
+Retorne um JSON com exatamente estas chaves (deixe em branco se não encontrar):
+{
+  "queixa_resp": "",
+  "queixa_crianca": "",
+  "tempo": "",
+  "surgiu": "",
+  "tentativas": "",
+  "antecedentes": "",
+  "onde": "",
+  "pensamentos": "",
+  "emocoes": "",
+  "reacao": "",
+  "evitacao": "",
+  "consequencia": "",
+  "outros_sint": "",
+  "sint_ansi": "",
+  "sint_ext": "",
+  "sint_int": "",
+  "gestacao": "",
+  "marcos_motor": "",
+  "marcos_ling": "",
+  "adapt_escolar": "",
+  "perdas": "",
+  "diag": "",
+  "meds": "",
+  "acomp": "",
+  "profissionais": "",
+  "desempenho": "",
+  "dif_aprendizagem": "",
+  "colegas": "",
+  "bullying": "",
+  "sono": "",
+  "alim": "",
+  "interesses": "",
+  "telas": "",
+  "descricao_crianca": "",
+  "estilo_parental": "",
+  "resposta_pais": "",
+  "conflitos_fam": "",
+  "hist_familiar": "",
+  "protecao": "",
+  "risco_abuso": "",
+  "ideacao": "",
+  "expectativa_resp": "",
+  "expectativa_crianca": "",
+  "motivacao_resp": "",
+  "obs_entrevista": "",
+  "hipotese": "",
+  "obs_gerais": ""
+}
+Para "onde","emocoes","sint_ansi","sint_ext","sint_int","profissionais": coloque itens separados por vírgula.
+Para "acomp": use "Sim" ou "Não".
+Para "desempenho": use "Ótimo","Bom","Regular","Abaixo do esperado" ou "Com dificuldades significativas".
+Para "bullying": use "Não há relatos","Sofre bullying","Pratica bullying" ou "Ambos".
+Para "sono": use "Boa","Regular","Ruim","Insônia" ou "Pesadelos frequentes".
+Para "alim": use "Boa","Regular","Seletividade alimentar" ou "Recusa alimentar".
+Para "estilo_parental": use "Autoritativo (firme e afetuoso)","Autoritário (rígido)","Permissivo","Superprotetor","Negligente" ou "Inconsistente".
+Para "ideacao": use "Não há relatos","Fala em morte de forma passiva","Expressou desejo de morrer","Autolesão presente" ou "Tentativa anterior".
+Para "motivacao_resp": use "Alta — buscaram ativamente","Moderada","Baixa — vieram por indicação" ou "Relutantes / resistentes".`;
+
+  try{
+    const text=await callAI(prompt);
+    const clean=text.replace(/```json|```/g,'').trim();
+    const d=JSON.parse(clean);
+    const map={'queixa_resp':'ai-queixa-resp','queixa_crianca':'ai-queixa-crianca','tempo':'ai-tempo','surgiu':'ai-surgiu','tentativas':'ai-tentativas','antecedentes':'ai-antecedentes','pensamentos':'ai-pensamentos','reacao':'ai-reacao','evitacao':'ai-evitacao','consequencia':'ai-consequencia','outros_sint':'ai-outros-sint','gestacao':'ai-gestacao','marcos_motor':'ai-marcos-motor','marcos_ling':'ai-marcos-ling','adapt_escolar':'ai-adapt-escolar','perdas':'ai-perdas','diag':'ai-diag','meds':'ai-meds','dif_aprendizagem':'ai-dif-aprendizagem','colegas':'ai-colegas','interesses':'ai-interesses','telas':'ai-telas','descricao_crianca':'ai-descricao-crianca','resposta_pais':'ai-resposta-pais','conflitos_fam':'ai-conflitos-fam','hist_familiar':'ai-hist-familiar','protecao':'ai-protecao','risco_abuso':'ai-risco-abuso','expectativa_resp':'ai-expectativa-resp','expectativa_crianca':'ai-expectativa-crianca','obs_entrevista':'ai-obs-entrevista','hipotese':'ai-hipotese','obs_gerais':'ai-obs-gerais'};
+    Object.entries(map).forEach(([k,id])=>{ const el=document.getElementById(id); if(el&&d[k]) el.value=d[k]; });
+    if(d.acomp) document.getElementById('ai-acomp').value=d.acomp;
+    if(d.desempenho) document.getElementById('ai-desempenho').value=d.desempenho;
+    if(d.bullying) document.getElementById('ai-bullying').value=d.bullying;
+    if(d.sono) document.getElementById('ai-sono').value=d.sono;
+    if(d.alim) document.getElementById('ai-alim').value=d.alim;
+    if(d.estilo_parental) document.getElementById('ai-estilo-parental').value=d.estilo_parental;
+    if(d.ideacao) document.getElementById('ai-ideacao').value=d.ideacao;
+    if(d.motivacao_resp) document.getElementById('ai-motivacao-resp').value=d.motivacao_resp;
+    if(d.onde) setPills('ai-onde-check', d.onde);
+    if(d.emocoes) setPills('ai-emocoes-check', d.emocoes);
+    if(d.sint_ansi) setPills('ai-sint-ansi-check', d.sint_ansi);
+    if(d.sint_ext) setPills('ai-sint-ext-check', d.sint_ext);
+    if(d.sint_int) setPills('ai-sint-int-check', d.sint_int);
+    if(d.profissionais) setPills('ai-profissionais-check', d.profissionais);
+    status.textContent='✓ Campos preenchidos com sucesso! Revise e ajuste o que precisar.';
+    status.style.color='var(--green)';
+  }catch(e){
+    status.textContent='Erro ao processar. Tente novamente.';
+    status.style.color='var(--red)';
+  }
+  btn.textContent='✨ Preencher com IA'; btn.disabled=false;
+}
+
 // ── HUMOR ──────────────────────────────────────────────────────────────────
 function selHumor(el,v){ document.querySelectorAll('.humor-opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); selHumorVal=v; }
 
@@ -980,11 +1184,7 @@ function addSess(){
   document.querySelectorAll('.suds-btn').forEach(b=>b.classList.remove('sel'));
   save(); renderSess(); renderPts();
 }
-function delSess(sid){
-  if(!confirm('Excluir esta sessão?')) return;
-  const p=getP(curId); p.sessions=p.sessions.filter(s=>s.id!==sid);
-  save(); renderSess(); renderPts();
-}
+function delSess(sid){ if(!confirm('Excluir esta sessão?')) return; const p=getP(curId); p.sessions=p.sessions.filter(s=>s.id!==sid); save(); renderSess(); renderPts(); }
 function renderSess(){
   const p=getP(curId); const el=document.getElementById('sess-list');
   const sess=p.sessions||[];
@@ -1009,14 +1209,7 @@ function renderSess(){
 }
 
 // ── PAYMENTS ───────────────────────────────────────────────────────────────
-function addPay(){
-  const p=getP(curId); const val=document.getElementById('pay-val').value;
-  if(!val){ alert('Informe o valor.'); return; }
-  p.payments=p.payments||[];
-  p.payments.unshift({id:'pay'+Date.now(),data:document.getElementById('pay-data').value,desc:document.getElementById('pay-desc').value||'Sessão',valor:parseFloat(val),status:document.getElementById('pay-status').value});
-  document.getElementById('pay-desc').value='';
-  save(); renderPay(); renderPts();
-}
+function addPay(){ const p=getP(curId); const val=document.getElementById('pay-val').value; if(!val){ alert('Informe o valor.'); return; } p.payments=p.payments||[]; p.payments.unshift({id:'pay'+Date.now(),data:document.getElementById('pay-data').value,desc:document.getElementById('pay-desc').value||'Sessão',valor:parseFloat(val),status:document.getElementById('pay-status').value}); document.getElementById('pay-desc').value=''; save(); renderPay(); renderPts(); }
 function togglePay(pid){ const p=getP(curId); const pay=p.payments.find(x=>x.id===pid); if(pay){ pay.status=pay.status==='pago'?'pendente':'pago'; } save(); renderPay(); renderPts(); }
 function delPay(pid){ if(!confirm('Excluir?')) return; const p=getP(curId); p.payments=p.payments.filter(x=>x.id!==pid); save(); renderPay(); renderPts(); }
 function renderPay(){
@@ -1045,13 +1238,6 @@ function saveForm(){
   setTimeout(()=>{ btn.textContent='💾 Salvar formulação'; btn.style.background=''; },2000);
 }
 
-// ── IA ─────────────────────────────────────────────────────────────────────
-async function callAI(prompt){
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
-  const data=await resp.json();
-  return data.content.map(c=>c.text||'').join('');
-}
-
 async function gerarEvolucaoIA(){
   const p=getP(curId);
   const btn=event.target; btn.textContent='⏳ Gerando...'; btn.disabled=true;
@@ -1059,77 +1245,45 @@ async function gerarEvolucaoIA(){
   const textEl=document.getElementById('ai-evolucao-text');
   block.style.display='block'; textEl.innerHTML='<span class="ai-loading">Gerando evolução clínica...</span>';
   const a=p.anamnese||{};
-  const tema=document.getElementById('s-tema').value;
-  const relato=document.getElementById('s-relato').value;
-  const interv=document.getElementById('s-interv').value;
-  const chegou=document.getElementById('s-chegou').value;
-  const humor=selHumorVal;
-  const tarefa=document.getElementById('s-tarefa-ant').value;
-  const tarefaOk=document.getElementById('s-tarefa-ok').value;
   const prompt=`Você é uma psicóloga clínica especialista em TCC. Escreva uma evolução de prontuário clínico em português formal para o seguinte atendimento:
 
 Paciente: ${p.nome}${a.queixa?'\nQueixa principal: '+a.queixa:''}
-Estado de humor: ${humor||'não informado'}
-Como chegou à sessão: ${chegou||'não informado'}
-Relato da semana: ${relato||'não informado'}
-Tarefa anterior: ${tarefa||'não informada'} | Realização: ${tarefaOk||'não informado'}
-Tema trabalhado: ${tema||'não informado'}
-Intervenções utilizadas: ${interv||'não informadas'}
+Estado de humor: ${selHumorVal||'não informado'}
+Como chegou à sessão: ${document.getElementById('s-chegou').value||'não informado'}
+Relato da semana: ${document.getElementById('s-relato').value||'não informado'}
+Tarefa anterior: ${document.getElementById('s-tarefa-ant').value||'não informada'} | Realização: ${document.getElementById('s-tarefa-ok').value||'não informado'}
+Tema trabalhado: ${document.getElementById('s-tema').value||'não informado'}
+Intervenções utilizadas: ${document.getElementById('s-interv').value||'não informadas'}
 
 Escreva a evolução em formato de prontuário clínico com linguagem técnica formal, em 3 a 5 parágrafos. Inclua: como o paciente se apresentou, o que foi trabalhado, as intervenções aplicadas, resposta do paciente e observações clínicas relevantes. Não use marcadores ou listas — apenas texto corrido.`;
-  try{
-    const text=await callAI(prompt);
-    textEl.textContent=text;
-  }catch(e){ textEl.textContent='Erro ao gerar. Tente novamente.'; }
+  try{ const text=await callAI(prompt); textEl.textContent=text; }catch(e){ textEl.textContent='Erro ao gerar. Tente novamente.'; }
   btn.textContent='✨ Gerar evolução com IA'; btn.disabled=false;
 }
-
-function copiarEvolucao(){
-  const text=document.getElementById('ai-evolucao-text').textContent;
-  document.getElementById('s-evolucao').value=text;
-  const btn=event.target; btn.textContent='✓ Copiado!';
-  setTimeout(()=>btn.textContent='📋 Copiar para o campo de evolução',2000);
-}
+function copiarEvolucao(){ const text=document.getElementById('ai-evolucao-text').textContent; document.getElementById('s-evolucao').value=text; const btn=event.target; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar para o campo de evolução',2000); }
 
 async function gerarFormulacao(){
   const p=getP(curId);
   const btn=event.target; btn.textContent='⏳ Gerando...'; btn.disabled=true;
-  switchTab('formulacao',document.querySelectorAll('.itab')[2]);
+  switchTab('formulacao',document.querySelectorAll('.itab')[3]);
   const block=document.getElementById('ai-formulacao-block');
   const textEl=document.getElementById('ai-formulacao-text');
   block.style.display='block'; textEl.innerHTML='<span class="ai-loading">Gerando formulação de caso TCC...</span>';
   const a=p.anamnese||{};
-  const prompt=`Você é uma psicóloga clínica especialista em Terapia Cognitivo-Comportamental (TCC). Com base nas informações abaixo, elabore uma formulação de caso completa em português clínico formal.
+  const prompt=`Você é uma psicóloga clínica especialista em TCC. Com base nas informações abaixo, elabore uma formulação de caso completa em português clínico formal.
 
 Paciente: ${p.nome} | Gênero: ${p.genero||'não inf.'} | Idade: ${p.nasc?Math.floor((Date.now()-new Date(p.nasc+'T12:00'))/(365.25*864e5))+'a':'não inf.'}
 Queixa principal: ${a.queixa||'não informada'}
 Quanto tempo: ${a.tempo||'não informado'}
 Como surgiu: ${a.surgiu||'não informado'}
-Expectativas: ${a.espera||'não informada'}
 Infância: ${a.infancia||'não informada'}
-Com quem cresceu: ${a.cresceu||'não informado'}
 Ambiente familiar: ${a.faminfancia||'não informado'}
-Trauma/abuso: ${a.trauma||'não informado'}
-Acompanhamento anterior: ${a.acomp||'não informado'} | Diagnóstico: ${a.diag||'não informado'}
-Medicações: ${a.meds||'nenhuma'}
-Internação: ${a.intern||'não informado'} | Tentativa suicídio: ${a.suic||'não informado'}
-Sono: ${a.sono||'não inf.'} | Alimentação: ${a.alim||'não inf.'} | Uso álcool/subst.: ${a.alcool||'não inf.'}
-Relacionamentos sociais: ${a.social||'não informado'}
-Motivação: ${a.motiv||'não informada'}
+Trauma: ${a.trauma||'não informado'}
+Diagnóstico anterior: ${a.diag||'não informado'} | Medicações: ${a.meds||'nenhuma'}
+Sono: ${a.sono||'não inf.'} | Alimentação: ${a.alim||'não inf.'}
+Relacionamentos: ${a.social||'não informado'}
 
-Elabore a formulação com as seguintes seções claramente identificadas:
-1. ANÁLISE FUNCIONAL: situação/gatilho, pensamentos automáticos, crenças intermediárias, crenças nucleares, emoções, comportamentos e consequências
-2. HIPÓTESE DIAGNÓSTICA: hipótese diagnóstica com justificativa clínica (use CID-11 ou DSM-5)
-3. IMPRESSÕES CLÍNICAS: observações sobre o funcionamento do paciente, padrões identificados
-4. PLANO TERAPÊUTICO: objetivos de curto, médio e longo prazo; estratégias e técnicas TCC recomendadas; estimativa de duração
-
-Escreva em texto corrido e formal, sem listas com marcadores. Cada seção deve ser claramente separada.`;
-  try{
-    const text=await callAI(prompt);
-    textEl.textContent=text;
-    // populate fields from AI text if empty
-    const p2=getP(curId); if(!p2.formulacao) p2.formulacao={};
-  }catch(e){ textEl.textContent='Erro ao gerar. Verifique sua conexão e tente novamente.'; }
+Elabore com as seções: 1. ANÁLISE FUNCIONAL 2. HIPÓTESE DIAGNÓSTICA (CID-11/DSM-5) 3. IMPRESSÕES CLÍNICAS 4. PLANO TERAPÊUTICO. Escreva em texto corrido e formal.`;
+  try{ const text=await callAI(prompt); textEl.textContent=text; }catch(e){ textEl.textContent='Erro ao gerar. Verifique sua conexão e tente novamente.'; }
   btn.textContent='✨ Gerar com IA'; btn.disabled=false;
 }
 
@@ -1150,7 +1304,7 @@ function renderFin(){
   if(fs) f=f.filter(x=>x.status===fs);
   if(fp) f=f.filter(x=>x.pId===fp);
   const el=document.getElementById('fin-list');
-  if(!f.length){ el.innerHTML='<div class="empty"><div class="empty-icon">💳</div><h3>Sem registros</h3><p>Nenhum pagamento encontrado.</p></div>'; return; }
+  if(!f.length){ el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--muted);">Nenhum pagamento encontrado.</div>'; return; }
   el.innerHTML=f.map(pay=>`
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 15px;background:var(--card);border-radius:10px;margin-bottom:7px;box-shadow:0 1px 4px rgba(58,42,30,.05);border-left:3px solid ${pay.status==='pago'?'var(--green)':'var(--yellow)'};">
       <div><div style="font-size:14px;font-weight:500;">${pay.pNome} — ${pay.desc}</div><div style="font-size:12px;color:var(--muted);">${pay.data?fmtDate(pay.data):''}</div></div>
@@ -1163,10 +1317,7 @@ function renderCL(){
   const mes=parseInt(document.getElementById('cl-mes').value);
   const ano=parseInt(document.getElementById('cl-ano').value);
   let all=[];
-  pts.forEach(p=>(p.payments||[]).filter(pay=>pay.status==='pago'&&pay.data).forEach(pay=>{
-    const d=new Date(pay.data+'T12:00');
-    if(d.getMonth()===mes&&d.getFullYear()===ano) all.push({...pay,pNome:p.nome});
-  }));
+  pts.forEach(p=>(p.payments||[]).filter(pay=>pay.status==='pago'&&pay.data).forEach(pay=>{ const d=new Date(pay.data+'T12:00'); if(d.getMonth()===mes&&d.getFullYear()===ano) all.push({...pay,pNome:p.nome}); }));
   const total=all.reduce((a,b)=>a+parseFloat(b.valor||0),0);
   let imp=0,ali='Isento';
   if(total>4664.68){imp=(total-4664.68)*.275+(4664.68-3751.05)*.225+(3751.05-2826.65)*.15+(2826.65-2259.20)*.075;ali='27,5%';}
@@ -1194,618 +1345,150 @@ function switchTab(name,el){
   document.querySelectorAll('.itab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.icontent').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  // find correct tab button
   document.querySelectorAll('.itab').forEach(t=>{ if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+name+"'")) t.classList.add('active'); });
 }
 
 // ── AGENDA ─────────────────────────────────────────────────────────────────
 let agendamentos = JSON.parse(localStorage.getItem('agendamentos')||'[]');
 let calYear, calMonth, selDate;
-
-function initAgenda(){
-  const now = new Date();
-  calYear = now.getFullYear(); calMonth = now.getMonth();
-  selDate = now.toISOString().split('T')[0];
-  renderCal(); renderAgendaList();
-  const dias = agendamentos.filter(a=>a.data===selDate&&a.status!=='cancelled');
-  document.getElementById('agenda-hoje-label').textContent = dias.length ? `${dias.length} sessão(ões) hoje` : 'Nenhuma sessão hoje';
-}
-
-function mudaMes(d){
-  calMonth += d;
-  if(calMonth>11){calMonth=0;calYear++;}
-  if(calMonth<0){calMonth=11;calYear--;}
-  renderCal();
-}
-
-function irParaHoje(){
-  const now=new Date();
-  calYear=now.getFullYear(); calMonth=now.getMonth();
-  selDate=now.toISOString().split('T')[0];
-  renderCal(); renderAgendaList();
-}
-
+function initAgenda(){ const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth(); selDate=now.toISOString().split('T')[0]; renderCal(); renderAgendaList(); const dias=agendamentos.filter(a=>a.data===selDate&&a.status!=='cancelled'); document.getElementById('agenda-hoje-label').textContent=dias.length?`${dias.length} sessão(ões) hoje`:'Nenhuma sessão hoje'; }
+function mudaMes(d){ calMonth+=d; if(calMonth>11){calMonth=0;calYear++;} if(calMonth<0){calMonth=11;calYear--;} renderCal(); }
+function irParaHoje(){ const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth(); selDate=now.toISOString().split('T')[0]; renderCal(); renderAgendaList(); }
 function renderCal(){
   const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  document.getElementById('cal-titulo').textContent = meses[calMonth]+' '+calYear;
-  const grid = document.getElementById('cal-grid');
-  const dows = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  let html = dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
-  const first = new Date(calYear,calMonth,1).getDay();
-  const days = new Date(calYear,calMonth+1,0).getDate();
-  const prevDays = new Date(calYear,calMonth,0).getDate();
-  const today = new Date().toISOString().split('T')[0];
-  // prev month
-  for(let i=first-1;i>=0;i--){
-    const d=prevDays-i; const dd=`${calYear}-${String(calMonth===0?12:calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    html+=`<div class="cal-day other-month" onclick="selDay('${dd}')"><div class="cal-day-num">${d}</div></div>`;
-  }
-  // current month
-  for(let d=1;d<=days;d++){
-    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const evts=agendamentos.filter(a=>a.data===ds&&a.status!=='cancelled');
-    const isToday=ds===today; const isSel=ds===selDate;
-    const dots=evts.slice(0,4).map(e=>`<div class="cal-dot ${e.status}"></div>`).join('');
-    html+=`<div class="cal-day${isToday?' today':''}${isSel?' today':''}${evts.length?' has-events':''}" onclick="selDay('${ds}')" style="${isSel&&!isToday?'border-color:var(--terra);background:var(--terra-light);':''}">
-      <div class="cal-day-num">${d}</div>
-      <div class="cal-dot-wrap">${dots}</div>
-    </div>`;
-  }
-  // next month padding
+  document.getElementById('cal-titulo').textContent=meses[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  const dows=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let html=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const prevDays=new Date(calYear,calMonth,0).getDate();
+  const today=new Date().toISOString().split('T')[0];
+  for(let i=first-1;i>=0;i--){ const d=prevDays-i; const dd=`${calYear}-${String(calMonth===0?12:calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`; html+=`<div class="cal-day other-month" onclick="selDay('${dd}')"><div class="cal-day-num">${d}</div></div>`; }
+  for(let d=1;d<=days;d++){ const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const evts=agendamentos.filter(a=>a.data===ds&&a.status!=='cancelled'); const isToday=ds===today; const isSel=ds===selDate; const dots=evts.slice(0,4).map(e=>`<div class="cal-dot ${e.status}"></div>`).join(''); html+=`<div class="cal-day${isToday?' today':''}${isSel&&!isToday?' today':''}" onclick="selDay('${ds}')" style="${isSel&&!isToday?'border-color:var(--terra);background:var(--terra-light);':''}"><div class="cal-day-num">${d}</div><div class="cal-dot-wrap">${dots}</div></div>`; }
   const total=first+days; const rem=(7-total%7)%7;
-  for(let d=1;d<=rem;d++){
-    const m=calMonth+2>12?1:calMonth+2; const y=calMonth+2>12?calYear+1:calYear;
-    const dd=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    html+=`<div class="cal-day other-month" onclick="selDay('${dd}')"><div class="cal-day-num">${d}</div></div>`;
-  }
+  for(let d=1;d<=rem;d++){ const m=calMonth+2>12?1:calMonth+2; const y=calMonth+2>12?calYear+1:calYear; const dd=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`; html+=`<div class="cal-day other-month" onclick="selDay('${dd}')"><div class="cal-day-num">${d}</div></div>`; }
   grid.innerHTML=html;
 }
-
-function selDay(ds){
-  selDate=ds;
-  const[y,m,d]=ds.split('-');
-  document.getElementById('agenda-dia-title').textContent=`${d}/${m}/${y}`;
-  calYear=parseInt(y); calMonth=parseInt(m)-1;
-  renderCal(); renderAgendaList();
-}
-
+function selDay(ds){ selDate=ds; const[y,m,d]=ds.split('-'); document.getElementById('agenda-dia-title').textContent=`${d}/${m}/${y}`; calYear=parseInt(y); calMonth=parseInt(m)-1; renderCal(); renderAgendaList(); }
 function renderAgendaList(){
   const el=document.getElementById('agenda-list');
   const evts=agendamentos.filter(a=>a.data===selDate).sort((a,b)=>a.hora.localeCompare(b.hora));
-  if(!evts.length){
-    el.innerHTML=`<div class="empty" style="padding:28px 20px;"><div class="empty-icon">🗓️</div><h3>Sem sessões neste dia</h3><p>Clique em "+ Agendar" para adicionar.</p></div>`;
-    return;
-  }
-  el.innerHTML=evts.map(ag=>{
-    const pt=pts.find(p=>p.id===ag.ptId);
-    const statusLabel={agendado:'📋 Agendado',confirmed:'✅ Confirmado',cancelled:'❌ Cancelado'}[ag.status]||ag.status;
-    return `<div class="agenda-item ${ag.status}">
-      <div class="agenda-time">${ag.hora}</div>
-      <div class="agenda-info">
-        <div class="agenda-name">${pt?pt.nome:ag.ptNome||'Paciente'}</div>
-        <div class="agenda-meta">${ag.tipo||'Online'} · ${ag.dur||50}min · ${statusLabel}${ag.obs?' · '+ag.obs:''}</div>
-      </div>
-      <div class="agenda-actions">
-        ${ag.status!=='confirmed'?`<button class="btn btn-secondary btn-sm" onclick="confirmAgend('${ag.id}')">✅</button>`:''}
-        <button class="btn btn-wpp btn-sm" onclick="wppFromAgenda('${ag.ptId}','${ag.data}','${ag.hora}')">💬</button>
-        ${ag.status!=='cancelled'?`<button class="btn btn-danger btn-sm" onclick="cancelAgend('${ag.id}')">✕</button>`:''}
-        <button class="btn btn-danger btn-sm" onclick="delAgend('${ag.id}')">🗑</button>
-      </div>
-    </div>`;
-  }).join('');
+  if(!evts.length){ el.innerHTML=`<div style="text-align:center;padding:28px 0;color:var(--muted);">Sem sessões neste dia. Clique em "+ Agendar" para adicionar.</div>`; return; }
+  el.innerHTML=evts.map(ag=>{ const pt=pts.find(p=>p.id===ag.ptId); const statusLabel={agendado:'📋 Agendado',confirmed:'✅ Confirmado',cancelled:'❌ Cancelado'}[ag.status]||ag.status; return `<div class="agenda-item ${ag.status}"><div class="agenda-time">${ag.hora}</div><div class="agenda-info"><div class="agenda-name">${pt?pt.nome:ag.ptNome||'Paciente'}</div><div class="agenda-meta">${ag.tipo||'Online'} · ${ag.dur||50}min · ${statusLabel}${ag.obs?' · '+ag.obs:''}</div></div><div class="agenda-actions">${ag.status!=='confirmed'?`<button class="btn btn-secondary btn-sm" onclick="confirmAgend('${ag.id}')">✅</button>`:''}<button class="btn btn-wpp btn-sm" onclick="wppFromAgenda('${ag.ptId}','${ag.data}','${ag.hora}')">💬</button>${ag.status!=='cancelled'?`<button class="btn btn-danger btn-sm" onclick="cancelAgend('${ag.id}')">✕</button>`:''}<button class="btn btn-danger btn-sm" onclick="delAgend('${ag.id}')">🗑</button></div></div>`; }).join('');
 }
-
-function openNovoAgend(){
-  document.getElementById('ag-pt').innerHTML='<option value="">Selecione o paciente...</option>'+pts.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');
-  document.getElementById('ag-data').value=selDate;
-  document.getElementById('ag-hora').value='09:00';
-  document.getElementById('ag-status').value='agendado';
-  document.getElementById('ag-obs').value='';
-  document.getElementById('ov-agend-title').textContent='Novo Agendamento';
-  openOv('ov-agend');
-}
-
-function saveAgend(){
-  const ptId=document.getElementById('ag-pt').value;
-  const data=document.getElementById('ag-data').value;
-  const hora=document.getElementById('ag-hora').value;
-  if(!ptId||!data||!hora){alert('Preencha paciente, data e horário.');return;}
-  const pt=pts.find(p=>p.id===ptId);
-  agendamentos.push({id:'ag'+Date.now(),ptId,ptNome:pt?pt.nome:'',data,hora,dur:document.getElementById('ag-dur').value,tipo:document.getElementById('ag-tipo').value,status:document.getElementById('ag-status').value,obs:document.getElementById('ag-obs').value});
-  saveAgends(); selDate=data;
-  const[y,m,d]=data.split('-'); calYear=parseInt(y); calMonth=parseInt(m)-1;
-  renderCal(); renderAgendaList(); closeOv('ov-agend');
-}
-
-function wppFromAgenda(ptId, data, hora){
-  curId=ptId;
-  document.getElementById('wpp-tipo').value='lembrete';
-  document.getElementById('wpp-data').value=data;
-  document.getElementById('wpp-hora').value=hora;
-  gerarMsgWpp();
-  openOv('ov-wpp');
-}
+function openNovoAgend(){ document.getElementById('ag-pt').innerHTML='<option value="">Selecione o paciente...</option>'+pts.map(p=>`<option value="${p.id}">${p.nome}</option>`).join(''); document.getElementById('ag-data').value=selDate; document.getElementById('ag-hora').value='09:00'; document.getElementById('ag-status').value='agendado'; document.getElementById('ag-obs').value=''; document.getElementById('ov-agend-title').textContent='Novo Agendamento'; openOv('ov-agend'); }
+function saveAgend(){ const ptId=document.getElementById('ag-pt').value; const data=document.getElementById('ag-data').value; const hora=document.getElementById('ag-hora').value; if(!ptId||!data||!hora){alert('Preencha paciente, data e horário.');return;} const pt=pts.find(p=>p.id===ptId); agendamentos.push({id:'ag'+Date.now(),ptId,ptNome:pt?pt.nome:'',data,hora,dur:document.getElementById('ag-dur').value,tipo:document.getElementById('ag-tipo').value,status:document.getElementById('ag-status').value,obs:document.getElementById('ag-obs').value}); saveAgends(); selDate=data; const[y,m,d]=data.split('-'); calYear=parseInt(y); calMonth=parseInt(m)-1; renderCal(); renderAgendaList(); closeOv('ov-agend'); }
+function wppFromAgenda(ptId,data,hora){ curId=ptId; document.getElementById('wpp-tipo').value='lembrete'; document.getElementById('wpp-data').value=data; document.getElementById('wpp-hora').value=hora; gerarMsgWpp(); openOv('ov-wpp'); }
 function cancelAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a) a.status='cancelled'; saveAgends(); renderCal(); renderAgendaList(); }
+function confirmAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a) a.status='confirmed'; saveAgends(); renderCal(); renderAgendaList(); }
 function delAgend(id){ if(!confirm('Excluir agendamento?')) return; agendamentos=agendamentos.filter(x=>x.id!==id); saveAgends(); renderCal(); renderAgendaList(); }
 
 // ── DOCUMENTOS ────────────────────────────────────────────────────────────
 function trocaDoc(){
-  const tipo = document.getElementById('doc-tipo').value;
-  const extras = document.getElementById('doc-campos-extra');
+  const tipo=document.getElementById('doc-tipo').value;
+  const extras=document.getElementById('doc-campos-extra');
   document.getElementById('doc-editor-wrap').style.display='none';
   document.getElementById('ai-doc-loading').style.display='none';
-  if(tipo==='declaracao-comparecimento'){
-    extras.innerHTML=`
-      <div class="fr">
-        <div class="fg"><label>Data da sessão</label><input id="doc-data-sess" type="date"></div>
-        <div class="fg"><label>Horário</label><input id="doc-hora-sess" placeholder="Ex: 14h às 15h"></div>
-      </div>`;
-  } else if(tipo==='encaminhamento-psiq'||tipo==='encaminhamento-outro'){
-    extras.innerHTML=`
-      <div class="fg"><label>Nome do profissional / especialidade de destino</label><input id="doc-dest" placeholder="Ex: Dr. João Silva — Psiquiatra"></div>
-      <div class="fg"><label>Motivo do encaminhamento</label><textarea id="doc-motivo" placeholder="Descreva brevemente o motivo..."></textarea></div>`;
-  } else if(tipo==='atestado'){
-    extras.innerHTML=`
-      <div class="fr">
-        <div class="fg"><label>Data</label><input id="doc-data-sess" type="date"></div>
-        <div class="fg"><label>Dias de afastamento (se houver)</label><input id="doc-dias" placeholder="Ex: 2 dias"></div>
-      </div>`;
-  } else {
-    extras.innerHTML='';
-  }
+  if(tipo==='declaracao-comparecimento'){ extras.innerHTML=`<div class="fr"><div class="fg"><label>Data da sessão</label><input id="doc-data-sess" type="date"></div><div class="fg"><label>Horário</label><input id="doc-hora-sess" placeholder="Ex: 14h às 15h"></div></div>`; }
+  else if(tipo==='encaminhamento-psiq'||tipo==='encaminhamento-outro'){ extras.innerHTML=`<div class="fg"><label>Nome do profissional / especialidade</label><input id="doc-dest" placeholder="Ex: Dr. João Silva — Psiquiatra"></div><div class="fg"><label>Motivo do encaminhamento</label><textarea id="doc-motivo" placeholder="Descreva brevemente o motivo..."></textarea></div>`; }
+  else if(tipo==='atestado'){ extras.innerHTML=`<div class="fr"><div class="fg"><label>Data</label><input id="doc-data-sess" type="date"></div><div class="fg"><label>Dias de afastamento (se houver)</label><input id="doc-dias" placeholder="Ex: 2 dias"></div></div>`; }
+  else { extras.innerHTML=''; }
 }
-
 function preencherDocManual(){
-  const p = getP(curId); if(!p) return;
-  const tipo = document.getElementById('doc-tipo').value;
-  const hoje = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const cidade = p.cidade||'__________';
-
-  const templates = {
-    'declaracao-acompanhamento':
-`DECLARAÇÃO DE ACOMPANHAMENTO EM PSICOTERAPIA
-
-
-Declaro, para os devidos fins, que ${p.nome}${p.nasc?', nascido(a) em '+fmtDate(p.nasc)+',':','} encontra-se em acompanhamento psicoterapêutico sob minha responsabilidade profissional, com sessões de frequência semanal, desde ${p.inicio?fmtDate(p.inicio):'________/________/________'}.
-
-O processo psicoterápico tem como objetivo promover saúde mental, bem-estar emocional e o desenvolvimento pessoal do(a) paciente, em conformidade com o Código de Ética Profissional do Psicólogo (Resolução CFP nº 010/2005) e com a Resolução CFP nº 001/2009.
-
-O sigilo das informações clínicas é garantido, nos termos do artigo 9º do Código de Ética Profissional do Psicólogo, ressalvadas as situações previstas em lei.
-
-Por ser verdade, firmo a presente declaração.
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`,
-
-    'declaracao-comparecimento':
-`DECLARAÇÃO DE COMPARECIMENTO
-
-
-Declaro, para os devidos fins, que ${p.nome} compareceu a atendimento psicológico nesta data, [data da sessão], no horário das [horário de início] às [horário de término], nesta cidade.
-
-Por ser verdade, firmo a presente declaração.
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`,
-
-    'atestado':
-`ATESTADO PSICOLÓGICO
-
-
-Atesto que ${p.nome}${p.nasc?', nascido(a) em '+fmtDate(p.nasc)+',':','} esteve sob atendimento psicológico nesta data e encontra-se em acompanhamento regular de psicoterapia.
-
-[Se houver afastamento: O(a) paciente necessita de afastamento de suas atividades pelo período de ________ dias, a contar desta data, por motivos de saúde mental.]
-
-O presente atestado é emitido a pedido do(a) interessado(a), para os fins que se fizerem necessários, em conformidade com o Código de Ética Profissional do Psicólogo.
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`,
-
-    'encaminhamento-psiq':
-`ENCAMINHAMENTO PARA PSIQUIATRIA
-
-
-Encaminho para avaliação e acompanhamento psiquiátrico o(a) paciente ${p.nome}${p.nasc?', nascido(a) em '+fmtDate(p.nasc)+',':','} que se encontra em processo psicoterápico sob minha responsabilidade desde ${p.inicio?fmtDate(p.inicio):'________'}.
-
-Motivo do encaminhamento: [descrever brevemente os aspectos clínicos que justificam o encaminhamento, sem revelar informações sigilosas além do necessário].
-
-Coloco-me à disposição para eventuais esclarecimentos e para o trabalho interdisciplinar em prol do bem-estar do(a) paciente.
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`,
-
-    'encaminhamento-outro':
-`ENCAMINHAMENTO
-
-
-Encaminho para avaliação e acompanhamento junto a [nome do profissional / especialidade] o(a) paciente ${p.nome}${p.nasc?', nascido(a) em '+fmtDate(p.nasc)+',':','} que se encontra em processo psicoterápico sob minha responsabilidade.
-
-Motivo do encaminhamento: [descrever brevemente].
-
-Coloco-me à disposição para eventuais esclarecimentos e para o trabalho conjunto em benefício do(a) paciente.
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`,
-
-    'relatorio':
-`RELATÓRIO PSICOLÓGICO
-
-
-1. IDENTIFICAÇÃO
-Nome: ${p.nome}
-${p.nasc?'Data de nascimento: '+fmtDate(p.nasc)+'\n':''}${p.cidade?'Cidade: '+p.cidade+'\n':''}Finalidade: [informar a finalidade do relatório]
-
-2. PROCEDIMENTOS UTILIZADOS
-[Descrever os instrumentos e procedimentos utilizados: entrevistas, observação clínica, sessões de psicoterapia, etc.]
-
-3. HISTÓRICO E CONTEXTO CLÍNICO
-[Descrever o histórico clínico relevante, queixa principal e contexto do atendimento, sem expor informações além do necessário para a finalidade do documento.]
-
-4. ANÁLISE E OBSERVAÇÕES CLÍNICAS
-[Descrever as observações clínicas relevantes: comportamento, estado emocional, funcionamento cognitivo e outros aspectos pertinentes à finalidade.]
-
-5. CONCLUSÃO E RECOMENDAÇÕES
-[Apresentar conclusão técnica e recomendações pertinentes.]
-
-O presente relatório foi elaborado em conformidade com a Resolução CFP nº 006/2019, que regulamenta a elaboração de documentos escritos produzidos pelo psicólogo.
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`,
-
-    'laudo':
-`LAUDO PSICOLÓGICO
-
-
-1. IDENTIFICAÇÃO
-Nome: ${p.nome}
-${p.nasc?'Data de nascimento: '+fmtDate(p.nasc)+'\n':''}${p.cidade?'Cidade: '+p.cidade+'\n':''}Finalidade: [informar a finalidade — previdenciária, judicial, clínica, etc.]
-
-2. DEMANDA E QUESTÃO PERICIADA
-[Descrever a questão que motivou a elaboração do laudo e o que se busca responder.]
-
-3. PROCEDIMENTOS UTILIZADOS
-[Descrever os instrumentos de avaliação psicológica utilizados: testes, entrevistas, observação clínica, etc. — todos com evidências de validade conforme CFP.]
-
-4. RESULTADOS
-[Apresentar os resultados obtidos em cada procedimento, de forma objetiva e fundamentada.]
-
-5. ANÁLISE INTEGRATIVA
-[Integrar os resultados dos diferentes procedimentos em uma análise coerente.]
-
-6. CONCLUSÃO
-[Responder objetivamente à questão periciada, com fundamentação nos dados coletados.]
-
-O presente laudo foi elaborado em conformidade com a Resolução CFP nº 006/2019 e com as normas do Sistema de Avaliação de Testes Psicológicos (SATEPSI).
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`,
-
-    'parecer':
-`PARECER PSICOLÓGICO
-
-
-1. IDENTIFICAÇÃO E FINALIDADE
-Nome: ${p.nome}
-${p.nasc?'Data de nascimento: '+fmtDate(p.nasc)+'\n':''}Finalidade: [informar a finalidade do parecer]
-
-2. QUESTÃO A SER RESPONDIDA
-[Descrever com clareza a questão técnica ou clínica que o parecer se propõe a responder.]
-
-3. ANÁLISE
-[Desenvolver a análise técnica com base nos dados disponíveis, fundamentando-se em conhecimento científico e em normas éticas da profissão.]
-
-4. CONCLUSÃO
-[Responder de forma clara e objetiva à questão proposta, apresentando a posição técnica fundamentada.]
-
-O presente parecer foi elaborado em conformidade com a Resolução CFP nº 006/2019.
-
-
-${cidade}, ${hoje}.
-
-
-_______________________________________________
-[Seu nome completo]
-Psicóloga — [Nº CRP]`
-  };
-
-  const wrap = document.getElementById('doc-editor-wrap');
-  document.getElementById('doc-preview').innerText = templates[tipo]||'';
+  const p=getP(curId); if(!p) return;
+  const tipo=document.getElementById('doc-tipo').value;
+  const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const cidade=p.cidade||'__________';
+  const templates={'declaracao-acompanhamento':`DECLARAÇÃO DE ACOMPANHAMENTO EM PSICOTERAPIA\n\n\nDeclaro, para os devidos fins, que ${p.nome}${p.nasc?', nascido(a) em '+fmtDate(p.nasc)+',':','} encontra-se em acompanhamento psicoterapêutico sob minha responsabilidade profissional, com sessões de frequência semanal, desde ${p.inicio?fmtDate(p.inicio):'________/________/________'}.\n\nO processo psicoterápico tem como objetivo promover saúde mental, bem-estar emocional e o desenvolvimento pessoal do(a) paciente, em conformidade com o Código de Ética Profissional do Psicólogo (Resolução CFP nº 010/2005) e com a Resolução CFP nº 001/2009.\n\nO sigilo das informações clínicas é garantido, nos termos do artigo 9º do Código de Ética Profissional do Psicólogo, ressalvadas as situações previstas em lei.\n\nPor ser verdade, firmo a presente declaração.\n\n\n${cidade}, ${hoje}.\n\n\n_______________________________________________\n[Seu nome completo]\nPsicóloga — [Nº CRP]`};
+  const wrap=document.getElementById('doc-editor-wrap');
+  document.getElementById('doc-preview').innerText=templates[tipo]||'[Preencha o documento manualmente]';
   wrap.style.display='block';
   wrap.scrollIntoView({behavior:'smooth'});
 }
-
 async function gerarDocumentoIA(){
-  const p = getP(curId); if(!p) return;
-  const tipo = document.getElementById('doc-tipo').value;
-  const a = p.anamnese||{};
-  const f = p.formulacao||{};
-  const hoje = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const loading = document.getElementById('ai-doc-loading');
-  const wrap = document.getElementById('doc-editor-wrap');
+  const p=getP(curId); if(!p) return;
+  const tipo=document.getElementById('doc-tipo').value;
+  const a=p.anamnese||{};
+  const f=p.formulacao||{};
+  const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const loading=document.getElementById('ai-doc-loading');
+  const wrap=document.getElementById('doc-editor-wrap');
   loading.style.display='block'; wrap.style.display='none';
-
-  const tipoLabel = document.getElementById('doc-tipo').options[document.getElementById('doc-tipo').selectedIndex].text;
-  const dataSess = document.getElementById('doc-data-sess')?.value||'';
-  const horaSess = document.getElementById('doc-hora-sess')?.value||'';
-  const destino = document.getElementById('doc-dest')?.value||'';
-  const motivo = document.getElementById('doc-motivo')?.value||'';
-  const dias = document.getElementById('doc-dias')?.value||'';
-
-  const instrucoesPorTipo = {
-    'declaracao-acompanhamento': `Elabore uma Declaração de Acompanhamento em Psicoterapia conforme a Resolução CFP nº 001/2009 e o Código de Ética Profissional do Psicólogo (Resolução CFP nº 010/2005). O documento deve: confirmar que o paciente está em acompanhamento psicoterápico; informar a frequência e data de início; garantir o sigilo conforme o art. 9º do Código de Ética; ser redigido em linguagem formal e concisa. NÃO revelar diagnóstico, queixa ou detalhes clínicos.`,
-    'declaracao-comparecimento': `Elabore uma Declaração de Comparecimento simples e objetiva. Deve conter: nome do paciente, data${dataSess?' ('+fmtDate(dataSess)+')':''} e horário${horaSess?' ('+horaSess+')':''} do atendimento, e confirmação de comparecimento. Linguagem formal e concisa. NÃO revelar informações clínicas.`,
-    'atestado': `Elabore um Atestado Psicológico conforme o Código de Ética Profissional do Psicólogo. Deve: confirmar que o paciente esteve em atendimento; ${dias?'indicar afastamento de '+dias+' dias;':''} ser objetivo e não revelar diagnóstico ou informações clínicas sigilosas além do necessário. Conforme Resolução CFP nº 006/2019.`,
-    'encaminhamento-psiq': `Elabore um Encaminhamento para Psiquiatria. Deve: identificar o paciente; informar que está em psicoterapia; apresentar o motivo do encaminhamento de forma técnica e ética${motivo?': '+motivo:''}; não revelar informações sigilosas além do necessário; expressar disponibilidade para trabalho interdisciplinar. Conforme Código de Ética CFP art. 9º e 10º.`,
-    'encaminhamento-outro': `Elabore um Encaminhamento para outro profissional${destino?' ('+destino+')':''}. Deve: identificar o paciente; apresentar o motivo${motivo?': '+motivo:''}; ser objetivo e ético; não revelar informações sigilosas além do necessário.`,
-    'relatorio': `Elabore um Relatório Psicológico conforme a Resolução CFP nº 006/2019, que regulamenta a elaboração de documentos escritos. Estruture com: 1) Identificação; 2) Procedimentos utilizados; 3) Histórico e contexto clínico relevante; 4) Análise e observações clínicas; 5) Conclusão e recomendações. Use linguagem técnica formal. Baseie-se nas informações clínicas disponíveis.`,
-    'laudo': `Elabore um Laudo Psicológico conforme a Resolução CFP nº 006/2019 e as normas do SATEPSI. Estruture com: 1) Identificação e finalidade; 2) Demanda e questão periciada; 3) Procedimentos utilizados (mencione entrevistas clínicas e observação); 4) Resultados; 5) Análise integrativa; 6) Conclusão objetiva. Use linguagem técnica precisa.`,
-    'parecer': `Elabore um Parecer Psicológico conforme a Resolução CFP nº 006/2019. Estruture com: 1) Identificação e finalidade; 2) Questão a ser respondida; 3) Análise técnica fundamentada; 4) Conclusão clara e objetiva. Use linguagem técnica formal e científica.`
-  };
-
-  const prompt = `Você é uma psicóloga clínica com expertise em documentação psicológica conforme as normas do CFP (Conselho Federal de Psicologia). Elabore o seguinte documento: ${tipoLabel}.
-
-DADOS DO PACIENTE:
-Nome: ${p.nome}
-${p.nasc?'Data de nascimento: '+fmtDate(p.nasc):''}
-${p.cidade?'Cidade: '+p.cidade:''}
-${p.inicio?'Em atendimento desde: '+fmtDate(p.inicio):''}
-${a.queixa?'Queixa principal (uso interno — não revelar no documento): '+a.queixa:''}
-${f.hipotese?'Hipótese diagnóstica (uso interno — revelar apenas se o documento exigir): '+f.hipotese:''}
-${f.objetivos?'Objetivos terapêuticos: '+f.objetivos:''}
-${dataSess?'Data da sessão: '+fmtDate(dataSess):''}
-${horaSess?'Horário: '+horaSess:''}
-${destino?'Encaminhar para: '+destino:''}
-${motivo?'Motivo informado: '+motivo:''}
-${dias?'Dias de afastamento: '+dias:''}
-
-INSTRUÇÕES ESPECÍFICAS:
-${instrucoesPorTipo[tipo]||'Elabore o documento de forma técnica e ética, conforme as normas do CFP.'}
-
-FORMATAÇÃO OBRIGATÓRIA:
-- Título em letras maiúsculas centralizado
-- Texto em parágrafos corridos, sem marcadores ou listas
-- Deixe "[Seu nome completo]" e "[Nº CRP]" como placeholders para a psicóloga preencher
-- Finalize com a linha de assinatura: "_______________________________________________"
-- Abaixo da linha: "[Seu nome completo]" e "Psicóloga — [Nº CRP]"
-- Última linha: "${p.cidade||'__________'}, ${hoje}."
-- Escreva SOMENTE o texto do documento, sem explicações ou comentários externos`;
-
-  try {
-    const text = await callAI(prompt);
-    loading.style.display='none';
-    wrap.style.display='block';
-    document.getElementById('doc-preview').innerText = text;
-    wrap.scrollIntoView({behavior:'smooth'});
-  } catch(e) {
-    loading.style.display='none';
-    alert('Erro ao gerar documento. Tente novamente.');
-  }
-}
-
-function copiarDoc(){
-  const text = document.getElementById('doc-preview').innerText;
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn = event.target; btn.textContent='✓ Copiado!';
-    setTimeout(()=>btn.textContent='📋 Copiar',2000);
-  });
-}
-
-function imprimirDoc(){
-  const conteudo = document.getElementById('doc-preview').innerHTML;
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Documento Psicológico</title>
-  <style>
-    body{font-family:'Times New Roman',serif;font-size:12pt;line-height:2;margin:3cm 3cm 2cm 3cm;color:#000;}
-    pre{font-family:'Times New Roman',serif;white-space:pre-wrap;font-size:12pt;line-height:2;}
-    @media print{body{margin:2.5cm;}}
-  </style></head>
-  <body><pre>${document.getElementById('doc-preview').innerText}</pre></body></html>`);
-  win.document.close(); win.focus();
-  setTimeout(()=>win.print(), 400);
-}
-
-// ── CONTRATO TERAPÊUTICO ──────────────────────────────────────────────────
-async function gerarContratoIA(){
-  const p = getP(curId); if(!p) return;
-  const nome = document.getElementById('ct-psi-nome').value || '[Seu nome completo]';
-  const crp = document.getElementById('ct-crp').value || '[Nº CRP]';
-  const valor = document.getElementById('ct-valor').value || p.valor || '[valor]';
-  const freq = document.getElementById('ct-freq').value;
-  const horario = document.getElementById('ct-horario').value || '[dia e horário]';
-  const modalidade = document.getElementById('ct-modalidade').value;
-  const cancel = document.getElementById('ct-cancel').value;
-  const pagamento = document.getElementById('ct-pagamento').value || 'PIX';
-  const obs = document.getElementById('ct-obs').value;
-  const hoje = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const cidade = p.cidade||'__________';
-
-  const wrap = document.getElementById('contrato-editor-wrap');
-  wrap.style.display='block';
-  const preview = document.getElementById('contrato-preview');
-  preview.innerText = 'Gerando contrato...';
-
-  const prompt = `Você é uma psicóloga clínica. Elabore um Contrato Terapêutico para ser lido e explicado ao paciente na primeira sessão.
+  const tipoLabel=document.getElementById('doc-tipo').options[document.getElementById('doc-tipo').selectedIndex].text;
+  const dataSess=document.getElementById('doc-data-sess')?.value||'';
+  const horaSess=document.getElementById('doc-hora-sess')?.value||'';
+  const destino=document.getElementById('doc-dest')?.value||'';
+  const motivo=document.getElementById('doc-motivo')?.value||'';
+  const dias=document.getElementById('doc-dias')?.value||'';
+  const instrucoesPorTipo={'declaracao-acompanhamento':'Elabore uma Declaração de Acompanhamento em Psicoterapia conforme a Resolução CFP nº 001/2009. NÃO revelar diagnóstico ou detalhes clínicos.','declaracao-comparecimento':`Elabore uma Declaração de Comparecimento simples. Data${dataSess?' ('+fmtDate(dataSess)+')':''} e horário${horaSess?' ('+horaSess+')':''}. NÃO revelar informações clínicas.`,'atestado':`Elabore um Atestado Psicológico. ${dias?'Afastamento de '+dias+' dias.':''} NÃO revelar diagnóstico.`,'encaminhamento-psiq':`Elabore Encaminhamento para Psiquiatria. Motivo: ${motivo||'[não informado]'}. Conforme Código de Ética CFP.`,'encaminhamento-outro':`Elabore Encaminhamento para ${destino||'outro profissional'}. Motivo: ${motivo||'[não informado]'}.`,'relatorio':'Elabore Relatório Psicológico conforme Resolução CFP nº 006/2019. Seções: Identificação, Procedimentos, Histórico, Análise, Conclusão.','laudo':'Elabore Laudo Psicológico conforme Resolução CFP nº 006/2019 e SATEPSI. Seções: Identificação, Demanda, Procedimentos, Resultados, Análise, Conclusão.','parecer':'Elabore Parecer Psicológico conforme Resolução CFP nº 006/2019. Seções: Identificação, Questão, Análise, Conclusão.'};
+  const prompt=`Você é uma psicóloga clínica com expertise em documentação psicológica conforme normas do CFP. Elabore: ${tipoLabel}.
 
 DADOS:
+Nome: ${p.nome}${p.nasc?'\nNascimento: '+fmtDate(p.nasc):''}${p.cidade?'\nCidade: '+p.cidade:''}${p.inicio?'\nEm atendimento desde: '+fmtDate(p.inicio):''}
+${f.hipotese?'Hipótese diagnóstica (uso interno): '+f.hipotese:''}
+
+INSTRUÇÕES:
+${instrucoesPorTipo[tipo]||'Elabore o documento de forma técnica e ética.'}
+
+FORMATAÇÃO: Título em maiúsculas. Texto em parágrafos. Use "[Seu nome completo]" e "[Nº CRP]" como placeholders. Finalize com assinatura. Última linha: "${p.cidade||'__________'}, ${hoje}."
+Escreva SOMENTE o texto do documento.`;
+  try{ const text=await callAI(prompt); loading.style.display='none'; wrap.style.display='block'; document.getElementById('doc-preview').innerText=text; wrap.scrollIntoView({behavior:'smooth'}); }
+  catch(e){ loading.style.display='none'; alert('Erro ao gerar documento.'); }
+}
+function copiarDoc(){ const text=document.getElementById('doc-preview').innerText; navigator.clipboard.writeText(text).then(()=>{ const btn=event.target; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar',2000); }); }
+function imprimirDoc(){ const win=window.open('','_blank'); win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Documento</title><style>body{font-family:'Times New Roman',serif;font-size:12pt;line-height:2;margin:3cm 3cm 2cm 3cm;}pre{font-family:'Times New Roman',serif;white-space:pre-wrap;font-size:12pt;line-height:2;}</style></head><body><pre>${document.getElementById('doc-preview').innerText}</pre></body></html>`); win.document.close(); win.focus(); setTimeout(()=>win.print(),400); }
+
+// ── CONTRATO ──────────────────────────────────────────────────────────────
+async function gerarContratoIA(){
+  const p=getP(curId); if(!p) return;
+  const nome=document.getElementById('ct-psi-nome').value||'[Seu nome completo]';
+  const crp=document.getElementById('ct-crp').value||'[Nº CRP]';
+  const valor=document.getElementById('ct-valor').value||p.valor||'[valor]';
+  const freq=document.getElementById('ct-freq').value;
+  const horario=document.getElementById('ct-horario').value||'[dia e horário]';
+  const modalidade=document.getElementById('ct-modalidade').value;
+  const cancel=document.getElementById('ct-cancel').value;
+  const pagamento=document.getElementById('ct-pagamento').value||'PIX';
+  const obs=document.getElementById('ct-obs').value;
+  const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const cidade=p.cidade||'__________';
+  const wrap=document.getElementById('contrato-editor-wrap');
+  wrap.style.display='block';
+  const preview=document.getElementById('contrato-preview');
+  preview.innerText='Gerando contrato...';
+  const prompt=`Elabore um Contrato Terapêutico para ser lido e explicado ao paciente na primeira sessão.
+
 Psicóloga: ${nome} | CRP: ${crp}
 Paciente: ${p.nome}${p.nasc?' | Nascido(a) em: '+fmtDate(p.nasc):''}
-Valor da sessão: R$ ${valor}
-Frequência: ${freq}
-Dia e horário: ${horario}
-Modalidade: ${modalidade}
-Cancelamento sem cobrança: com até ${cancel}h de antecedência
-Forma de pagamento: ${pagamento}
+Valor: R$ ${valor} | Frequência: ${freq} | Horário: ${horario} | Modalidade: ${modalidade}
+Cancelamento: ${cancel}h de antecedência | Pagamento: ${pagamento}
 ${obs?'Observações: '+obs:''}
 
-INSTRUÇÕES MUITO IMPORTANTES:
-- Este contrato será LIDO EM VOZ ALTA pela psicóloga e EXPLICADO ao paciente durante a sessão
-- Use linguagem SIMPLES, CLARA e ACOLHEDORA — como se estivesse conversando com a pessoa
-- Evite termos jurídicos complexos; quando usar um termo técnico, explique entre parênteses
-- Tom: profissional mas humano, cuidadoso, transparente
-- Estrutura sugerida:
-  1. Uma abertura acolhedora explicando o que é este contrato e por que é importante
-  2. Como funcionam as sessões (duração, frequência, modalidade)
-  3. Valor e forma de pagamento — explicado de forma direta e sem constrangimento
-  4. Política de cancelamento — explicar o motivo da regra, não só a regra
-  5. Sigilo — explicar de forma clara o que é sigiloso e as exceções legais (risco de vida, determinação judicial) em linguagem acessível
-  6. Como encerramos o processo — que o paciente pode encerrar quando quiser, com aviso prévio
-  7. Ao final: espaço para assinatura de ambos com data
-- O tom deve transmitir: "Estamos construindo uma parceria de cuidado juntos"
-- NÃO use cláusulas numeradas em formato jurídico frio
-- Finalize com local e data: ${cidade}, ${hoje}.
-- Escreva SOMENTE o texto do contrato, sem explicações externas`;
-
-  try {
-    const text = await callAI(prompt);
-    preview.innerText = text;
-    wrap.scrollIntoView({behavior:'smooth'});
-  } catch(e) {
-    preview.innerText = 'Erro ao gerar. Tente novamente.';
-  }
+Use linguagem simples, clara e acolhedora. Tom profissional mas humano. Inclua: abertura, funcionamento das sessões, valor/pagamento, política de cancelamento (explicando o motivo), sigilo (com exceções legais em linguagem acessível), encerramento do processo e espaço para assinaturas.
+Finalize com: ${cidade}, ${hoje}.
+Escreva SOMENTE o texto do contrato.`;
+  try{ const text=await callAI(prompt); preview.innerText=text; wrap.scrollIntoView({behavior:'smooth'}); }
+  catch(e){ preview.innerText='Erro ao gerar. Tente novamente.'; }
 }
+function copiarContrato(){ const text=document.getElementById('contrato-preview').innerText; navigator.clipboard.writeText(text).then(()=>{ const btn=event.target; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar',2000); }); }
+function imprimirContrato(){ const win=window.open('','_blank'); win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Contrato</title><style>body{font-family:'Times New Roman',serif;font-size:12pt;line-height:2;margin:3cm 3cm 2cm 3cm;}pre{font-family:'Times New Roman',serif;white-space:pre-wrap;font-size:12pt;line-height:2;}</style></head><body><pre>${document.getElementById('contrato-preview').innerText}</pre></body></html>`); win.document.close(); win.focus(); setTimeout(()=>win.print(),400); }
 
-function copiarContrato(){
-  const text = document.getElementById('contrato-preview').innerText;
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn = event.target; btn.textContent='✓ Copiado!';
-    setTimeout(()=>btn.textContent='📋 Copiar',2000);
-  });
-}
-
-function imprimirContrato(){
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Contrato Terapêutico</title>
-  <style>
-    body{font-family:'Times New Roman',serif;font-size:12pt;line-height:2;margin:3cm 3cm 2cm 3cm;color:#000;}
-    pre{font-family:'Times New Roman',serif;white-space:pre-wrap;font-size:12pt;line-height:2;}
-    @media print{body{margin:2.5cm;}}
-  </style></head>
-  <body><pre>${document.getElementById('contrato-preview').innerText}</pre></body></html>`);
-  win.document.close(); win.focus();
-  setTimeout(()=>win.print(), 400);
-}
 // ── FIREBASE ───────────────────────────────────────────────────────────────
 function initFirebase(){
-  const firebaseConfig = {
-    apiKey: "AIzaSyAKq1Q-5QmUQu_x3mvgzpJXMyzVxNEcQig",
-    authDomain: "clinica-dab42.firebaseapp.com",
-    projectId: "clinica-dab42",
-    storageBucket: "clinica-dab42.firebasestorage.app",
-    messagingSenderId: "924425214099",
-    appId: "1:924425214099:web:c82e6279c6bcdec63b9566"
-  };
+  const firebaseConfig={apiKey:"AIzaSyAKq1Q-5QmUQu_x3mvgzpJXMyzVxNEcQig",authDomain:"clinica-dab42.firebaseapp.com",projectId:"clinica-dab42",storageBucket:"clinica-dab42.firebasestorage.app",messagingSenderId:"924425214099",appId:"1:924425214099:web:c82e6279c6bcdec63b9566"};
   firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  let uid = null;
-
-  // LOGIN / LOGOUT
-  window.loginGoogle = function(){
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(e=>{
-      document.getElementById('login-err').style.display='block';
-      console.error(e);
-    });
-  };
-  window.logout = function(){
-    if(!confirm('Sair do sistema?')) return;
-    auth.signOut();
-  };
-
-  // SYNC INDICATOR
-  function setSyncing(on){
-    const dot = document.getElementById('sync-dot');
-    const lbl = document.getElementById('sync-label');
-    if(on){ dot.classList.add('syncing'); lbl.textContent='Sincronizando...'; }
-    else  { dot.classList.remove('syncing'); lbl.textContent='Sincronizado ☁️'; }
-  }
-
-  // FIRESTORE SAVE — override the local-only save()
-  window.save = function(){
-    localStorage.setItem('pts_v2', JSON.stringify(pts));
-    localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
-    if(!uid) return;
-    setSyncing(true);
-    db.collection('usuarios').doc(uid).set({
-      pts, agendamentos, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(()=>setSyncing(false))
-      .catch(e=>{ setSyncing(false); console.error('Erro ao salvar:',e); });
-  };
-  window.saveAgends = function(){
-    localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
-    if(!uid) return;
-    setSyncing(true);
-    db.collection('usuarios').doc(uid).update({
-      agendamentos, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(()=>setSyncing(false)).catch(()=>window.save());
-  };
-
-  // AUTH STATE
-  auth.onAuthStateChanged(user=>{
-    if(user){
-      uid = user.uid;
-      document.getElementById('login-screen').classList.remove('show');
-      setSyncing(true);
-      db.collection('usuarios').doc(uid).get().then(doc=>{
-        if(doc.exists){
-          const data = doc.data();
-          pts = data.pts || [];
-          agendamentos = data.agendamentos || [];
-          localStorage.setItem('pts_v2', JSON.stringify(pts));
-          localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
-        } else {
-          const localPts = JSON.parse(localStorage.getItem('pts_v2')||'[]');
-          const localAg  = JSON.parse(localStorage.getItem('agendamentos')||'[]');
-          if(localPts.length){ pts = localPts; agendamentos = localAg; window.save(); }
-        }
-        setSyncing(false);
-        setMonthNow();
-        renderPts();
-      }).catch(e=>{ setSyncing(false); console.error(e); setMonthNow(); renderPts(); });
-    } else {
-      uid = null;
-      document.getElementById('login-screen').classList.add('show');
-    }
-  });
+  const auth=firebase.auth();
+  const db=firebase.firestore();
+  let uid=null;
+  window.loginGoogle=function(){ const provider=new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(provider).catch(e=>{ document.getElementById('login-err').style.display='block'; console.error(e); }); };
+  window.logout=function(){ if(!confirm('Sair do sistema?')) return; auth.signOut(); };
+  function setSyncing(on){ const dot=document.getElementById('sync-dot'); const lbl=document.getElementById('sync-label'); if(on){dot.classList.add('syncing');lbl.textContent='Sincronizando...';}else{dot.classList.remove('syncing');lbl.textContent='Sincronizado ☁️';} }
+  window.save=function(){ localStorage.setItem('pts_v2',JSON.stringify(pts)); localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); if(!uid) return; setSyncing(true); db.collection('usuarios').doc(uid).set({pts,agendamentos,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>setSyncing(false)).catch(e=>{setSyncing(false);console.error('Erro ao salvar:',e);}); };
+  window.saveAgends=function(){ localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); if(!uid) return; setSyncing(true); db.collection('usuarios').doc(uid).update({agendamentos,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>setSyncing(false)).catch(()=>window.save()); };
+  auth.onAuthStateChanged(user=>{ if(user){ uid=user.uid; document.getElementById('login-screen').classList.remove('show'); setSyncing(true); db.collection('usuarios').doc(uid).get().then(doc=>{ if(doc.exists){ const data=doc.data(); pts=data.pts||[]; agendamentos=data.agendamentos||[]; localStorage.setItem('pts_v2',JSON.stringify(pts)); localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); }else{ const localPts=JSON.parse(localStorage.getItem('pts_v2')||'[]'); const localAg=JSON.parse(localStorage.getItem('agendamentos')||'[]'); if(localPts.length){pts=localPts;agendamentos=localAg;window.save();} } setSyncing(false); setMonthNow(); renderPts(); }).catch(e=>{setSyncing(false);console.error(e);setMonthNow();renderPts();}); }else{ uid=null; document.getElementById('login-screen').classList.add('show'); } });
 }
 </script>
-
-<!-- Firebase SDKs carregados no final do body para garantir disponibilidade -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
