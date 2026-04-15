@@ -343,6 +343,7 @@ textarea{resize:vertical;min-height:72px;}
       <button class="itab" onclick="switchTab('pagamentos',this)">💰 Pagamentos</button>
       <button class="itab" onclick="switchTab('documentos',this)">📄 Documentos</button>
       <button class="itab" onclick="switchTab('contrato',this)">📑 Contrato</button>
+      <button class="itab" onclick="switchTab('recibo',this)">🧾 Recibo</button>
     </div>
 
     <!-- ANAMNESE ADULTO -->
@@ -434,118 +435,378 @@ textarea{resize:vertical;min-height:72px;}
 
       <!-- AI FILL BOX INFANTIL -->
       <div class="ai-fill-box">
-        <div class="ai-label">✨ Preencher anamnese infantil com IA</div>
-        <textarea id="ai-fill-infantil-texto" placeholder="Descreva livremente o que foi relatado na entrevista com os responsáveis e com a criança... A IA vai preencher os campos automaticamente."></textarea>
-        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+        <div class="ai-label">✨ Preencher com IA</div>
+        <textarea id="ai-fill-infantil-texto" placeholder="Descreva livremente o que foi relatado na entrevista com os responsáveis e com a criança... A IA vai preencher os campos automaticamente." style="min-height:80px;"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;">
           <button class="btn btn-ai btn-sm" onclick="preencherAnamneseInfantilIA()">✨ Preencher com IA</button>
           <span class="ai-fill-hint">Cole ou escreva o relato — a IA identifica e preenche cada campo.</span>
         </div>
-        <div id="ai-fill-infantil-status" style="display:none;" class="ai-loading" style="margin-top:6px;"></div>
+        <div id="ai-fill-infantil-status" style="display:none;" class="ai-loading"></div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
-        <div class="sec" style="margin:0;border:none;">Anamnese Infantil</div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <label style="margin:0;white-space:nowrap;">Data:</label>
-          <input id="ai-data" type="date" style="width:auto;">
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+        <div style="font-family:'Lora',serif;font-size:16px;">Anamnese Infantil</div>
+        <div style="font-size:11px;color:var(--muted);">Avaliação Inicial — Primeira Sessão com Responsável</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;padding:8px 12px;background:var(--sage-light);border-radius:8px;border-left:3px solid var(--sage-dark);">📋 Documento de uso clínico confidencial — sigilo profissional conforme CFP Resolução 001/2009 e LGPD (Lei 13.709/2018)</div>
+
+      <div class="fr3">
+        <div class="fg"><label>Data</label><input id="ai-data" type="date"></div>
+        <div class="fg"><label>Psicóloga / CRP</label><input id="ai-psi-crp" placeholder="Nome · CRP" value="Júlia Vitória Acunha da Costa · CRP 14/11909"></div>
+        <div class="fg"><label>Nº de prontuário</label><input id="ai-prontuario" placeholder="Ex: 001/2026"></div>
       </div>
 
-      <div class="sec">Queixa Principal</div>
-      <div class="fg"><label>Queixa trazida pelo responsável</label><textarea id="ai-queixa-resp" placeholder="O que os responsáveis relatam como principal problema..."></textarea></div>
-      <div class="fg"><label>O que a criança diz sobre o motivo de vir à terapia</label><textarea id="ai-queixa-crianca" placeholder="Narrativa da criança, se houver..."></textarea></div>
-      <div class="fr"><div class="fg"><label>Há quanto tempo o problema ocorre?</label><input id="ai-tempo" placeholder="Ex: 6 meses, desde os 5 anos..."></div><div class="fg"><label>Como surgiu / o que desencadeou?</label><input id="ai-surgiu" placeholder="Eventos, mudanças, situações..."></div></div>
-      <div class="fg"><label>O que já foi tentado para resolver?</label><textarea id="ai-tentativas" placeholder="Estratégias dos responsáveis, outros tratamentos..."></textarea></div>
+      <div class="sec">1. Identificação da criança</div>
+      <div class="fr"><div class="fg"><label>Nome completo da criança</label><input id="ai-nome-crianca" placeholder="Nome completo"></div><div class="fg"><label>Data de nascimento</label><input id="ai-nasc-crianca" type="date"></div></div>
+      <div class="fr3"><div class="fg"><label>Idade</label><input id="ai-idade-crianca" placeholder="Ex: 7 anos e 3 meses"></div><div class="fg"><label>Sexo / gênero</label><select id="ai-sexo"><option value="">—</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Outro</option></select></div><div class="fg"><label>Escola / série</label><input id="ai-escola-serie" placeholder="Ex: EMEF João · 3º ano"></div></div>
+      <div class="fg"><label>Endereço / cidade</label><input id="ai-endereco" placeholder="Cidade ou endereço"></div>
 
-      <div class="sec">Análise do Problema (TCC Infantil)</div>
-      <div class="fg"><label>Situações que disparam o problema (antecedentes)</label><textarea id="ai-antecedentes" placeholder="O que acontece antes do comportamento/sintoma aparecer?"></textarea></div>
-      <div class="fg"><label>Onde ocorre com mais intensidade?</label>
-        <div class="check-group" id="ai-onde-check">
-          <span class="check-pill" onclick="togglePill(this)">Em casa</span><span class="check-pill" onclick="togglePill(this)">Na escola</span><span class="check-pill" onclick="togglePill(this)">Com a família</span><span class="check-pill" onclick="togglePill(this)">Com amigos</span><span class="check-pill" onclick="togglePill(this)">Em lugares públicos</span><span class="check-pill" onclick="togglePill(this)">No quarto sozinho(a)</span><span class="check-pill" onclick="togglePill(this)">Em todos os ambientes</span>
+      <div class="sec">2. Responsáveis e composição familiar</div>
+      <div class="fr"><div class="fg"><label>Nome do(a) responsável 1</label><input id="ai-resp1-nome"></div><div class="fg"><label>Parentesco</label><input id="ai-resp1-parent" placeholder="Ex: mãe, pai, avó..."></div></div>
+      <div class="fr"><div class="fg"><label>Idade / profissão (resp. 1)</label><input id="ai-resp1-profissao" placeholder="Ex: 35 anos · Professora"></div><div class="fg"><label>Contato / WhatsApp (resp. 1)</label><input id="ai-resp1-wpp"></div></div>
+      <div class="fr"><div class="fg"><label>Nome do(a) responsável 2</label><input id="ai-resp2-nome"></div><div class="fg"><label>Parentesco</label><input id="ai-resp2-parent"></div></div>
+      <div class="fr"><div class="fg"><label>Idade / profissão (resp. 2)</label><input id="ai-resp2-profissao"></div><div class="fg"><label>Contato / WhatsApp (resp. 2)</label><input id="ai-resp2-wpp"></div></div>
+      <div class="fg"><label>Estado civil dos pais</label>
+        <div class="check-group" id="ai-estado-civil-check">
+          <span class="check-pill" onclick="togglePill(this)">Juntos</span>
+          <span class="check-pill" onclick="togglePill(this)">Separados</span>
+          <span class="check-pill" onclick="togglePill(this)">Outro</span>
         </div>
       </div>
-      <div class="fg"><label>O que a criança pensa / fala quando o problema ocorre?</label><textarea id="ai-pensamentos" placeholder="Pensamentos automáticos, falas recorrentes..."></textarea></div>
-      <div class="fg"><label>Quais emoções surgem?</label>
-        <div class="check-group" id="ai-emocoes-check">
-          <span class="check-pill" onclick="togglePill(this)">Medo</span><span class="check-pill" onclick="togglePill(this)">Tristeza</span><span class="check-pill" onclick="togglePill(this)">Raiva</span><span class="check-pill" onclick="togglePill(this)">Vergonha</span><span class="check-pill" onclick="togglePill(this)">Culpa</span><span class="check-pill" onclick="togglePill(this)">Ansiedade</span><span class="check-pill" onclick="togglePill(this)">Irritação</span><span class="check-pill" onclick="togglePill(this)">Insegurança</span><span class="check-pill" onclick="togglePill(this)">Solidão</span><span class="check-pill" onclick="togglePill(this)">Confusão</span>
-        </div>
-      </div>
-      <div class="fg"><label>Como a criança reage e se comporta?</label><textarea id="ai-reacao" placeholder="Chora, agride, foge, fica paralisada, se isola..."></textarea></div>
-      <div class="fg"><label>O que faz para evitar ou aliviar?</label><textarea id="ai-evitacao" placeholder="Estratégias de evitação, comportamentos compensatórios..."></textarea></div>
-      <div class="fg"><label>Qual a consequência no ambiente?</label><textarea id="ai-consequencia" placeholder="Como os outros reagem? O que muda após o episódio?"></textarea></div>
+      <div class="fr"><div class="fg"><label>Com quem a criança reside?</label><input id="ai-reside-com"></div><div class="fg"><label>Irmãos (nomes e idades)</label><input id="ai-irmaos" placeholder="Ex: Ana, 8 anos; Pedro, 4 anos"></div></div>
+      <div class="fg"><label>Outros membros que residem na mesma casa</label><input id="ai-outros-membros"></div>
 
-      <div class="sec">Sintomas</div>
-      <div class="fg"><label>Sintomas de ansiedade</label>
-        <div class="check-group" id="ai-sint-ansi-check">
-          <span class="check-pill" onclick="togglePill(this)">Choro frequente</span><span class="check-pill" onclick="togglePill(this)">Medos intensos</span><span class="check-pill" onclick="togglePill(this)">Recusa escolar</span><span class="check-pill" onclick="togglePill(this)">Queixas somáticas</span><span class="check-pill" onclick="togglePill(this)">Pesadelos</span><span class="check-pill" onclick="togglePill(this)">Insônia</span><span class="check-pill" onclick="togglePill(this)">Apego excessivo</span><span class="check-pill" onclick="togglePill(this)">Tiques</span><span class="check-pill" onclick="togglePill(this)">Fobia específica</span>
+      <div class="sec">3. Queixa principal e motivo do atendimento</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic;">Registrar com as palavras do responsável. Não interpretar neste momento.</div>
+      <div class="fg"><label>Queixa principal (nas palavras do responsável)</label><textarea id="ai-queixa-resp"></textarea></div>
+      <div class="fr"><div class="fg"><label>Há quanto tempo apresenta essa queixa?</label><input id="ai-tempo"></div><div class="fg"><label>O que motivou buscar atendimento agora?</label><input id="ai-motivo-agora"></div></div>
+      <div class="fg"><label>A criança já fez acompanhamento psicológico antes?</label>
+        <div class="check-group" id="ai-acomp-ant-check">
+          <span class="check-pill" onclick="togglePill(this)">Não</span>
+          <span class="check-pill" onclick="togglePill(this)">Sim</span>
         </div>
       </div>
-      <div class="fg"><label>Sintomas comportamentais / externalizantes</label>
-        <div class="check-group" id="ai-sint-ext-check">
-          <span class="check-pill" onclick="togglePill(this)">Agressividade física</span><span class="check-pill" onclick="togglePill(this)">Agressividade verbal</span><span class="check-pill" onclick="togglePill(this)">Birras intensas</span><span class="check-pill" onclick="togglePill(this)">Desobediência frequente</span><span class="check-pill" onclick="togglePill(this)">Hiperatividade</span><span class="check-pill" onclick="togglePill(this)">Impulsividade</span><span class="check-pill" onclick="togglePill(this)">Desatenção</span><span class="check-pill" onclick="togglePill(this)">Mentiras recorrentes</span>
-        </div>
-      </div>
-      <div class="fg"><label>Sintomas internalizantes / depressivos</label>
-        <div class="check-group" id="ai-sint-int-check">
-          <span class="check-pill" onclick="togglePill(this)">Tristeza persistente</span><span class="check-pill" onclick="togglePill(this)">Isolamento social</span><span class="check-pill" onclick="togglePill(this)">Perda de interesse em brincadeiras</span><span class="check-pill" onclick="togglePill(this)">Baixa autoestima</span><span class="check-pill" onclick="togglePill(this)">Fala em morte</span><span class="check-pill" onclick="togglePill(this)">Regressão de comportamento</span>
-        </div>
-      </div>
-      <div class="fg"><label>Outros sintomas relevantes</label><textarea id="ai-outros-sint" placeholder="Enurese, encoprese, autolesão, comportamento sexual inadequado para a idade..."></textarea></div>
+      <div class="fg"><label>Se sim — período, profissional e motivo</label><input id="ai-acomp-detalhe" placeholder="Período, profissional, motivo"></div>
+      <div class="fg"><label>A criança sabe que irá ao psicólogo? Como foi explicado?</label><textarea id="ai-crianca-sabe"></textarea></div>
 
-      <div class="sec">Histórico de Desenvolvimento</div>
-      <div class="fg"><label>Gestação e parto</label><textarea id="ai-gestacao" placeholder="Planejada, intercorrências, tipo de parto, prematuridade..."></textarea></div>
-      <div class="fr"><div class="fg"><label>Marcos motores</label><textarea id="ai-marcos-motor" placeholder="Sentou, andou — dentro do esperado?"></textarea></div><div class="fg"><label>Marcos de linguagem</label><textarea id="ai-marcos-ling" placeholder="Primeiras palavras, frases, atrasos..."></textarea></div></div>
-      <div class="fg"><label>Como foi a adaptação escolar?</label><textarea id="ai-adapt-escolar" placeholder="Choro, recusa, adaptação tranquila..."></textarea></div>
-      <div class="fg"><label>Histórico de separações ou perdas significativas</label><textarea id="ai-perdas" placeholder="Morte de familiar, separação dos pais, mudanças..."></textarea></div>
+      <div class="sec">4. História do desenvolvimento</div>
+      <div class="sec" style="font-size:9px;border:none;margin-top:0;padding-top:0;letter-spacing:1px;">Gestação e nascimento</div>
+      <div class="fr3">
+        <div class="fg"><label>Gravidez planejada?</label>
+          <div class="check-group" id="ai-grav-plan-check"><span class="check-pill" onclick="togglePill(this)">Sim</span><span class="check-pill" onclick="togglePill(this)">Não</span></div>
+        </div>
+        <div class="fg"><label>Tipo de parto</label>
+          <div class="check-group" id="ai-parto-check"><span class="check-pill" onclick="togglePill(this)">Normal</span><span class="check-pill" onclick="togglePill(this)">Cesárea</span></div>
+        </div>
+        <div class="fg"><label>UTI neonatal?</label>
+          <div class="check-group" id="ai-uti-check"><span class="check-pill" onclick="togglePill(this)">Não</span><span class="check-pill" onclick="togglePill(this)">Sim</span></div>
+        </div>
+      </div>
+      <div class="fr"><div class="fg"><label>Intercorrências na gestação</label><input id="ai-gestacao" placeholder="Nenhuma / descrever"></div><div class="fg"><label>Peso ao nascer / idade gestacional</label><input id="ai-peso-nasc" placeholder="Ex: 3,2kg · 39 semanas"></div></div>
+      <div class="sec" style="font-size:9px;border:none;margin-top:8px;padding-top:0;letter-spacing:1px;">Marcos do desenvolvimento</div>
+      <div class="fr3">
+        <div class="fg"><label>Engatinhou</label><input id="ai-engatinhou" placeholder="idade aprox."></div>
+        <div class="fg"><label>Andou</label><input id="ai-andou" placeholder="idade aprox."></div>
+        <div class="fg"><label>Primeiras palavras</label><input id="ai-primeiras-palavras" placeholder="idade aprox."></div>
+      </div>
+      <div class="fr3">
+        <div class="fg"><label>Frases completas</label><input id="ai-frases" placeholder="idade aprox."></div>
+        <div class="fg"><label>Controle esfincteriano diurno</label><input id="ai-esfincter-dia" placeholder="idade aprox."></div>
+        <div class="fg"><label>Controle esfincteriano noturno</label><input id="ai-esfincter-noite" placeholder="idade aprox."></div>
+      </div>
+      <div class="fg"><label>Observações sobre o desenvolvimento (algo que chamou atenção?)</label><textarea id="ai-obs-desenvolvimento"></textarea></div>
 
-      <div class="sec">Saúde</div>
-      <div class="fr"><div class="fg"><label>Diagnóstico(s) anterior(es)</label><input id="ai-diag" placeholder="TDAH, TEA, ansiedade..."></div><div class="fg"><label>Medicações em uso</label><input id="ai-meds" placeholder="Nome, dose, desde quando"></div></div>
-      <div class="fg"><label>Já realizou acompanhamento psicológico?</label><select id="ai-acomp"><option value="">—</option><option>Sim</option><option>Não</option></select></div>
-      <div class="fg"><label>Outros acompanhamentos profissionais</label>
+      <div class="sec">5. Saúde e histórico médico</div>
+      <div class="fg"><label>Diagnósticos médicos ou psiquiátricos já estabelecidos</label><input id="ai-diag" placeholder="Nenhum / descrever"></div>
+      <div class="fg"><label>Medicamentos em uso (nome, dose, desde quando)</label><input id="ai-meds" placeholder="Nenhum / descrever"></div>
+      <div class="fr"><div class="fg"><label>Alergias conhecidas</label><input id="ai-alergias" placeholder="Nenhuma / descrever"></div><div class="fg"><label>Internações ou cirurgias relevantes</label><input id="ai-internacoes" placeholder="Nenhuma / descrever"></div></div>
+      <div class="fg"><label>Profissionais que acompanham atualmente</label>
         <div class="check-group" id="ai-profissionais-check">
-          <span class="check-pill" onclick="togglePill(this)">Psiquiatra</span><span class="check-pill" onclick="togglePill(this)">Neurologista</span><span class="check-pill" onclick="togglePill(this)">Fonoaudiólogo(a)</span><span class="check-pill" onclick="togglePill(this)">Terapeuta ocupacional</span><span class="check-pill" onclick="togglePill(this)">Psicopedagogo(a)</span>
+          <span class="check-pill" onclick="togglePill(this)">Médico(a)</span>
+          <span class="check-pill" onclick="togglePill(this)">Psiquiatra</span>
+          <span class="check-pill" onclick="togglePill(this)">Neurologista</span>
+          <span class="check-pill" onclick="togglePill(this)">Fonoaudiólogo(a)</span>
+          <span class="check-pill" onclick="togglePill(this)">Terapeuta ocupacional</span>
+          <span class="check-pill" onclick="togglePill(this)">Psicopedagogo(a)</span>
+        </div>
+      </div>
+      <div class="fg"><label>Marque se houver queixas físicas recorrentes</label>
+        <div class="check-group" id="ai-queixas-fisicas-check">
+          <span class="check-pill" onclick="togglePill(this)">Dores de cabeça</span>
+          <span class="check-pill" onclick="togglePill(this)">Dores abdominais</span>
+          <span class="check-pill" onclick="togglePill(this)">Enurese (xixi na cama)</span>
+          <span class="check-pill" onclick="togglePill(this)">Encoprese</span>
+          <span class="check-pill" onclick="togglePill(this)">Tiques</span>
+          <span class="check-pill" onclick="togglePill(this)">Problemas de sono</span>
+          <span class="check-pill" onclick="togglePill(this)">Somatizações frequentes</span>
+          <span class="check-pill" onclick="togglePill(this)">Apetite alterado</span>
         </div>
       </div>
 
-      <div class="sec">Escola e Vida Social</div>
-      <div class="fg"><label>Desempenho escolar</label><select id="ai-desempenho"><option value="">—</option><option>Ótimo</option><option>Bom</option><option>Regular</option><option>Abaixo do esperado</option><option>Com dificuldades significativas</option></select></div>
-      <div class="fg"><label>Dificuldades de aprendizagem</label><textarea id="ai-dif-aprendizagem" placeholder="Leitura, escrita, matemática, atenção em sala..."></textarea></div>
-      <div class="fg"><label>Como é o relacionamento com colegas?</label><textarea id="ai-colegas" placeholder="Tem amigos, é isolada(o), tem conflitos frequentes..."></textarea></div>
-      <div class="fg"><label>Situações de bullying</label><select id="ai-bullying"><option value="">—</option><option>Não há relatos</option><option>Sofre bullying</option><option>Pratica bullying</option><option>Ambos</option></select></div>
+      <div class="sec">6. Comportamento, desenvolvimento emocional e relações sociais</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-style:italic;">Conforme diretrizes do CFP (Resolução 009/2018). Informações coletadas com o(a) responsável. Observação direta complementa nas sessões seguintes.</div>
 
-      <div class="sec">Rotina e Hábitos</div>
-      <div class="fr"><div class="fg"><label>Qualidade do sono</label><select id="ai-sono"><option value="">—</option><option>Boa</option><option>Regular</option><option>Ruim</option><option>Insônia</option><option>Pesadelos frequentes</option></select></div><div class="fg"><label>Alimentação</label><select id="ai-alim"><option value="">—</option><option>Boa</option><option>Regular</option><option>Seletividade alimentar</option><option>Recusa alimentar</option></select></div></div>
-      <div class="fg"><label>Interesses e brincadeiras preferidas</label><textarea id="ai-interesses" placeholder="O que gosta de fazer, jogos, temas de interesse..."></textarea></div>
-      <div class="fg"><label>Uso de telas</label><input id="ai-telas" placeholder="Horas por dia, tipos de conteúdo..."></div>
+      <div class="sec" style="font-size:9px;border:none;margin-top:0;padding-top:0;">6.1 — Temperamento e personalidade</div>
+      <div class="fg"><label>Como os responsáveis descrevem a criança no geral?</label><textarea id="ai-descricao-crianca" placeholder="Ex: agitada, tímida, alegre, irritável, perfeccionista..." style="min-height:48px;"></textarea></div>
+      <div class="fr">
+        <div class="fg"><label>Nível de energia / atividade geral</label>
+          <div class="check-group" id="ai-energia-check"><span class="check-pill" onclick="togglePill(this)">Baixo</span><span class="check-pill" onclick="togglePill(this)">Moderado</span><span class="check-pill" onclick="togglePill(this)">Alto</span><span class="check-pill" onclick="togglePill(this)">Muito alto</span></div>
+        </div>
+        <div class="fg"><label>Adaptabilidade a situações novas</label>
+          <div class="check-group" id="ai-adapt-check"><span class="check-pill" onclick="togglePill(this)">Fácil</span><span class="check-pill" onclick="togglePill(this)">Com dificuldade</span><span class="check-pill" onclick="togglePill(this)">Muito resistente</span></div>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Reação inicial diante de pessoas / situações desconhecidas</label>
+          <div class="check-group" id="ai-reacao-novo-check"><span class="check-pill" onclick="togglePill(this)">Aproximação espontânea</span><span class="check-pill" onclick="togglePill(this)">Observa antes</span><span class="check-pill" onclick="togglePill(this)">Afastamento / choro / recusa</span></div>
+        </div>
+        <div class="fg"><label>Persistência em tarefas</label>
+          <div class="check-group" id="ai-persist-check"><span class="check-pill" onclick="togglePill(this)">Sim</span><span class="check-pill" onclick="togglePill(this)">Às vezes</span><span class="check-pill" onclick="togglePill(this)">Pouca persistência</span></div>
+        </div>
+      </div>
+      <div class="fg"><label>Sensibilidade a estímulos (barulho, toque, luz, textura, cheiro)</label>
+        <div class="check-group" id="ai-sensib-check"><span class="check-pill" onclick="togglePill(this)">Baixa</span><span class="check-pill" onclick="togglePill(this)">Moderada</span><span class="check-pill" onclick="togglePill(this)">Alta</span></div>
+      </div>
 
-      <div class="sec">Dinâmica Familiar</div>
-      <div class="fg"><label>Como os responsáveis descrevem a criança?</label><textarea id="ai-descricao-crianca" placeholder="Adjetivos, características, como a veem..."></textarea></div>
-      <div class="fg"><label>Estilo parental predominante</label><select id="ai-estilo-parental"><option value="">—</option><option>Autoritativo (firme e afetuoso)</option><option>Autoritário (rígido)</option><option>Permissivo</option><option>Superprotetor</option><option>Negligente</option><option>Inconsistente</option></select></div>
-      <div class="fg"><label>Como os responsáveis lidam com os comportamentos-problema?</label><textarea id="ai-resposta-pais" placeholder="Punem, ignoram, cedem, dialogam..."></textarea></div>
-      <div class="fg"><label>Há conflitos familiares que impactam a criança?</label><textarea id="ai-conflitos-fam" placeholder="Brigas frequentes, separação em andamento, tensão no lar..."></textarea></div>
-      <div class="fg"><label>Histórico familiar de transtornos psicológicos / psiquiátricos</label><textarea id="ai-hist-familiar" placeholder="Ansiedade, depressão, TDAH, alcoolismo..."></textarea></div>
+      <div class="sec" style="font-size:9px;border:none;margin-top:8px;padding-top:0;">6.2 — Regulação emocional</div>
+      <div class="fg"><label>Como a criança expressa suas emoções (alegria, raiva, tristeza, medo)?</label><textarea id="ai-expressao-emocoes"></textarea></div>
+      <div class="fg"><label>Como reage quando contrariada ou frustrada?</label><textarea id="ai-reacao-frustracao" placeholder="Ex: birra, choro, agressão, silêncio..."></textarea></div>
+      <div class="fr">
+        <div class="fg"><label>Frequência de crises emocionais / birras intensas</label>
+          <div class="check-group" id="ai-freq-crises-check"><span class="check-pill" onclick="togglePill(this)">Raramente</span><span class="check-pill" onclick="togglePill(this)">Às vezes</span><span class="check-pill" onclick="togglePill(this)">Frequente</span><span class="check-pill" onclick="togglePill(this)">Diariamente</span></div>
+        </div>
+        <div class="fg"><label>Duração média das crises</label><input id="ai-duracao-crises" placeholder="Ex: poucos minutos, horas..."></div>
+      </div>
+      <div class="fg"><label>O que ajuda a criança a se acalmar?</label><input id="ai-acalmar" placeholder="Ex: colo, objeto específico, distração, música..."></div>
+      <div class="fg"><label>A criança consegue nomear suas próprias emoções?</label>
+        <div class="check-group" id="ai-nomear-emocoes-check"><span class="check-pill" onclick="togglePill(this)">Sim, com facilidade</span><span class="check-pill" onclick="togglePill(this)">Parcialmente</span><span class="check-pill" onclick="togglePill(this)">Não consegue / evita</span></div>
+      </div>
+      <div class="fg"><label>Assinale emoções que os responsáveis observam com frequência</label>
+        <div class="check-group" id="ai-emocoes-freq-check">
+          <span class="check-pill" onclick="togglePill(this)">Tristeza frequente</span><span class="check-pill" onclick="togglePill(this)">Choro sem motivo aparente</span><span class="check-pill" onclick="togglePill(this)">Irritabilidade / humor instável</span><span class="check-pill" onclick="togglePill(this)">Ansiedade / nervosismo</span><span class="check-pill" onclick="togglePill(this)">Preocupação excessiva</span><span class="check-pill" onclick="togglePill(this)">Medos intensos ou irracionais</span><span class="check-pill" onclick="togglePill(this)">Pânico / crise de ansiedade</span><span class="check-pill" onclick="togglePill(this)">Alegria excessiva / euforia</span><span class="check-pill" onclick="togglePill(this)">Apatia / indiferença</span><span class="check-pill" onclick="togglePill(this)">Culpa excessiva</span><span class="check-pill" onclick="togglePill(this)">Vergonha intensa</span>
+        </div>
+      </div>
+      <div class="fg"><label>Medos específicos relatados</label><input id="ai-medos" placeholder="Ex: escuro, animais, morte, separação dos pais, escola..."></div>
 
-      <div class="sec">Fatores de Risco e Proteção</div>
-      <div class="fg"><label>Fatores de proteção</label><textarea id="ai-protecao" placeholder="Vínculos afetivos saudáveis, pontos fortes, habilidades..."></textarea></div>
-      <div class="fg"><label>Indicadores de violência, abuso ou negligência</label><textarea id="ai-risco-abuso" placeholder="Relatos, comportamentos suspeitos, marcas físicas..."></textarea></div>
-      <div class="fg"><label>Ideação suicida / autolesão</label><select id="ai-ideacao"><option value="">—</option><option>Não há relatos</option><option>Fala em morte de forma passiva</option><option>Expressou desejo de morrer</option><option>Autolesão presente</option><option>Tentativa anterior</option></select></div>
+      <div class="sec" style="font-size:9px;border:none;margin-top:8px;padding-top:0;">6.3 — Checklist comportamental detalhado</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic;">Assinale os comportamentos presentes. Use o campo de observações ao final para detalhar frequência, contexto e intensidade.</div>
+      <div class="fr">
+        <div class="fg"><label>Comportamentos internalizantes</label>
+          <div class="check-group" id="ai-sint-int-check" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Isolamento social</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Retraimento / mutismo seletivo</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Tristeza persistente</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Choro fácil e frequente</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Queixas somáticas sem causa médica</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Ansiedade de separação</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Fobia escolar / recusa escolar</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Medos específicos intensos</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Pensamentos negativos sobre si</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Fala em morte / desaparecimento</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Baixa autoestima verbalizada</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Hipersensibilidade à crítica</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Perfeccionismo / medo de errar</label>
+          </div>
+        </div>
+        <div class="fg"><label>Comportamentos externalizantes</label>
+          <div class="check-group" id="ai-sint-ext-check" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Agitação / hiperatividade motora</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Impulsividade (age sem pensar)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Desatenção / distração fácil</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Agressão física (bater, morder, chutar)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Agressão verbal (xingamentos, ameaças)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Destruição de objetos</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Birras intensas e prolongadas</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Desobediência frequente</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Comportamento desafiador / opositor</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Mentiras frequentes</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Furtos (em casa ou fora)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Crueldade com animais</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Bullying / intimidação de colegas</label>
+          </div>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Comportamentos de ansiedade / TOC / fobias</label>
+          <div class="check-group" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Rituais / comportamentos repetitivos</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Verificações compulsivas</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Necessidade de simetria ou ordem</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Evitação de situações/objetos específicos</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Pensamentos intrusivos relatados</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Ansiedade antecipatória frequente</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Hipocondria (medo de doenças)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Fobia social (medo de julgamento)</label>
+          </div>
+        </div>
+        <div class="fg"><label>Comportamentos relacionados ao sono</label>
+          <div class="check-group" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Dificuldade para adormecer</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Recusa dormir sozinho(a)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Pesadelos frequentes</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Terror noturno (acorda aterrorizado)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Sonambulismo</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Enurese noturna (xixi na cama)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Acorda várias vezes à noite</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Sonolência excessiva diurna</label>
+          </div>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Alimentação e corpo</label>
+          <div class="check-group" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Seletividade alimentar intensa</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Recusa generalizada de alimentos</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Hiperfagia (come compulsivamente)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Perda de apetite persistente</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Regurgitação / ruminação</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Pica (ingere objetos não alimentares)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Preocupação excessiva com o corpo</label>
+          </div>
+        </div>
+        <div class="fg"><label style="color:var(--terra);">⚠️ Comportamentos autolesivos / proteção</label>
+          <div class="check-group" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Automutilação (arranhar, beliscar, bater a cabeça)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Fala em se machucar</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Fala em morte ou desejo de morrer</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Comportamentos de risco</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Relatos de abuso / situação de violência</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Regressão comportamental súbita</label>
+          </div>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Linguagem e comunicação</label>
+          <div class="check-group" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Gagueira / disfluência</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Atraso na fala / linguagem</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Ecolalia (repete frases/palavras)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Dificuldade de compreensão verbal</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Dificuldade de expressar necessidades</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Mutismo seletivo</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Fala excessiva / sem filtro</label>
+          </div>
+        </div>
+        <div class="fg"><label>Indicadores de TEA / neurodesenvolvimento</label>
+          <div class="check-group" style="flex-direction:column;gap:5px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Contato visual reduzido</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Dificuldade de leitura social/emocional</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Interesses muito restritos e intensos</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Rotinas rígidas (desregula com mudanças)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Movimentos estereotipados (balançar, girar)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Hipersensibilidade sensorial</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Hiposensibilidade sensorial</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="checkbox" style="accent-color:var(--sage-dark);width:13px;height:13px;"> Dificuldade de jogo simbólico/imaginativo</label>
+          </div>
+        </div>
+      </div>
+      <div class="fg"><label>Observações complementares sobre os comportamentos marcados (frequência, contexto, gravidade)</label><textarea id="ai-obs-comportamentos" style="min-height:70px;"></textarea></div>
 
-      <div class="sec">Motivação para o Tratamento</div>
-      <div class="fg"><label>O que os responsáveis esperam alcançar?</label><textarea id="ai-expectativa-resp" placeholder="Objetivos trazidos pela família..."></textarea></div>
-      <div class="fg"><label>O que a criança gostaria de mudar?</label><textarea id="ai-expectativa-crianca" placeholder="Perspectiva da criança, se verbalizar..."></textarea></div>
-      <div class="fg"><label>Motivação dos responsáveis</label><select id="ai-motivacao-resp"><option value="">—</option><option>Alta — buscaram ativamente</option><option>Moderada</option><option>Baixa — vieram por indicação</option><option>Relutantes / resistentes</option></select></div>
+      <div class="sec" style="font-size:9px;border:none;margin-top:8px;padding-top:0;">6.4 — Relações sociais e vínculos afetivos</div>
+      <div class="fg"><label>Como é o vínculo afetivo da criança com a mãe / cuidadora principal?</label><textarea id="ai-vinculo-principal" placeholder="Ex: apego seguro, ansioso, evitativo, desorganizado..."></textarea></div>
+      <div class="fg"><label>Como é o vínculo afetivo com o pai / outro cuidador?</label><textarea id="ai-vinculo-outro"></textarea></div>
+      <div class="fg"><label>Como é a relação com irmãos (se houver)?</label><textarea id="ai-relacao-irmaos" placeholder="Ex: rivalidade, proteção, indiferença, conflitos..."></textarea></div>
+      <div class="fg"><label>Como é a relação com outras figuras de autoridade (avós, tios, professores)?</label><textarea id="ai-relacao-autoridade"></textarea></div>
+      <div class="fr3">
+        <div class="fg"><label>Tem amizades? Quantos amigos próximos?</label>
+          <div class="check-group" id="ai-amizades-check"><span class="check-pill" onclick="togglePill(this)">Nenhum</span><span class="check-pill" onclick="togglePill(this)">1–2</span><span class="check-pill" onclick="togglePill(this)">Vários</span><span class="check-pill" onclick="togglePill(this)">Muitos</span></div>
+        </div>
+        <div class="fg"><label>Como se relaciona com colegas da mesma idade?</label>
+          <div class="check-group" id="ai-colegas-check"><span class="check-pill" onclick="togglePill(this)">Bem integrado</span><span class="check-pill" onclick="togglePill(this)">Seletivo</span><span class="check-pill" onclick="togglePill(this)">Com conflitos</span><span class="check-pill" onclick="togglePill(this)">Isolado</span></div>
+        </div>
+        <div class="fg"><label>Já sofreu ou praticou bullying?</label><textarea id="ai-bullying-desc" style="min-height:48px;" placeholder="Descrever se houver..."></textarea></div>
+      </div>
+      <div class="fg"><label>Assinale características observadas nas relações sociais</label>
+        <div class="check-group" id="ai-relacao-social-check">
+          <span class="check-pill" onclick="togglePill(this)">Tímido(a) / retraído(a)</span><span class="check-pill" onclick="togglePill(this)">Extrovertido(a) / sociável</span><span class="check-pill" onclick="togglePill(this)">Liderança entre pares</span><span class="check-pill" onclick="togglePill(this)">Seguidismo / dificuldade de impor opiniões</span><span class="check-pill" onclick="togglePill(this)">Dificuldade de compartilhar / cooperar</span><span class="check-pill" onclick="togglePill(this)">Ciúme excessivo</span><span class="check-pill" onclick="togglePill(this)">Prefere brincar com crianças mais novas</span><span class="check-pill" onclick="togglePill(this)">Prefere brincar com adultos</span><span class="check-pill" onclick="togglePill(this)">Prefere brincar sozinho</span><span class="check-pill" onclick="togglePill(this)">Dificuldade de resolver conflitos entre pares</span><span class="check-pill" onclick="togglePill(this)">Vitimização frequente</span><span class="check-pill" onclick="togglePill(this)">Manipulação de colegas</span>
+        </div>
+      </div>
 
-      <div class="sec">Observações Clínicas</div>
-      <div class="fg"><label>Comportamento da criança durante a entrevista</label><textarea id="ai-obs-entrevista" placeholder="Postura, contato visual, linguagem, cooperação, humor observado..."></textarea></div>
-      <div class="fg"><label>Hipótese diagnóstica inicial</label><input id="ai-hipotese" placeholder="CID-11 / DSM-5 — provisória"></div>
-      <div class="fg"><label>Observações gerais</label><textarea id="ai-obs-gerais" placeholder="Qualquer informação relevante não contemplada acima..."></textarea></div>
+      <div class="sec" style="font-size:9px;border:none;margin-top:8px;padding-top:0;">6.5 — Brincadeira, lazer e criatividade</div>
+      <div class="fg"><label>Quais as brincadeiras e atividades preferidas da criança?</label><textarea id="ai-interesses"></textarea></div>
+      <div class="fr">
+        <div class="fg"><label>Tipo de brincadeira predominante</label>
+          <div class="check-group" id="ai-tipo-brincadeira-check" style="flex-direction:column;gap:4px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="radio" name="ai-brinc" style="accent-color:var(--sage-dark);"> Solitária</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="radio" name="ai-brinc" style="accent-color:var(--sage-dark);"> Paralela (perto, mas sem interagir)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="radio" name="ai-brinc" style="accent-color:var(--sage-dark);"> Cooperativa</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="radio" name="ai-brinc" style="accent-color:var(--sage-dark);"> Jogo de regras</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="radio" name="ai-brinc" style="accent-color:var(--sage-dark);"> Jogo simbólico / faz de conta</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;color:var(--brown);"><input type="radio" name="ai-brinc" style="accent-color:var(--sage-dark);"> Jogo construtivo</label>
+          </div>
+        </div>
+        <div>
+          <div class="fg"><label>Uso de telas (horas por dia / tipo de conteúdo)</label><input id="ai-telas" placeholder="Ex: 3h, YouTube, jogos..."></div>
+          <div class="fg" style="margin-top:10px;"><label>Aceita perder em jogos / esperar sua vez?</label>
+            <div class="check-group" id="ai-perder-check"><span class="check-pill" onclick="togglePill(this)">Sim, tranquilamente</span><span class="check-pill" onclick="togglePill(this)">Com dificuldade</span><span class="check-pill" onclick="togglePill(this)">Não aceita / crise</span></div>
+          </div>
+          <div class="fg" style="margin-top:10px;"><label>Atividades extracurriculares</label><input id="ai-extracurricular" placeholder="Ex: futebol, dança, karatê..."></div>
+          <div class="fg" style="margin-top:10px;"><label>A criança demonstra prazer nas atividades do dia a dia?</label>
+            <div class="check-group" id="ai-prazer-check"><span class="check-pill" onclick="togglePill(this)">Sim</span><span class="check-pill" onclick="togglePill(this)">Às vezes</span><span class="check-pill" onclick="togglePill(this)">Raramente</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec" style="font-size:9px;border:none;margin-top:8px;padding-top:0;">6.6 — Autonomia, autocuidado e desenvolvimento adaptativo</div>
+      <div class="fg"><label>Assinale o que a criança já realiza com autonomia (compatível com a idade)</label>
+        <div class="check-group" id="ai-autonomia-check">
+          <span class="check-pill" onclick="togglePill(this)">Se veste sozinha</span><span class="check-pill" onclick="togglePill(this)">Higiene pessoal (escova dentes, banho)</span><span class="check-pill" onclick="togglePill(this)">Organiza o próprio material escolar</span><span class="check-pill" onclick="togglePill(this)">Faz refeições sem auxílio</span><span class="check-pill" onclick="togglePill(this)">Dorme sozinha sem resistência</span><span class="check-pill" onclick="togglePill(this)">Realiza tarefas domésticas simples</span><span class="check-pill" onclick="togglePill(this)">Toma decisões simples do dia a dia</span><span class="check-pill" onclick="togglePill(this)">Pede ajuda quando necessário</span>
+        </div>
+      </div>
+      <div class="fg"><label>Há dependência excessiva dos responsáveis? Descrever</label><textarea id="ai-dependencia"></textarea></div>
+      <div class="fg"><label>Como a criança reage à separação dos responsáveis (escola, passeios)?</label><textarea id="ai-separacao-resp" placeholder="Ex: tranquila, choro breve, crise intensa, recusa ir..."></textarea></div>
+
+      <div class="sec" style="font-size:9px;border:none;margin-top:8px;padding-top:0;">6.7 — Desenvolvimento psicossexual (conforme faixa etária)</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic;">Conforme CFP Nota Técnica 01/2022 sobre escuta especializada. Abordar com naturalidade.</div>
+      <div class="fg"><label>Há curiosidade sobre o próprio corpo ou o de outras crianças (natural para a idade)?</label>
+        <div class="check-group" id="ai-curiosidade-corpo-check"><span class="check-pill" onclick="togglePill(this)">Não observado</span><span class="check-pill" onclick="togglePill(this)">Sim, de forma natural e esperada</span><span class="check-pill" onclick="togglePill(this)">Sim, de forma excessiva ou preocupante</span></div>
+      </div>
+      <div class="fg"><label>Há comportamentos sexualizados inadequados para a faixa etária?</label>
+        <div class="check-group" id="ai-sexualizado-check"><span class="check-pill" onclick="togglePill(this)">Não</span><span class="check-pill" onclick="togglePill(this)">Sim — descrever abaixo</span></div>
+        <input id="ai-sexualizado-desc" placeholder="Descrever se sim" style="margin-top:6px;">
+      </div>
+      <div class="fg"><label>A criança verbaliza algo sobre o próprio corpo ou situações que geram preocupação?</label><textarea id="ai-verbaliza-corpo"></textarea></div>
+      <div class="fg"><label>Mudanças súbitas de comportamento relacionadas a alguma pessoa ou contexto específico?</label><textarea id="ai-mudanca-comportamento" placeholder="Ex: regrediu após visitar fulano, recusa ir à casa de alguém..."></textarea></div>
+      <div class="fg"><label>Observações gerais do responsável sobre o comportamento e relações da criança</label><textarea id="ai-obs-comportamentos-geral"></textarea></div>
+
+      <div class="sec">7. Escolaridade e aprendizagem</div>
+      <div class="fr">
+        <div class="fg"><label>Nome da escola / turno</label><input id="ai-escola"></div>
+        <div class="fg"><label>Rendimento escolar geral</label>
+          <div class="check-group" id="ai-desempenho-check"><span class="check-pill" onclick="togglePill(this)">Bom</span><span class="check-pill" onclick="togglePill(this)">Regular</span><span class="check-pill" onclick="togglePill(this)">Com dificuldades</span></div>
+        </div>
+      </div>
+      <div class="fg"><label>Dificuldades específicas (leitura, escrita, cálculo, atenção, etc.)</label><textarea id="ai-dif-aprendizagem"></textarea></div>
+      <div class="fg"><label>Como é a relação com professores e colegas?</label><textarea id="ai-colegas"></textarea></div>
+      <div class="fg"><label>Já foi retido, teve reforço ou apoio pedagógico especial?</label><textarea id="ai-retencao"></textarea></div>
+      <div class="fg"><label>Queixas vindas da escola</label><textarea id="ai-queixas-escola"></textarea></div>
+
+      <div class="sec">8. Dinâmica familiar e contexto de vida</div>
+      <div class="fg"><label>Como é a rotina da criança (horários, atividades, telas, sono)?</label><textarea id="ai-rotina"></textarea></div>
+      <div class="fg"><label>Como é a disciplina em casa? Quem define regras e limites?</label><textarea id="ai-resposta-pais"></textarea></div>
+      <div class="fg"><label>Houve eventos estressores recentes? (mudança, luto, separação, violência, etc.)</label><textarea id="ai-eventos-estressores"></textarea></div>
+      <div class="fg"><label>Histórico de transtornos mentais na família (pais, avós, irmãos)?</label><textarea id="ai-hist-familiar"></textarea></div>
+      <div class="fg"><label>Como o responsável avalia a relação afetiva com a criança?</label><textarea id="ai-relacao-afetiva"></textarea></div>
+      <div class="fg"><label>O que os responsáveis esperam do atendimento?</label><textarea id="ai-expectativa-resp"></textarea></div>
+
+      <div class="sec">9. Observações clínicas e encaminhamentos</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic;">Uso exclusivo da psicóloga — preenchido após a sessão.</div>
+      <div class="fg"><label>Impressão geral da entrevista de anamnese</label><textarea id="ai-obs-entrevista" style="min-height:70px;"></textarea></div>
+      <div class="fg"><label>Hipóteses iniciais / CID-10 ou DSM-5 a investigar</label><input id="ai-hipotese" placeholder="Ex: F90.0 TDAH, F93.0 Ansiedade de separação..."></div>
+      <div class="fg"><label>Encaminhamentos / avaliações complementares indicadas</label><textarea id="ai-encaminhamentos"></textarea></div>
+      <div class="fg"><label>Plano terapêutico inicial / objetivos</label><textarea id="ai-plano-terapeutico"></textarea></div>
+      <div class="fr">
+        <div class="fg"><label>Periodicidade prevista das sessões</label>
+          <div class="check-group" id="ai-periodicidade-check"><span class="check-pill" onclick="togglePill(this)">Semanal</span><span class="check-pill" onclick="togglePill(this)">Quinzenal</span></div>
+        </div>
+        <div class="fg"><label>Duração estimada do processo</label><input id="ai-duracao-processo" placeholder="Ex: 6 meses, 1 ano..."></div>
+      </div>
+      <div class="fg"><label>Observações gerais</label><textarea id="ai-obs-gerais"></textarea></div>
 
       <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="saveAnamInfantil()">💾 Salvar anamnese infantil</button>
       </div>
     </div>
-
-    <!-- SESSÕES -->
     <div class="icontent" id="tab-sessoes">
       <div class="card" style="padding:16px;margin-bottom:14px;">
         <div class="sec" style="margin-top:0;">Nova Sessão</div>
@@ -706,6 +967,42 @@ textarea{resize:vertical;min-height:72px;}
         <div style="font-size:11px;color:var(--muted);margin-top:8px;">💡 Clique no texto acima para editar diretamente antes de imprimir.</div>
       </div>
     </div>
+
+    <!-- RECIBO -->
+    <div class="icontent" id="tab-recibo">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-family:'Lora',serif;font-size:16px;">Recibo de Atendimento</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Atendimento psicológico online</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-secondary btn-sm" onclick="imprimirRecibo()">🖨️ Imprimir</button>
+          <button class="btn btn-secondary btn-sm" onclick="copiarRecibo()">📋 Copiar</button>
+        </div>
+      </div>
+
+      <div class="card" style="padding:16px;margin-bottom:12px;">
+        <div class="sec" style="margin-top:0;">Dados do recibo</div>
+        <div class="fr">
+          <div class="fg"><label>Data do atendimento</label><input id="rec-data" type="date"></div>
+          <div class="fg"><label>Nº do recibo</label><input id="rec-num" type="text" placeholder="Ex: 001/2026"></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label>Valor (R$)</label><input id="rec-valor" type="number" placeholder="Ex: 150"></div>
+          <div class="fg"><label>Forma de pagamento</label><select id="rec-pagamento"><option value="PIX">PIX</option><option value="Transferência bancária">Transferência bancária</option><option value="Dinheiro">Dinheiro</option><option value="Cartão de crédito">Cartão de crédito</option><option value="Cartão de débito">Cartão de débito</option></select></div>
+        </div>
+        <div class="fg"><label>Descrição do serviço</label><input id="rec-descricao" placeholder="Ex: Sessão de psicoterapia online — TCC"></div>
+        <button class="btn btn-primary btn-sm" style="margin-top:6px;" onclick="gerarRecibo()">✨ Gerar recibo</button>
+      </div>
+
+      <div id="recibo-preview-wrap" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:12px;color:var(--muted);">Revise antes de imprimir — clique no texto para editar:</div>
+        </div>
+        <div id="recibo-preview" contenteditable="true" style="background:white;color:#222;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:2;min-height:300px;font-family:'DM Sans',sans-serif;white-space:pre-wrap;"></div>
+      </div>
+    </div>
+
 
   </div>
 </div>
@@ -934,6 +1231,9 @@ function openPt(id){
   document.getElementById('pay-data').value=today;
   if(p.valor) document.getElementById('pay-val').value=p.valor;
   if(p.valor){ const ctv=document.getElementById('ct-valor'); if(ctv) ctv.value=p.valor; }
+  // auto-fill recibo
+  const recNum=document.getElementById('rec-num');
+  if(recNum){ recNum.value=''; document.getElementById('rec-data').value=today; if(p.valor) document.getElementById('rec-valor').value=p.valor; document.getElementById('recibo-preview-wrap').style.display='none'; }
   document.getElementById('ai-evolucao-block').style.display='none';
   document.getElementById('ai-formulacao-block').style.display='none';
   selHumorVal=''; selSudsVal=null;
@@ -983,8 +1283,9 @@ function saveAnamInfantil(){
 }
 
 // ── IA ─────────────────────────────────────────────────────────────────────
-async function callAI(prompt){
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+const API_KEY='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';
+async function callAI(prompt,maxTokens=1200){
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
   const data=await resp.json();
   return data.content.map(c=>c.text||'').join('');
 }
@@ -1473,6 +1774,86 @@ Escreva SOMENTE o texto do contrato.`;
 }
 function copiarContrato(){ const text=document.getElementById('contrato-preview').innerText; navigator.clipboard.writeText(text).then(()=>{ const btn=event.target; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar',2000); }); }
 function imprimirContrato(){ const win=window.open('','_blank'); win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Contrato</title><style>body{font-family:'Times New Roman',serif;font-size:12pt;line-height:2;margin:3cm 3cm 2cm 3cm;}pre{font-family:'Times New Roman',serif;white-space:pre-wrap;font-size:12pt;line-height:2;}</style></head><body><pre>${document.getElementById('contrato-preview').innerText}</pre></body></html>`); win.document.close(); win.focus(); setTimeout(()=>win.print(),400); }
+
+
+// ── RECIBO ─────────────────────────────────────────────────────────────────
+function gerarRecibo(){
+  const p=getP(curId); if(!p) return;
+  const data=document.getElementById('rec-data').value;
+  const num=document.getElementById('rec-num').value||'___';
+  const valor=document.getElementById('rec-valor').value||p.valor||'___';
+  const pagamento=document.getElementById('rec-pagamento').value;
+  const descricao=document.getElementById('rec-descricao').value||'Sessão de psicoterapia online — TCC';
+  const hoje=data?fmtDate(data):fmtDate(new Date().toISOString().split('T')[0]);
+  const valorFmt=parseFloat(valor).toFixed(2).replace('.',',');
+  const valorExtenso=numPorExtenso(parseFloat(valor));
+  const nomePaciente=p.nome||'___';
+  const cpfPaciente=p.cpf?'CPF: '+p.cpf:'';
+
+  const recibo=`RECIBO DE ATENDIMENTO PSICOLÓGICO
+Nº ${num}
+
+
+Eu, Júlia Vitória Acunha da Costa, psicóloga inscrita no CRP 14/11909, recebi de ${nomePaciente}${cpfPaciente?' ('+cpfPaciente+')':''} a importância de R$ ${valorFmt} (${valorExtenso}), referente a:
+
+${descricao}
+
+Modalidade: Atendimento online (via Google Meet)
+Forma de pagamento: ${pagamento}
+Data: ${hoje}
+
+
+Por ser verdade, firmo o presente recibo.
+
+
+Três Lagoas/MS, ${hoje}.
+
+
+
+
+_______________________________________________
+Júlia Vitória Acunha da Costa
+Psicóloga — CRP 14/11909
+E-mail: psi.juliaacunha@gmail.com
+Instagram: @psi.juliaacunha`;
+
+  const wrap=document.getElementById('recibo-preview-wrap');
+  document.getElementById('recibo-preview').innerText=recibo;
+  wrap.style.display='block';
+  wrap.scrollIntoView({behavior:'smooth'});
+}
+
+function numPorExtenso(n){
+  if(isNaN(n)||n===0) return 'zero reais';
+  const unidades=['','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze','quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
+  const dezenas=['','','vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+  const centenas=['','cento','duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'];
+  function conv(n){
+    if(n===100) return 'cem';
+    if(n<20) return unidades[n];
+    if(n<100) return dezenas[Math.floor(n/10)]+(n%10?' e '+unidades[n%10]:'');
+    return centenas[Math.floor(n/100)]+(n%100?' e '+conv(n%100):'');
+  }
+  const inteiro=Math.floor(n);
+  const cents=Math.round((n-inteiro)*100);
+  let result=inteiro>0?(inteiro===1?'um real':conv(inteiro)+' reais'):'';
+  if(cents>0) result+=(result?' e ':'')+conv(cents)+(cents===1?' centavo':' centavos');
+  return result||'zero reais';
+}
+
+function imprimirRecibo(){
+  const texto=document.getElementById('recibo-preview').innerText;
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Recibo</title><style>body{font-family:'Times New Roman',serif;font-size:12pt;line-height:2;margin:3cm 3cm 2cm 3cm;}pre{font-family:'Times New Roman',serif;white-space:pre-wrap;font-size:12pt;line-height:2;}</style></head><body><pre>${texto}</pre></body></html>`);
+  win.document.close(); win.focus(); setTimeout(()=>win.print(),400);
+}
+
+function copiarRecibo(){
+  const texto=document.getElementById('recibo-preview').innerText;
+  navigator.clipboard.writeText(texto).then(()=>{
+    alert('Recibo copiado!');
+  });
+}
 
 // ── FIREBASE ───────────────────────────────────────────────────────────────
 function initFirebase(){
