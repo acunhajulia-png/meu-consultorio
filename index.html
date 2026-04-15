@@ -142,6 +142,8 @@ textarea{resize:vertical;min-height:72px;}
 .agenda-item{background:var(--card);border-radius:11px;padding:13px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(58,42,30,.05);border-left:4px solid var(--sage);}
 .agenda-item.confirmed{border-left-color:var(--green);}
 .agenda-item.cancelled{border-left-color:var(--red);opacity:.6;}
+.agenda-item.compareceu{border-left-color:var(--green);}
+.agenda-item.faltou{border-left-color:var(--red);background:var(--terra-light);}
 .agenda-time{font-family:'Lora',serif;font-size:16px;color:var(--sage-dark);min-width:50px;}
 .agenda-info{flex:1;}
 .agenda-name{font-weight:600;font-size:14px;}
@@ -192,7 +194,8 @@ textarea{resize:vertical;min-height:72px;}
   <div class="brand">🌿 Meu Consultório <small>Psicologia · TCC</small></div>
   <div style="display:flex;align-items:center;gap:8px;">
     <span id="sync-status" style="font-size:11px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px;"><span class="sync-dot" id="sync-dot"></span><span id="sync-label">Sincronizado</span></span>
-    <button class="btn-dark" onclick="toggleDark()" id="dark-btn" title="Alternar modo escuro">🌙</button>
+    <button class="btn-dark" onclick="toggleDark()" id="dark-btn" title="Modo escuro">🌙</button>
+    <button class="btn-dark" onclick="openConfiguracoes()" title="Configurações de IA">⚙️</button>
     <button class="btn btn-secondary btn-sm" onclick="openNewPt()">+ Novo Paciente</button>
     <button class="btn btn-danger btn-sm" onclick="logout()" title="Sair" style="padding:6px 10px;">↪</button>
   </div>
@@ -330,6 +333,7 @@ textarea{resize:vertical;min-height:72px;}
       </div>
       <div style="display:flex;gap:6px;align-items:center;">
         <button class="btn btn-secondary btn-sm" onclick="editCurPt()">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCurPt()" title="Excluir paciente">🗑 Excluir</button>
         <button class="btn btn-wpp btn-sm" onclick="enviarWpp()">💬 WhatsApp</button>
         <button class="btn btn-secondary btn-sm" onclick="printPt()">🖨️ Imprimir</button>
         <button class="mclose" onclick="closeOv('ov-view')">×</button>
@@ -1244,6 +1248,19 @@ function openPt(id){
   openOv('ov-view');
 }
 
+
+// ── EXCLUIR PACIENTE ───────────────────────────────────────────────────────
+function deleteCurPt(){
+  const p=getP(curId); if(!p) return;
+  if(!confirm(`Excluir o paciente "${p.nome}" permanentemente?\n\nEsta ação não pode ser desfeita. Todas as sessões, pagamentos e dados serão removidos.`)) return;
+  pts=pts.filter(x=>x.id!==curId);
+  agendamentos=agendamentos.filter(a=>a.ptId!==curId);
+  save(); saveAgends();
+  closeOv('ov-view');
+  renderPts();
+  alert('Paciente excluído com sucesso.');
+}
+
 // ── ANAMNESE ───────────────────────────────────────────────────────────────
 function saveAnam(){
   const p=getP(curId); const a={};
@@ -1283,10 +1300,13 @@ function saveAnamInfantil(){
 }
 
 // ── IA ─────────────────────────────────────────────────────────────────────
-const API_KEY='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';
+function getApiKey(){ return localStorage.getItem('anthropic_api_key')||''; }
 async function callAI(prompt,maxTokens=1200){
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
+  const key=getApiKey();
+  if(!key){ alert('Configure sua chave de API nas ⚙️ Configurações (botão na barra superior).'); throw new Error('No API key'); }
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
   const data=await resp.json();
+  if(data.error){ throw new Error(data.error.message); }
   return data.content.map(c=>c.text||'').join('');
 }
 
@@ -1641,7 +1661,7 @@ function printPt(){ window.print(); }
 function fmtDate(s){ if(!s) return ''; const[y,m,d]=s.split('-'); return `${d}/${m}/${y}`; }
 function openOv(id){ document.getElementById(id).classList.add('open'); }
 function closeOv(id){ document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+
 function switchTab(name,el){
   document.querySelectorAll('.itab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.icontent').forEach(c=>c.classList.remove('active'));
@@ -1676,11 +1696,15 @@ function renderAgendaList(){
   const el=document.getElementById('agenda-list');
   const evts=agendamentos.filter(a=>a.data===selDate).sort((a,b)=>a.hora.localeCompare(b.hora));
   if(!evts.length){ el.innerHTML=`<div style="text-align:center;padding:28px 0;color:var(--muted);">Sem sessões neste dia. Clique em "+ Agendar" para adicionar.</div>`; return; }
-  el.innerHTML=evts.map(ag=>{ const pt=pts.find(p=>p.id===ag.ptId); const statusLabel={agendado:'📋 Agendado',confirmed:'✅ Confirmado',cancelled:'❌ Cancelado'}[ag.status]||ag.status; return `<div class="agenda-item ${ag.status}"><div class="agenda-time">${ag.hora}</div><div class="agenda-info"><div class="agenda-name">${pt?pt.nome:ag.ptNome||'Paciente'}</div><div class="agenda-meta">${ag.tipo||'Online'} · ${ag.dur||50}min · ${statusLabel}${ag.obs?' · '+ag.obs:''}</div></div><div class="agenda-actions">${ag.status!=='confirmed'?`<button class="btn btn-secondary btn-sm" onclick="confirmAgend('${ag.id}')">✅</button>`:''}<button class="btn btn-wpp btn-sm" onclick="wppFromAgenda('${ag.ptId}','${ag.data}','${ag.hora}')">💬</button>${ag.status!=='cancelled'?`<button class="btn btn-danger btn-sm" onclick="cancelAgend('${ag.id}')">✕</button>`:''}<button class="btn btn-danger btn-sm" onclick="delAgend('${ag.id}')">🗑</button></div></div>`; }).join('');
+  el.innerHTML=evts.map(ag=>{ const pt=pts.find(p=>p.id===ag.ptId); const statusLabel={agendado:'📋 Agendado',confirmed:'✅ Confirmado',cancelled:'❌ Cancelado',compareceu:'✅ Compareceu',faltou:'❌ Faltou'}[ag.status]||ag.status; return `<div class="agenda-item ${ag.status}"><div class="agenda-time">${ag.hora}</div><div class="agenda-info"><div class="agenda-name">${pt?pt.nome:ag.ptNome||'Paciente'}</div><div class="agenda-meta">${ag.tipo||'Online'} · ${ag.dur||50}min · ${statusLabel}${ag.obs?' · '+ag.obs:''}</div></div><div class="agenda-actions">${ag.status==='compareceu'?'<span style="font-size:11px;color:var(--green);font-weight:600;">✅ Compareceu</span>':ag.status==='faltou'?'<span style="font-size:11px;color:var(--red);font-weight:600;">❌ Faltou</span>':ag.status!=='confirmed'?`<button class="btn btn-secondary btn-sm" onclick="confirmAgend('${ag.id}')">✅ Confirmar</button>`:''} ${ag.status!=='compareceu'&&ag.status!=='faltou'?`<button class="btn btn-sm" style="background:var(--green);color:#fff;" onclick="compareceuAgend('${ag.id}')">✅ Compareceu</button><button class="btn btn-sm" style="background:var(--red);color:#fff;" onclick="faltouAgend('${ag.id}')">❌ Faltou</button>`:''}<button class="btn btn-wpp btn-sm" onclick="wppFromAgenda('${ag.ptId}','${ag.data}','${ag.hora}')">💬</button>${ag.status!=='cancelled'&&ag.status!=='compareceu'&&ag.status!=='faltou'?`<button class="btn btn-danger btn-sm" onclick="cancelAgend('${ag.id}')">✕</button>`:''}<button class="btn btn-danger btn-sm" onclick="delAgend('${ag.id}')">🗑</button></div></div>`; }).join('');
 }
 function openNovoAgend(){ document.getElementById('ag-pt').innerHTML='<option value="">Selecione o paciente...</option>'+pts.map(p=>`<option value="${p.id}">${p.nome}</option>`).join(''); document.getElementById('ag-data').value=selDate; document.getElementById('ag-hora').value='09:00'; document.getElementById('ag-status').value='agendado'; document.getElementById('ag-obs').value=''; document.getElementById('ov-agend-title').textContent='Novo Agendamento'; openOv('ov-agend'); }
 function saveAgend(){ const ptId=document.getElementById('ag-pt').value; const data=document.getElementById('ag-data').value; const hora=document.getElementById('ag-hora').value; if(!ptId||!data||!hora){alert('Preencha paciente, data e horário.');return;} const pt=pts.find(p=>p.id===ptId); agendamentos.push({id:'ag'+Date.now(),ptId,ptNome:pt?pt.nome:'',data,hora,dur:document.getElementById('ag-dur').value,tipo:document.getElementById('ag-tipo').value,status:document.getElementById('ag-status').value,obs:document.getElementById('ag-obs').value}); saveAgends(); selDate=data; const[y,m,d]=data.split('-'); calYear=parseInt(y); calMonth=parseInt(m)-1; renderCal(); renderAgendaList(); closeOv('ov-agend'); }
 function wppFromAgenda(ptId,data,hora){ curId=ptId; document.getElementById('wpp-tipo').value='lembrete'; document.getElementById('wpp-data').value=data; document.getElementById('wpp-hora').value=hora; gerarMsgWpp(); openOv('ov-wpp'); }
+
+function compareceuAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a){ a.status='compareceu'; } saveAgends(); renderCal(); renderAgendaList(); }
+function faltouAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a){ a.status='faltou'; } saveAgends(); renderCal(); renderAgendaList(); }
+
 function cancelAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a) a.status='cancelled'; saveAgends(); renderCal(); renderAgendaList(); }
 function confirmAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a) a.status='confirmed'; saveAgends(); renderCal(); renderAgendaList(); }
 function delAgend(id){ if(!confirm('Excluir agendamento?')) return; agendamentos=agendamentos.filter(x=>x.id!==id); saveAgends(); renderCal(); renderAgendaList(); }
@@ -1855,6 +1879,35 @@ function copiarRecibo(){
   });
 }
 
+
+// ── CONFIGURAÇÕES ──────────────────────────────────────────────────────────
+function openConfiguracoes(){
+  const key=localStorage.getItem('anthropic_api_key')||'';
+  document.getElementById('config-api-key').value=key;
+  const st=document.getElementById('config-status');
+  st.style.display=key?'block':'none';
+  if(key){ st.style.color='var(--green)'; st.textContent='✓ Chave configurada e salva no seu navegador.'; }
+  openOv('ov-config');
+}
+function salvarConfig(){
+  const key=document.getElementById('config-api-key').value.trim();
+  if(!key){ alert('Cole sua chave de API antes de salvar.'); return; }
+  if(!key.startsWith('sk-ant-')){ alert('Chave inválida. Deve começar com sk-ant-'); return; }
+  localStorage.setItem('anthropic_api_key', key);
+  const st=document.getElementById('config-status');
+  st.style.display='block'; st.style.color='var(--green)';
+  st.textContent='✓ Chave salva com sucesso!';
+  setTimeout(()=>closeOv('ov-config'),1200);
+}
+function removerConfig(){
+  if(!confirm('Remover a chave de API?')) return;
+  localStorage.removeItem('anthropic_api_key');
+  document.getElementById('config-api-key').value='';
+  const st=document.getElementById('config-status');
+  st.style.display='block'; st.style.color='var(--red)';
+  st.textContent='Chave removida.';
+}
+
 // ── FIREBASE ───────────────────────────────────────────────────────────────
 function initFirebase(){
   const firebaseConfig={apiKey:"AIzaSyAKq1Q-5QmUQu_x3mvgzpJXMyzVxNEcQig",authDomain:"clinica-dab42.firebaseapp.com",projectId:"clinica-dab42",storageBucket:"clinica-dab42.firebasestorage.app",messagingSenderId:"924425214099",appId:"1:924425214099:web:c82e6279c6bcdec63b9566"};
@@ -1870,6 +1923,32 @@ function initFirebase(){
   auth.onAuthStateChanged(user=>{ if(user){ uid=user.uid; document.getElementById('login-screen').classList.remove('show'); setSyncing(true); db.collection('usuarios').doc(uid).get().then(doc=>{ if(doc.exists){ const data=doc.data(); pts=data.pts||[]; agendamentos=data.agendamentos||[]; localStorage.setItem('pts_v2',JSON.stringify(pts)); localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); }else{ const localPts=JSON.parse(localStorage.getItem('pts_v2')||'[]'); const localAg=JSON.parse(localStorage.getItem('agendamentos')||'[]'); if(localPts.length){pts=localPts;agendamentos=localAg;window.save();} } setSyncing(false); setMonthNow(); renderPts(); }).catch(e=>{setSyncing(false);console.error(e);setMonthNow();renderPts();}); }else{ uid=null; document.getElementById('login-screen').classList.add('show'); } });
 }
 </script>
+<!-- MODAL CONFIGURAÇÕES -->
+<div class="overlay" id="ov-config">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-head">
+      <div class="modal-title">⚙️ Configurações de IA</div>
+      <button class="mclose" onclick="closeOv('ov-config')">×</button>
+    </div>
+    <div style="font-size:13px;color:var(--brown-mid);margin-bottom:16px;line-height:1.6;">
+      Cole sua chave da API da Anthropic abaixo. Ela fica salva <strong>apenas no seu navegador</strong> — não vai para o código nem para nenhum servidor.
+    </div>
+    <div class="fg">
+      <label>Chave de API (Anthropic)</label>
+      <input type="password" id="config-api-key" placeholder="sk-ant-api03-..." style="font-family:monospace;font-size:12px;">
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+      🔑 Obtenha sua chave em <a href="https://console.anthropic.com" target="_blank" style="color:var(--sage-dark);">console.anthropic.com</a> → API Keys → Create Key
+    </div>
+    <div id="config-status" style="font-size:12px;margin-bottom:10px;display:none;padding:8px 12px;border-radius:8px;"></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" style="flex:1" onclick="salvarConfig()">💾 Salvar chave</button>
+      <button class="btn btn-danger" onclick="removerConfig()">🗑 Remover</button>
+      <button class="btn btn-secondary" onclick="closeOv('ov-config')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
