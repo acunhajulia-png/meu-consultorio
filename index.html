@@ -986,7 +986,7 @@ function saveAnamInfantil(){
 }
 
 // ── IA ─────────────────────────────────────────────────────────────────────
-function getApiKey(){ const k=localStorage.getItem('anthropic_api_key'); if(k) return k; const a='sk-ant-api03-_p0NClvHMBTG1T6wYnbMFnb0CRhznU3dQbD_dOu2C'; const b='Wn5xB8Wd-UcILblSrSDQ89oD4wmur4lAjqd4Etuv39qfw-WrZMrQAA'; return a+b; }
+function getApiKey(){ return localStorage.getItem('anthropic_api_key')||''; }
 async function callAI(prompt,maxTokens=1200){
   const key=getApiKey();
   if(!key){ alert('Configure sua chave de API nas ⚙️ Configurações (botão na barra superior).'); throw new Error('No API key'); }
