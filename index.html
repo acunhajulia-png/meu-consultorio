@@ -991,7 +991,7 @@ async function callAI(prompt,maxTokens=1200){
   const key=getApiKey();
   if(!key){ alert('Configure sua chave de API nas ⚙️ Configurações (botão na barra superior).'); throw new Error('No API key'); }
   const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
-  if(!resp.ok){ const err=await resp.json().catch(()=>({})); throw new Error('API erro '+resp.status+': '+(err.error?.message||'chave inválida ou expirada')); }
+  if(!resp.ok){ const err=await resp.json().catch(()=>({})); throw new Error('API erro '+resp.status+': '+((err.error&&err.error.message)||'chave inválida ou expirada')); }
   const data=await resp.json();
   if(data.error){ throw new Error(data.error.message); }
   return data.content.map(c=>c.text||'').join('');
@@ -1991,7 +1991,7 @@ async function callAI(prompt,maxTokens=1200){
   const key=getApiKey();
   if(!key){ alert('Configure sua chave de API nas ⚙️ Configurações (botão na barra superior).'); throw new Error('No API key'); }
   const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
-  if(!resp.ok){ const err=await resp.json().catch(()=>({})); throw new Error('API erro '+resp.status+': '+(err.error?.message||'chave inválida ou expirada')); }
+  if(!resp.ok){ const err=await resp.json().catch(()=>({})); throw new Error('API erro '+resp.status+': '+((err.error&&err.error.message)||'chave inválida ou expirada')); }
   const data=await resp.json();
   if(data.error){ throw new Error(data.error.message); }
   return data.content.map(c=>c.text||'').join('');
@@ -2017,68 +2017,62 @@ async function preencherAnamneseIA(){
   if(!texto){ alert('Escreva o relato da entrevista primeiro.'); return; }
   const btn=event.target; btn.textContent='⏳ Analisando...'; btn.disabled=true;
   const status=document.getElementById('ai-fill-anamnese-status');
-  status.style.display='block'; status.textContent='A IA está lendo o relato e preenchendo os campos...';
-  const prompt=`Você é uma psicóloga clínica especialista em TCC. Com base no relato abaixo de uma entrevista de anamnese, extraia as informações e retorne SOMENTE um JSON válido (sem markdown, sem explicações, apenas o JSON) com os campos preenchidos. O relato pode conter erros de digitação, abreviações e linguagem informal — interprete da melhor forma possível. IMPORTANTE: os valores do JSON devem ser strings simples em uma única linha, sem quebras de linha internas.
+  status.style.display='block'; status.textContent='A IA está lendo o relato...'; status.style.color='var(--muted)';
+  const prompt=`Você é uma psicóloga clínica especialista em TCC. Leia o relato abaixo e extraia as informações. Responda APENAS no formato "CHAVE: valor" (uma por linha, sem explicações, sem JSON, sem markdown). Se não encontrar a informação, deixe o valor em branco.
 
-RELATO:
-${texto}
+RELATO: ${texto}
 
-Retorne um JSON com exatamente estas chaves (deixe em branco se não encontrar a informação):
-{
-  "queixa": "",
-  "tempo": "",
-  "surgiu": "",
-  "espera": "",
-  "antecedentes": "",
-  "onde": "",
-  "quandocomquem": "",
-  "pensamentos_sit": "",
-  "imagens": "",
-  "emocoes": "",
-  "reacao": "",
-  "evitacao": "",
-  "outros_sint": "",
-  "sintAnsi": "",
-  "sintDep": "",
-  "infancia": "",
-  "cresceu": "",
-  "faminfancia": "",
-  "trauma": "",
-  "acomp": "",
-  "diag": "",
-  "meds": "",
-  "intern": "",
-  "suic": "",
-  "alcool": "",
-  "sono": "",
-  "alim": "",
-  "civil": "",
-  "social": "",
-  "motiv": "",
-  "obs": ""
-}
-Para "emocoes" e "sintAnsi" e "sintDep": coloque apenas os itens separados por vírgula, escolhendo entre as opções existentes quando possível.
-Para "acomp", "intern", "suic": use apenas "Sim" ou "Não" quando mencionado.
-Para "sono": use apenas "Boa", "Regular", "Ruim" ou "Insônia".
-Para "alim": use apenas "Boa", "Regular" ou "Ruim".
-Para "civil": use apenas "Solteiro(a)", "Namorando", "Casado(a)", "Divorciado(a)" ou "Viúvo(a)".`;
+CAMPOS:
+queixa: (queixa principal)
+tempo: (há quanto tempo)
+surgiu: (como surgiu)
+espera: (o que espera da terapia)
+antecedentes: (o que acontece antes do problema)
+onde: (onde se manifesta)
+quandocomquem: (quando e com quem)
+pensamentos_sit: (pensamentos automáticos)
+reacao: (como reage ao problema)
+evitacao: (o que faz para evitar)
+outros_sint: (outros sintomas)
+sint_ansi: (sintomas de ansiedade)
+sint_dep: (sintomas depressivos)
+infancia: (como foi a infância)
+cresceu: (com quem cresceu)
+faminfancia: (ambiente familiar na infância)
+trauma: (histórico de trauma)
+diag: (diagnósticos anteriores)
+meds: (medicações em uso)
+alcool: (uso de álcool/substâncias)
+social: (relacionamentos sociais)
+motiv: (motivação para terapia)
+obs: (observações relevantes)`;
 
   try{
     const text=await callAI(prompt);
-    const dados=parseAIJson(text);
-    // preencher campos
-    const map={'queixa':'a-queixa','tempo':'a-tempo','surgiu':'a-surgiu','espera':'a-espera','antecedentes':'a-antecedentes','onde':'a-onde','quandocomquem':'a-quandocomquem','pensamentos_sit':'a-pensamentos-sit','imagens':'a-imagens','reacao':'a-reacao','evitacao':'a-evitacao','outros_sint':'a-outros-sint','infancia':'a-infancia','cresceu':'a-cresceu','faminfancia':'a-faminfancia','trauma':'a-trauma','diag':'a-diag','meds':'a-meds','alcool':'a-alcool','social':'a-social','motiv':'a-motiv','obs':'a-obs','emocoes':'a-emocoes-outras','sintAnsi':'a-sint-ansi-outros','sintDep':'a-sint-dep-outros'};
+    const lines=text.split('\n');
+    const dados={};
+    lines.forEach(line=>{
+      const idx=line.indexOf(':');
+      if(idx>0){
+        const k=line.slice(0,idx).trim();
+        const v=line.slice(idx+1).trim();
+        if(v) dados[k]=v;
+      }
+    });
+    const map={
+      'queixa':'a-queixa','tempo':'a-tempo','surgiu':'a-surgiu','espera':'a-espera',
+      'antecedentes':'a-antecedentes','onde':'a-onde','quandocomquem':'a-quandocomquem',
+      'pensamentos_sit':'a-pensamentos-sit','reacao':'a-reacao','evitacao':'a-evitacao',
+      'outros_sint':'a-outros-sint','sint_ansi':'a-sint-ansi-outros','sint_dep':'a-sint-dep-outros',
+      'infancia':'a-infancia','cresceu':'a-cresceu','faminfancia':'a-faminfancia',
+      'trauma':'a-trauma','diag':'a-diag','meds':'a-meds','alcool':'a-alcool',
+      'social':'a-social','motiv':'a-motiv','obs':'a-obs','emocoes':'a-emocoes-outras'
+    };
     Object.entries(map).forEach(([k,id])=>{ const el=document.getElementById(id); if(el&&dados[k]) el.value=dados[k]; });
-    if(dados.acomp) document.getElementById('a-acomp').value=dados.acomp;
-    if(dados.intern) document.getElementById('a-intern').value=dados.intern;
-    if(dados.suic) document.getElementById('a-suic').value=dados.suic;
-    if(dados.sono) document.getElementById('a-sono').value=dados.sono;
-    if(dados.alim) document.getElementById('a-alim').value=dados.alim;
-    if(dados.civil) document.getElementById('a-civil').value=dados.civil;
-    status.textContent='✓ Campos preenchidos com sucesso! Revise e ajuste o que precisar.';
+    status.textContent='✓ Campos preenchidos! Revise e ajuste o que precisar.';
     status.style.color='var(--green)';
   }catch(e){
-    console.error('Erro IA adulto:', e);
+    console.error('Erro IA adulto:',e);
     status.textContent='Erro: '+e.message;
     status.style.color='var(--red)';
   }
@@ -2091,48 +2085,55 @@ async function preencherAnamneseInfantilIA(){
   if(!texto){ alert('Escreva o relato da entrevista primeiro.'); return; }
   const btn=event.target; btn.textContent='⏳ Analisando...'; btn.disabled=true;
   const status=document.getElementById('ai-fill-infantil-status');
-  status.style.display='block'; status.textContent='A IA está lendo o relato e preenchendo os campos...'; status.style.color='var(--muted)';
-  const prompt=`Você é uma psicóloga clínica especialista em TCC infantil. Com base no relato abaixo de uma entrevista de anamnese infantil, extraia as informações e retorne SOMENTE um JSON válido (sem markdown, sem explicações, apenas o JSON). O relato pode conter erros de digitação, abreviações e linguagem informal — interprete da melhor forma. IMPORTANTE: todos os valores devem ser strings simples em uma única linha, sem quebras de linha internas.
+  status.style.display='block'; status.textContent='A IA está lendo o relato...'; status.style.color='var(--muted)';
+  const prompt=`Você é uma psicóloga clínica especialista em TCC infantil. Leia o relato abaixo e extraia as informações. Responda APENAS no formato "CHAVE: valor" (uma por linha, sem explicações, sem JSON, sem markdown). Se não encontrar a informação, deixe em branco.
 
-RELATO:
-${texto}
+RELATO: ${texto}
 
-Retorne um JSON com exatamente estas chaves (deixe em branco se não encontrar):
-{
-  "queixa_resp": "",
-  "tempo": "",
-  "motivo_agora": "",
-  "acomp_detalhe": "",
-  "crianca_sabe": "",
-  "gestacao": "",
-  "marcos": "",
-  "obs_desenvolvimento": "",
-  "diag": "",
-  "meds": "",
-  "alergias": "",
-  "profissionais": "",
-  "queixas_fisicas": "",
-  "descricao_crianca": "",
-  "expressao_emocoes": "",
-  "emocoes_freq": "",
-  "sint_int": "",
-  "sint_ext": "",
-  "outros_comportamentos": "",
-  "vinculos": "",
-  "relacoes_sociais": "",
-  "interesses": "",
-  "desempenho": "",
-  "dif_aprendizagem": "",
-  "rotina": "",
-  "eventos_estressores": "",
-  "expectativa_resp": "",
-  "obs_entrevista": "",
-  "hipotese": "",
-  "obs_gerais": ""
-}`;
+CAMPOS:
+queixa_resp: (queixa principal nas palavras do responsável)
+tempo: (há quanto tempo)
+motivo_agora: (o que motivou buscar atendimento agora)
+acomp_detalhe: (já fez acompanhamento antes? quando e por quê)
+crianca_sabe: (a criança sabe que vai ao psicólogo? como foi explicado)
+gestacao: (gestação, parto, nascimento)
+marcos: (marcos do desenvolvimento: engatinhou, andou, fala, esfíncteres)
+obs_desenvolvimento: (observações sobre o desenvolvimento)
+diag: (diagnósticos médicos ou psiquiátricos)
+meds: (medicamentos em uso)
+alergias: (alergias, internações, cirurgias)
+profissionais: (profissionais que acompanham)
+queixas_fisicas: (queixas físicas recorrentes)
+descricao_crianca: (como os responsáveis descrevem a criança)
+expressao_emocoes: (como expressa e regula emoções, birras, o que acalma)
+emocoes_freq: (emoções observadas com frequência)
+sint_int: (comportamentos internalizantes)
+sint_ext: (comportamentos externalizantes)
+outros_comportamentos: (outros comportamentos: sono, alimentação, linguagem, TEA)
+vinculos: (vínculos afetivos com cuidadores e irmãos)
+relacoes_sociais: (amizades, relações com colegas, bullying)
+interesses: (brincadeiras, lazer, autonomia, telas)
+desempenho: (rendimento escolar)
+dif_aprendizagem: (dificuldades e queixas da escola)
+rotina: (rotina, disciplina em casa)
+eventos_estressores: (eventos estressores, histórico familiar)
+expectativa_resp: (expectativa dos responsáveis)
+obs_entrevista: (impressão geral da entrevista)
+hipotese: (hipóteses diagnósticas)
+obs_gerais: (observações gerais)`;
+
   try{
     const text=await callAI(prompt);
-    const d=parseAIJson(text);
+    const lines=text.split('\n');
+    const d={};
+    lines.forEach(line=>{
+      const idx=line.indexOf(':');
+      if(idx>0){
+        const k=line.slice(0,idx).trim();
+        const v=line.slice(idx+1).trim();
+        if(v) d[k]=v;
+      }
+    });
     const map={
       'queixa_resp':'ai-queixa-resp','tempo':'ai-tempo','motivo_agora':'ai-motivo-agora',
       'acomp_detalhe':'ai-acomp-detalhe','crianca_sabe':'ai-crianca-sabe',
