@@ -991,6 +991,1010 @@ async function callAI(prompt,maxTokens=1200){
   const key=getApiKey();
   if(!key){ alert('Configure sua chave de API nas ⚙️ Configurações (botão na barra superior).'); throw new Error('No API key'); }
   const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
+  if(!resp.ok){ const err=await resp.json().catch(()=>({})); throw new Error('API erro '+resp.status+': '+(err.error?.message||'chave inválida ou expirada')); }
+  const data=await resp.json();
+  if(data.error){ throw new Error(data.error.message); }
+  return data.content.map(c=>c.text||'').join('');
+}
+function parseAIJson(text){
+  try{
+    let t=text.replace(/```json/g,'').replace(/```/g,'').trim();
+    let s=t.indexOf('{'), e=t.lastIndexOf('}');
+    if(s>=0&&e>s) t=t.slice(s,e+1);
+    return JSON.parse(t);
+  }catch(e){
+    throw new Error('Não foi possível ler a resposta da IA: '+e.message);
+  }
+}e="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Consultório · Psicologia</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F7F3EE; --card:#fff; --sage:#7A9E8E; --sage-light:#EAF2EE; --sage-dark:#4E7A6A;
+  --terra:#C4724A; --terra-light:#FAF0EA; --brown:#3A2A1E; --brown-mid:#8A6E5E;
+  --muted:#AE9A8E; --border:rgba(58,42,30,0.09); --shadow:0 2px 16px rgba(58,42,30,0.08);
+  --red:#D95B5B; --green:#5B9E7A; --yellow:#E6A83A;
+  --input-bg:#F7F3EE; --topbar-bg:#3A2A1E; --topbar-text:#FAF3EE;
+}
+[data-theme="dark"] {
+  --bg:#1A1410; --card:#251C15; --sage:#6B8E7E; --sage-light:#1E2E28; --sage-dark:#7AB89A;
+  --terra:#D4825A; --terra-light:#2A1E16; --brown:#EDE4DC; --brown-mid:#BBA898;
+  --muted:#7A6A60; --border:rgba(237,228,220,0.09); --shadow:0 2px 16px rgba(0,0,0,0.35);
+  --red:#E07070; --green:#6BBF8A; --yellow:#ECBA50;
+  --input-bg:#1E1610; --topbar-bg:#120E0A; --topbar-text:#FAF3EE;
+}
+*{margin:0;padding:0;box-sizing:border-box;transition:background-color .2s,color .2s,border-color .2s;}
+body{background:var(--bg);color:var(--brown);font-family:'DM Sans',sans-serif;min-height:100vh;}
+.topbar{background:var(--topbar-bg);color:var(--topbar-text);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;}
+.brand{font-family:'Lora',serif;font-size:17px;}
+.brand small{display:block;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;}
+.nav{background:var(--card);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:200;}
+.nav::-webkit-scrollbar{display:none;}
+.nav-tab{padding:13px 18px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;user-select:none;}
+.nav-tab.active{color:var(--sage-dark);border-bottom-color:var(--sage-dark);}
+.page{display:none;padding:20px;max-width:860px;margin:0 auto;}
+.page.active{display:block;}
+.btn{padding:9px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .18s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:var(--sage-dark);color:#fff;}
+.btn-primary:hover{opacity:.88;}
+.btn-secondary{background:var(--sage-light);color:var(--sage-dark);}
+.btn-secondary:hover{opacity:.85;}
+.btn-danger{background:var(--terra-light);color:var(--red);}
+.btn-terra{background:var(--terra);color:#fff;}
+.btn-terra:hover{opacity:.88;}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-ai{background:linear-gradient(135deg,#4E7A6A,#7A5C8E);color:#fff;}
+.btn-ai:hover{opacity:.9;}
+.btn-dark{background:rgba(255,255,255,0.12);color:var(--topbar-text);border:none;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.btn-dark:hover{background:rgba(255,255,255,0.2);}
+.card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:20px;margin-bottom:14px;}
+.card-title{font-family:'Lora',serif;font-size:16px;margin-bottom:14px;color:var(--brown);}
+.fg{margin-bottom:12px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px;font-weight:500;}
+input,textarea,select{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--input-bg);color:var(--brown);transition:border .2s,background .2s,color .2s;outline:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--sage);background:var(--card);}
+textarea{resize:vertical;min-height:72px;}
+.sec{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:600;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.search-wrap{position:relative;margin-bottom:14px;}
+.search-wrap input{padding-left:34px;}
+.search-wrap::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;}
+.pt-card{background:var(--card);border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1.5px solid transparent;transition:all .2s;box-shadow:0 1px 4px rgba(58,42,30,0.05);margin-bottom:8px;}
+.pt-card:hover{border-color:var(--sage);transform:translateY(-1px);box-shadow:var(--shadow);}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--sage-light);color:var(--sage-dark);display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:18px;font-weight:600;flex-shrink:0;}
+.pt-info{flex:1;min-width:0;}
+.pt-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pt-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.badge{font-size:10px;padding:3px 8px;border-radius:99px;font-weight:500;}
+.badge-active{background:var(--sage-light);color:var(--sage-dark);}
+.badge-inactive{background:var(--terra-light);color:var(--muted);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(30,20,12,.55);z-index:500;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);}
+.overlay.open{display:flex;}
+@media(min-width:620px){.overlay{align-items:center;}}
+.modal{background:var(--card);width:100%;max-width:700px;border-radius:20px 20px 0 0;padding:22px 20px;max-height:93vh;overflow-y:auto;animation:slideUp .28s ease;}
+@media(min-width:620px){.modal{border-radius:18px;padding:26px 28px;}}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-title{font-family:'Lora',serif;font-size:19px;}
+.mclose{font-size:22px;cursor:pointer;color:var(--muted);background:none;border:none;padding:4px;}
+.itabs{display:flex;gap:0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px;flex-wrap:wrap;}
+.itab{flex:1;padding:8px 6px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;color:var(--muted);background:transparent;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
+.itab.active{background:var(--sage-dark);color:#fff;}
+.icontent{display:none;}
+.icontent.active{display:block;}
+.sess-card{border:1.5px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px;background:var(--card);}
+.sess-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sess-date{font-size:13px;font-weight:600;color:var(--sage-dark);}
+.humor-badge{font-size:11px;padding:2px 10px;border-radius:99px;background:var(--sage-light);color:var(--sage-dark);}
+.sess-body{font-size:13px;color:var(--brown-mid);line-height:1.65;white-space:pre-wrap;}
+.humor-scale{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.humor-opt{padding:6px 12px;border-radius:99px;border:1.5px solid var(--border);font-size:12px;cursor:pointer;transition:all .2s;background:var(--bg);}
+.humor-opt.sel{border-color:var(--sage-dark);background:var(--sage-dark);color:#fff;}
+.pay-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:10px;border:1.5px solid var(--border);margin-bottom:7px;background:var(--card);}
+.pay-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.dot-pago{background:var(--green);}
+.dot-pendente{background:var(--yellow);}
+.fin-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;}
+.fin-box{background:var(--card);border-radius:12px;padding:14px 15px;box-shadow:var(--shadow);}
+.fin-box .fl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.fin-box .fv{font-family:'Lora',serif;font-size:21px;}
+.ai-block{background:var(--sage-light);border-radius:12px;padding:16px;margin-top:12px;border:1.5px solid rgba(78,122,106,.2);}
+.ai-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--sage-dark);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.ai-text{font-size:13px;color:var(--brown);line-height:1.75;white-space:pre-wrap;}
+.ai-loading{color:var(--muted);font-size:13px;font-style:italic;}
+
+/* AI FILL TEXTAREA */
+.ai-fill-box{background:var(--card);border:1.5px solid var(--sage);border-radius:12px;padding:14px;margin-bottom:14px;}
+.ai-fill-box textarea{min-height:100px;border-color:var(--border);}
+.ai-fill-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;}
+
+.form-caso-block{background:var(--bg);border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid var(--sage);}
+.form-caso-title{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--sage-dark);font-weight:600;margin-bottom:6px;}
+.form-caso-text{font-size:13px;color:var(--brown-mid);line-height:1.7;white-space:pre-wrap;}
+.suds-wrap{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+.suds-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;color:var(--brown-mid);}
+.suds-btn:hover{border-color:var(--sage);}
+.suds-btn.sel{color:#fff;border-color:transparent;}
+.suds-0{background:#5B9E7A!important;}.suds-1{background:#6aaa82!important;}.suds-2{background:#7db88e!important;}
+.suds-3{background:#93c49a!important;color:var(--brown)!important;}.suds-4{background:#b8d4a0!important;color:var(--brown)!important;}
+.suds-5{background:#d4c87a!important;color:var(--brown)!important;}.suds-6{background:#e0b05a!important;}
+.suds-7{background:#e08840!important;}.suds-8{background:#d06030!important;}.suds-9{background:#c04020!important;}.suds-10{background:#a02010!important;}
+.check-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.check-pill{padding:5px 11px;border-radius:99px;border:1.5px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);transition:all .2s;user-select:none;color:var(--brown);}
+.check-pill.sel{background:var(--sage-dark);color:#fff;border-color:var(--sage-dark);}
+.btn-wpp{background:#25D366;color:#fff;}
+.btn-wpp:hover{background:#1ebe5a;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-nav-title{font-family:'Lora',serif;font-size:19px;}
+.cal-nav-btn{background:var(--sage-light);border:none;color:var(--sage-dark);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.cal-nav-btn:hover{opacity:.8;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:20px;}
+.cal-dow{text-align:center;font-size:11px;color:var(--muted);font-weight:600;padding:6px 0;text-transform:uppercase;letter-spacing:.5px;}
+.cal-day{min-height:52px;border-radius:10px;padding:6px;background:var(--card);border:1.5px solid transparent;cursor:pointer;transition:all .2s;position:relative;}
+.cal-day:hover{border-color:var(--sage);background:var(--sage-light);}
+.cal-day.today{border-color:var(--sage-dark);background:var(--sage-light);}
+.cal-day.other-month{opacity:.35;}
+.cal-day-num{font-size:13px;font-weight:500;margin-bottom:3px;}
+.cal-day.today .cal-day-num{color:var(--sage-dark);font-weight:700;}
+.cal-dot-wrap{display:flex;flex-wrap:wrap;gap:2px;}
+.cal-dot{width:6px;height:6px;border-radius:50%;background:var(--sage-dark);}
+.cal-dot.confirmed{background:var(--green);}
+.cal-dot.cancelled{background:var(--red);}
+.agenda-list{display:flex;flex-direction:column;gap:8px;}
+.agenda-item{background:var(--card);border-radius:11px;padding:13px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(58,42,30,.05);border-left:4px solid var(--sage);}
+.agenda-item.confirmed{border-left-color:var(--green);}
+.agenda-item.cancelled{border-left-color:var(--red);opacity:.6;}
+.agenda-item.compareceu{border-left-color:var(--green);}
+.agenda-item.faltou{border-left-color:var(--red);background:var(--terra-light);}
+.agenda-time{font-family:'Lora',serif;font-size:16px;color:var(--sage-dark);min-width:50px;}
+.agenda-info{flex:1;}
+.agenda-name{font-weight:600;font-size:14px;}
+.agenda-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.agenda-actions{display:flex;gap:6px;}
+@media print{
+  .topbar,.nav,.btn,.itabs,.overlay,.mark-btn{display:none!important;}
+  .page{display:block!important;padding:0;}
+  .card{box-shadow:none;border:1px solid #ddd;}
+}
+@media(max-width:500px){
+  .fr,.fr3{grid-template-columns:1fr;}
+  .fin-grid{grid-template-columns:1fr 1fr;}
+  .page{padding:14px;}
+  .itab{font-size:10px;padding:7px 4px;}
+}
+.login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:var(--topbar-bg);padding:32px 20px;position:fixed;inset:0;z-index:9999;}
+.login-screen.show{display:flex;}
+.login-card{background:var(--card);border-radius:20px;padding:40px 32px;max-width:380px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.3);}
+.login-logo{font-size:48px;margin-bottom:16px;}
+.login-title{font-family:'Lora',serif;font-size:24px;color:var(--brown);margin-bottom:6px;}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6;}
+.btn-google{background:var(--card);color:var(--brown);border:1.5px solid var(--border);width:100%;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.btn-google:hover{background:var(--bg);border-color:var(--sage);transform:translateY(-1px);}
+.login-err{font-size:12px;color:var(--red);margin-top:12px;display:none;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;vertical-align:middle;}
+.sync-dot.syncing{background:var(--yellow);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+</head>
+<body>
+
+<div class="login-screen show" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🌿</div>
+    <div class="login-title">Meu Consultório</div>
+    <div class="login-sub">Psicologia · TCC<br>Entre com sua conta Google para acessar seus dados com segurança.</div>
+    <button class="btn-google" onclick="loginGoogle()">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Entrar com Google
+    </button>
+    <div class="login-err" id="login-err">Erro ao entrar. Tente novamente.</div>
+  </div>
+  <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:20px;text-align:center;line-height:1.7;">Seus dados ficam salvos com segurança no Firebase.<br>Acesse de qualquer dispositivo com a mesma conta Google.</div>
+</div>
+
+<div class="topbar">
+  <div class="brand">🌿 Meu Consultório <small>Psicologia · TCC</small></div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="sync-status" style="font-size:11px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px;"><span class="sync-dot" id="sync-dot"></span><span id="sync-label">Sincronizado</span></span>
+    <button class="btn-dark" onclick="toggleDark()" id="dark-btn" title="Modo escuro">🌙</button>
+    <button class="btn-dark" onclick="openConfiguracoes()" title="Configurações de IA">⚙️</button>
+    <button class="btn btn-secondary btn-sm" onclick="openNewPt()">+ Novo Paciente</button>
+    <button class="btn btn-danger btn-sm" onclick="logout()" title="Sair" style="padding:6px 10px;">↪</button>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-tab active" onclick="showPage('pacientes',this)">👤 Pacientes</div>
+  <div class="nav-tab" onclick="showPage('agenda',this)">📅 Agenda</div>
+  <div class="nav-tab" onclick="showPage('financeiro',this)">💰 Financeiro</div>
+  <div class="nav-tab" onclick="showPage('carneLeao',this)">🧾 Carnê-Leão</div>
+</div>
+
+<!-- PAGE PACIENTES -->
+<div class="page active" id="page-pacientes">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <div>
+      <div style="font-family:'Lora',serif;font-size:21px;">Pacientes</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="pt-count">Nenhum paciente</div>
+    </div>
+    <button class="btn btn-primary" onclick="openNewPt()">+ Novo</button>
+  </div>
+  <div class="search-wrap"><input type="text" placeholder="Buscar paciente..." oninput="filterPts(this.value)"></div>
+  <div id="pt-list"></div>
+</div>
+
+<!-- PAGE AGENDA -->
+<div class="page" id="page-agenda">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <div>
+      <div style="font-family:'Lora',serif;font-size:21px;">Agenda</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="agenda-hoje-label">Carregando...</div>
+    </div>
+    <button class="btn btn-primary" onclick="openNovoAgend()">+ Agendar</button>
+  </div>
+  <div class="card" style="padding:16px;">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="mudaMes(-1)">‹</button>
+      <div class="cal-nav-title" id="cal-titulo"></div>
+      <button class="cal-nav-btn" onclick="mudaMes(1)">›</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <div style="font-family:'Lora',serif;font-size:16px;" id="agenda-dia-title">Hoje</div>
+    <button class="btn btn-secondary btn-sm" onclick="irParaHoje()">Hoje</button>
+  </div>
+  <div class="agenda-list" id="agenda-list"></div>
+</div>
+
+<!-- PAGE FINANCEIRO -->
+<div class="page" id="page-financeiro">
+  <div style="font-family:'Lora',serif;font-size:21px;margin-bottom:4px;">Financeiro</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Visão geral dos pagamentos</div>
+  <div class="fin-grid">
+    <div class="fin-box"><div class="fl">Recebido</div><div class="fv" id="fin-rec" style="color:var(--green)">R$ 0</div></div>
+    <div class="fin-box"><div class="fl">Pendente</div><div class="fv" id="fin-pend" style="color:var(--yellow)">R$ 0</div></div>
+    <div class="fin-box"><div class="fl">Sessões</div><div class="fv" id="fin-sess">0</div></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+    <select id="ff-status" onchange="renderFin()" style="width:auto;flex:1;min-width:120px;"><option value="">Todos os status</option><option value="pago">Pagos</option><option value="pendente">Pendentes</option></select>
+    <select id="ff-pt" onchange="renderFin()" style="width:auto;flex:1;min-width:140px;"><option value="">Todos os pacientes</option></select>
+  </div>
+  <div id="fin-list"></div>
+</div>
+
+<!-- PAGE CARNÊ-LEÃO -->
+<div class="page" id="page-carneLeao">
+  <div style="font-family:'Lora',serif;font-size:21px;margin-bottom:4px;">Carnê-Leão</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Resumo mensal para a Receita Federal</div>
+  <div class="card" style="border-left:4px solid var(--terra);">
+    <div class="fr">
+      <div class="fg"><label>Mês</label>
+        <select id="cl-mes" onchange="renderCL()">
+          <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option><option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option><option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option><option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+        </select>
+      </div>
+      <div class="fg"><label>Ano</label>
+        <select id="cl-ano" onchange="renderCL()"><option>2025</option><option>2026</option><option>2027</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="fin-grid">
+    <div class="fin-box"><div class="fl">Total recebido</div><div class="fv" id="cl-total">R$ 0</div></div>
+    <div class="fin-box"><div class="fl">Imposto</div><div class="fv" id="cl-imp">R$ 0</div></div>
+    <div class="fin-box"><div class="fl">Alíquota</div><div class="fv" id="cl-ali" style="font-size:16px;">Isento</div></div>
+  </div>
+  <div class="card"><div class="card-title">Sessões pagas no mês</div><div id="cl-sess"></div></div>
+  <div class="card" style="background:var(--sage-light);border:1.5px solid var(--sage);">
+    <div style="font-family:'Lora',serif;font-size:15px;margin-bottom:10px;">📋 Como lançar no e-CAC</div>
+    <ol style="font-size:13px;color:var(--sage-dark);padding-left:18px;line-height:2.1;">
+      <li>Acesse <strong>gov.br/receitafederal → e-CAC</strong></li>
+      <li>Busque <strong>"Carnê-Leão Web"</strong></li>
+      <li>Informe os recebimentos do mês</li>
+      <li>Pague o DARF até o <strong>último dia útil do mês seguinte</strong></li>
+    </ol>
+  </div>
+</div>
+
+<!-- MODAL NOVO/EDITAR PACIENTE -->
+<div class="overlay" id="ov-pt">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="ov-pt-title">Novo Paciente</div>
+      <button class="mclose" onclick="closeOv('ov-pt')">×</button>
+    </div>
+    <div class="sec">Dados Pessoais</div>
+    <div class="fr"><div class="fg"><label>Nome completo *</label><input id="pt-nome" placeholder="Nome do paciente"></div><div class="fg"><label>Data de nascimento</label><input id="pt-nasc" type="date" oninput="calcIdade();checkMenorIdade()"></div></div>
+    <div class="fr3"><div class="fg"><label>Idade</label><input id="pt-idade" placeholder="Calculada automaticamente" readonly style="cursor:default;"></div><div class="fg"><label>CPF</label><input id="pt-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div><div class="fg"><label>Gênero</label><select id="pt-genero"><option value="">—</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Outro</option></select></div></div>
+    <div class="fr3"><div class="fg"><label>Profissão</label><input id="pt-profissao" placeholder="Ex: Professora, Estudante..."></div><div class="fg"><label>Cidade</label><input id="pt-cidade" placeholder="Cidade"></div><div class="fg"><label>Escolaridade</label><select id="pt-esc"><option value="">—</option><option>Fundamental</option><option>Médio</option><option>Superior incompleto</option><option>Superior completo</option><option>Pós-graduação</option></select></div></div>
+    <div class="fr"><div class="fg"><label>WhatsApp</label><input id="pt-wpp" placeholder="(11) 99999-9999"></div><div class="fg"><label>E-mail</label><input id="pt-email" type="email" placeholder="email@exemplo.com"></div></div>
+    <div class="fr"><div class="fg"><label>Contato de emergência</label><input id="pt-emerg" placeholder="Nome · Telefone"></div><div class="fg"><label>Valor da sessão (R$)</label><input id="pt-valor" type="number" placeholder="Ex: 110"></div></div>
+    <div class="fr"><div class="fg"><label>Status</label><select id="pt-status"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div><div class="fg"><label>Início do acompanhamento</label><input id="pt-inicio" type="date"></div></div>
+    <div id="sec-mae" style="display:none;">
+      <div class="sec" style="color:var(--terra);border-color:var(--terra);">👶 Dados da Mãe / Responsável</div>
+      <div class="fr"><div class="fg"><label>Nome da mãe / responsável *</label><input id="pt-mae-nome" placeholder="Nome completo"></div><div class="fg"><label>CPF da mãe / responsável</label><input id="pt-mae-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div></div>
+      <div class="fr"><div class="fg"><label>Data de nascimento (mãe)</label><input id="pt-mae-nasc" type="date"></div><div class="fg"><label>Profissão (mãe)</label><input id="pt-mae-profissao" placeholder="Ex: Professora..."></div></div>
+      <div class="fr"><div class="fg"><label>WhatsApp (mãe)</label><input id="pt-mae-wpp" placeholder="(11) 99999-9999"></div><div class="fg"><label>E-mail (mãe)</label><input id="pt-mae-email" type="email" placeholder="email@exemplo.com"></div></div>
+      <div class="fr"><div class="fg"><label>Estado civil (mãe)</label><select id="pt-mae-civil"><option value="">—</option><option>Solteira</option><option>Casada</option><option>Divorciada</option><option>Viúva</option><option>União estável</option></select></div><div class="fg"><label>Escolaridade (mãe)</label><select id="pt-mae-esc"><option value="">—</option><option>Fundamental</option><option>Médio</option><option>Superior incompleto</option><option>Superior completo</option><option>Pós-graduação</option></select></div></div>
+      <div class="fg"><label>Observações sobre a família</label><textarea id="pt-mae-obs" placeholder="Dinâmica familiar, contexto relevante..." style="min-height:56px;"></textarea></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <button class="btn btn-primary" style="flex:1" onclick="savePt()">Salvar paciente</button>
+      <button class="btn btn-secondary" onclick="closeOv('ov-pt')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VER PACIENTE -->
+<div class="overlay" id="ov-view">
+  <div class="modal" style="max-width:760px;">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="vw-nome">Paciente</div>
+        <div style="font-size:12px;color:var(--muted);" id="vw-meta"></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button class="btn btn-secondary btn-sm" onclick="editCurPt()">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCurPt()" title="Excluir paciente">🗑 Excluir</button>
+        <button class="btn btn-wpp btn-sm" onclick="enviarWpp()">💬 WhatsApp</button>
+        <button class="btn btn-secondary btn-sm" onclick="printPt()">🖨️ Imprimir</button>
+        <button class="mclose" onclick="closeOv('ov-view')">×</button>
+      </div>
+    </div>
+    <div class="itabs">
+      <button class="itab active" onclick="switchTab('anamnese',this)">📋 Anamnese</button>
+      <button class="itab" onclick="switchTab('anam-infantil',this)">👶 Infantil</button>
+      <button class="itab" onclick="switchTab('sessoes',this)">📝 Sessões</button>
+      <button class="itab" onclick="switchTab('formulacao',this)">🧠 Formulação</button>
+      <button class="itab" onclick="switchTab('pagamentos',this)">💰 Pagamentos</button>
+      <button class="itab" onclick="switchTab('documentos',this)">📄 Documentos</button>
+      <button class="itab" onclick="switchTab('contrato',this)">📑 Contrato</button>
+      <button class="itab" onclick="switchTab('recibo',this)">🧾 Recibo</button>
+    </div>
+
+    <!-- ANAMNESE ADULTO -->
+    <div class="icontent active" id="tab-anamnese">
+      <!-- AI FILL BOX -->
+      <div class="ai-fill-box">
+        <div class="ai-label">✨ Preencher anamnese com IA</div>
+        <textarea id="ai-fill-anamnese-texto" placeholder="Descreva o que foi relatado na entrevista de forma livre... A IA vai preencher os campos automaticamente."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button class="btn btn-ai btn-sm" onclick="preencherAnamneseIA()">✨ Preencher com IA</button>
+          <span class="ai-fill-hint">Cole ou escreva o relato — a IA identifica e preenche cada campo.</span>
+        </div>
+        <div id="ai-fill-anamnese-status" style="display:none;" class="ai-loading" style="margin-top:6px;"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+        <div class="sec" style="margin:0;border:none;">Dados da Anamnese</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label style="margin:0;white-space:nowrap;">Data:</label>
+          <input id="a-data" type="date" style="width:auto;">
+        </div>
+      </div>
+
+      <div class="sec">Queixa Principal</div>
+      <div class="fg"><label>Principal queixa</label><textarea id="a-queixa" placeholder="O que trouxe o paciente à terapia..."></textarea></div>
+      <div class="fr"><div class="fg"><label>Quanto tempo com esse problema?</label><input id="a-tempo" placeholder="Ex: 2 anos"></div><div class="fg"><label>Como surgiu?</label><input id="a-surgiu" placeholder="Situação ou contexto"></div></div>
+      <div class="fg"><label>O que espera alcançar com a terapia?</label><textarea id="a-espera" placeholder="Objetivos do paciente..."></textarea></div>
+
+      <div class="sec">Análise do Problema (TCC)</div>
+      <div class="fg"><label>O que costuma acontecer antes do problema aparecer? (Antecedentes)</label><textarea id="a-antecedentes" placeholder="Situações, pessoas, locais, horários que precedem o problema..."></textarea></div>
+      <div class="fr">
+        <div class="fg"><label>Onde se manifesta com mais intensidade?</label><input id="a-onde" placeholder="Ex: trabalho, casa, locais públicos..."></div>
+        <div class="fg"><label>Quando e com quem ocorre?</label><input id="a-quandocomquem" placeholder="Ex: às noites, sozinho, com familiares..."></div>
+      </div>
+      <div class="fg"><label>O que passa pela sua cabeça quando o problema ocorre?</label><textarea id="a-pensamentos-sit" placeholder="Pensamentos automáticos, interpretações, previsões..."></textarea></div>
+      <div class="fg"><label>Tem imagens associadas a esse momento? Quais?</label><textarea id="a-imagens" placeholder="Descreva imagens mentais, memórias ou cenas que surgem..."></textarea></div>
+      <div class="fg"><label>Quais emoções surgem?</label>
+        <textarea id="a-emocoes-outras" placeholder="Ex: ansiedade, tristeza, raiva, medo, vergonha..."></textarea>
+      </div>
+      <div class="fg"><label>Como reage e se comporta diante do problema?</label><textarea id="a-reacao" placeholder="Respostas comportamentais, o que faz ou deixa de fazer..."></textarea></div>
+      <div class="fg"><label>O que faz para evitar ou aliviar o problema?</label><textarea id="a-evitacao" placeholder="Estratégias de evitação, fuga, neutralização..."></textarea></div>
+
+      <div class="sec">Sintomas</div>
+      <div class="fg"><label>Sintomas de ansiedade</label>
+        <textarea id="a-sint-ansi-outros" placeholder="Ex: taquicardia, sudorese, tremores, falta de ar, insônia..."></textarea>
+      </div>
+      <div class="fg"><label>Sintomas depressivos</label>
+        <textarea id="a-sint-dep-outros" placeholder="Ex: humor deprimido, anedonia, fadiga, isolamento social, choro fácil..."></textarea>
+      </div>
+      <div class="fg"><label>Outros sintomas relevantes</label><textarea id="a-outros-sint" placeholder="Sintomas físicos, dissociativos, compulsivos, etc..."></textarea></div>
+
+      <div class="sec">História de Vida</div>
+      <div class="fg"><label>Como descreve sua infância?</label><textarea id="a-infancia"></textarea></div>
+      <div class="fg"><label>Com quem cresceu?</label><input id="a-cresceu" placeholder="Ex: pais, avós, irmãos..."></div>
+      <div class="fg"><label>Como descreve o ambiente familiar na infância?</label><textarea id="a-faminfancia"></textarea></div>
+      <div class="fg"><label>Histórico de trauma ou abuso</label><textarea id="a-trauma" placeholder="Descreva se houver..."></textarea></div>
+
+      <div class="sec">Histórico de Saúde Mental</div>
+      <div class="fr"><div class="fg"><label>Já realizou acompanhamento psicológico?</label><select id="a-acomp"><option value="">—</option><option>Sim</option><option>Não</option></select></div><div class="fg"><label>Diagnóstico(s) anteriores</label><input id="a-diag" placeholder="Ex: TDA, depressão..."></div></div>
+      <div class="fg"><label>Medicações em uso</label><input id="a-meds" placeholder="Nome e dose"></div>
+      <div class="fr"><div class="fg"><label>Histórico de internação psiquiátrica</label><select id="a-intern"><option value="">—</option><option>Sim</option><option>Não</option></select></div><div class="fg"><label>Tentativa de suicídio</label><select id="a-suic"><option value="">—</option><option>Sim</option><option>Não</option></select></div></div>
+
+      <div class="sec">Hábitos e Contexto de Vida</div>
+      <div class="fr"><div class="fg"><label>Uso de álcool / substâncias</label><input id="a-alcool" placeholder="Ex: social, frequente, não usa"></div><div class="fg"><label>Qualidade do sono</label><select id="a-sono"><option value="">—</option><option>Boa</option><option>Regular</option><option>Ruim</option><option>Insônia</option></select></div></div>
+      <div class="fr"><div class="fg"><label>Qualidade da alimentação</label><select id="a-alim"><option value="">—</option><option>Boa</option><option>Regular</option><option>Ruim</option></select></div><div class="fg"><label>Estado civil</label><select id="a-civil"><option value="">—</option><option>Solteiro(a)</option><option>Namorando</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Viúvo(a)</option></select></div></div>
+      <div class="fg"><label>Como avalia seus relacionamentos sociais?</label><textarea id="a-social" placeholder="Família, amigos, trabalho..."></textarea></div>
+
+      <div class="sec">Motivação para o Tratamento</div>
+      <div class="fg"><label>Motivação para iniciar terapia</label><textarea id="a-motiv" placeholder="O que motivou o paciente a buscar ajuda agora..."></textarea></div>
+      <div class="fg"><label>Observações relevantes</label><textarea id="a-obs" placeholder="Outras informações importantes..."></textarea></div>
+
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="saveAnam()">💾 Salvar anamnese</button>
+        <button class="btn btn-ai" onclick="gerarFormulacao()">✨ Gerar formulação com IA</button>
+      </div>
+    </div>
+
+    <!-- ANAMNESE INFANTIL -->
+    <div class="icontent" id="tab-anam-infantil">
+      <div class="ai-fill-box">
+        <div class="ai-label">✨ Preencher com IA</div>
+        <textarea id="ai-fill-infantil-texto" placeholder="Descreva livremente o que foi relatado na entrevista com os responsáveis... A IA vai preencher os campos automaticamente." style="min-height:80px;"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn-ai btn-sm" onclick="preencherAnamneseInfantilIA()">✨ Preencher com IA</button>
+          <span class="ai-fill-hint">Cole ou escreva o relato — a IA identifica e preenche cada campo.</span>
+        </div>
+        <div id="ai-fill-infantil-status" style="display:none;" class="ai-loading"></div>
+      </div>
+
+      <div style="font-family:'Lora',serif;font-size:16px;margin-bottom:4px;">Anamnese Infantil</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;padding:8px 12px;background:var(--sage-light);border-radius:8px;border-left:3px solid var(--sage-dark);">📋 Avaliação Inicial — Primeira Sessão com Responsável · Sigilo profissional CFP Resolução 001/2009 e LGPD</div>
+
+      <div class="fr3">
+        <div class="fg"><label>Data</label><input id="ai-data" type="date"></div>
+        <div class="fg"><label>Psicóloga / CRP</label><input id="ai-psi-crp" value="Júlia Vitória Acunha da Costa · CRP 14/11909"></div>
+        <div class="fg"><label>Nº de prontuário</label><input id="ai-prontuario" placeholder="Ex: 001/2026"></div>
+      </div>
+
+      <div class="sec">1. Identificação da criança</div>
+      <div class="fr"><div class="fg"><label>Nome completo da criança</label><input id="ai-nome-crianca"></div><div class="fg"><label>Data de nascimento</label><input id="ai-nasc-crianca" type="date"></div></div>
+      <div class="fr3"><div class="fg"><label>Idade</label><input id="ai-idade-crianca" placeholder="Ex: 7 anos e 3 meses"></div><div class="fg"><label>Sexo / gênero</label><input id="ai-sexo" placeholder="Ex: Feminino"></div><div class="fg"><label>Escola / série</label><input id="ai-escola-serie" placeholder="Ex: EMEF João · 3º ano"></div></div>
+      <div class="fg"><label>Endereço / cidade</label><input id="ai-endereco"></div>
+
+      <div class="sec">2. Responsáveis e composição familiar</div>
+      <div class="fr"><div class="fg"><label>Nome do(a) responsável 1</label><input id="ai-resp1-nome"></div><div class="fg"><label>Parentesco / idade / profissão</label><input id="ai-resp1-parent" placeholder="Ex: mãe · 35 anos · Professora"></div></div>
+      <div class="fr"><div class="fg"><label>WhatsApp (resp. 1)</label><input id="ai-resp1-wpp"></div><div class="fg"><label>Nome do(a) responsável 2</label><input id="ai-resp2-nome"></div></div>
+      <div class="fr"><div class="fg"><label>Parentesco / idade / profissão (resp. 2)</label><input id="ai-resp2-parent"></div><div class="fg"><label>WhatsApp (resp. 2)</label><input id="ai-resp2-wpp"></div></div>
+      <div class="fr"><div class="fg"><label>Estado civil dos pais</label><input id="ai-estado-civil" placeholder="Ex: Juntos, Separados..."></div><div class="fg"><label>Com quem a criança reside?</label><input id="ai-reside-com"></div></div>
+      <div class="fr"><div class="fg"><label>Irmãos (nomes e idades)</label><input id="ai-irmaos" placeholder="Ex: Ana, 8 anos; Pedro, 4 anos"></div><div class="fg"><label>Outros membros na casa</label><input id="ai-outros-membros"></div></div>
+
+      <div class="sec">3. Queixa principal</div>
+      <div class="fg"><label>Queixa principal (nas palavras do responsável)</label><textarea id="ai-queixa-resp" placeholder="Registrar com as palavras do responsável. Não interpretar neste momento."></textarea></div>
+      <div class="fr"><div class="fg"><label>Há quanto tempo?</label><input id="ai-tempo"></div><div class="fg"><label>O que motivou buscar atendimento agora?</label><input id="ai-motivo-agora"></div></div>
+      <div class="fr"><div class="fg"><label>Já fez acompanhamento psicológico antes?</label><input id="ai-acomp-detalhe" placeholder="Não / Sim — período, profissional, motivo"></div><div class="fg"><label>A criança sabe que irá ao psicólogo?</label><input id="ai-crianca-sabe" placeholder="Como foi explicado?"></div></div>
+
+      <div class="sec">4. História do desenvolvimento</div>
+      <div class="fr"><div class="fg"><label>Gestação e nascimento</label><textarea id="ai-gestacao" placeholder="Gravidez planejada? Intercorrências? Tipo de parto? Peso? UTI neonatal?" style="min-height:60px;"></textarea></div><div class="fg"><label>Marcos do desenvolvimento</label><textarea id="ai-marcos" placeholder="Engatinhou, andou, primeiras palavras, frases completas, controle esfincteriano..." style="min-height:60px;"></textarea></div></div>
+      <div class="fg"><label>Observações sobre o desenvolvimento</label><textarea id="ai-obs-desenvolvimento" placeholder="Algo que chamou atenção?"></textarea></div>
+
+      <div class="sec">5. Saúde e histórico médico</div>
+      <div class="fr"><div class="fg"><label>Diagnósticos médicos / psiquiátricos</label><input id="ai-diag" placeholder="Nenhum / descrever"></div><div class="fg"><label>Medicamentos em uso</label><input id="ai-meds" placeholder="Nenhum / descrever"></div></div>
+      <div class="fr"><div class="fg"><label>Alergias / internações / cirurgias</label><input id="ai-alergias" placeholder="Nenhuma / descrever"></div><div class="fg"><label>Profissionais que acompanham atualmente</label><input id="ai-profissionais" placeholder="Ex: Fonoaudiólogo, TO..."></div></div>
+      <div class="fg"><label>Queixas físicas recorrentes</label><input id="ai-queixas-fisicas" placeholder="Ex: dores de cabeça, enurese, tiques, problemas de sono..."></div>
+
+      <div class="sec">6. Comportamento e desenvolvimento emocional</div>
+      <div class="fg"><label>Como os responsáveis descrevem a criança?</label><textarea id="ai-descricao-crianca" placeholder="Ex: agitada, tímida, alegre, irritável... nível de energia, adaptabilidade, sensibilidade a estímulos..."></textarea></div>
+      <div class="fg"><label>Como expressa e regula as emoções?</label><textarea id="ai-expressao-emocoes" placeholder="Como reage quando frustrada? Frequência de birras? O que ajuda a se acalmar? Consegue nomear emoções?"></textarea></div>
+      <div class="fg"><label>Emoções observadas com frequência</label><input id="ai-emocoes-freq" placeholder="Ex: ansiedade, tristeza, irritabilidade, medos específicos..."></div>
+      <div class="fg"><label>Comportamentos internalizantes</label><textarea id="ai-sint-int" placeholder="Ex: isolamento, retraimento, tristeza, ansiedade de separação, fobia escolar, baixa autoestima..."></textarea></div>
+      <div class="fg"><label>Comportamentos externalizantes</label><textarea id="ai-sint-ext" placeholder="Ex: agitação, impulsividade, agressividade, birras, desobediência, mentiras..."></textarea></div>
+      <div class="fg"><label>Outros comportamentos relevantes (sono, alimentação, TOC, TEA, linguagem)</label><textarea id="ai-outros-comportamentos" placeholder="Ex: dificuldade para dormir, seletividade alimentar, rituais, contato visual reduzido, atraso na fala..."></textarea></div>
+      <div class="fg"><label>Observações complementares</label><textarea id="ai-obs-comportamentos"></textarea></div>
+
+      <div class="sec">6.4 Relações sociais e vínculos</div>
+      <div class="fg"><label>Vínculos afetivos (mãe, pai, irmãos, outros)</label><textarea id="ai-vinculos" placeholder="Como é o apego com cada cuidador? Relação com irmãos e figuras de autoridade?"></textarea></div>
+      <div class="fg"><label>Amizades e relações com colegas</label><textarea id="ai-relacoes-sociais" placeholder="Tem amigos? Como se relaciona? Já sofreu ou praticou bullying?"></textarea></div>
+      <div class="fg"><label>Brincadeiras, lazer e autonomia</label><textarea id="ai-interesses" placeholder="Brincadeiras preferidas, tipo de jogo, uso de telas, atividades extracurriculares, autonomia no dia a dia..."></textarea></div>
+
+      <div class="sec">7. Escolaridade e aprendizagem</div>
+      <div class="fr"><div class="fg"><label>Nome da escola / turno</label><input id="ai-escola"></div><div class="fg"><label>Rendimento escolar</label><input id="ai-desempenho" placeholder="Ex: Bom, Regular, Com dificuldades"></div></div>
+      <div class="fg"><label>Dificuldades específicas / queixas da escola</label><textarea id="ai-dif-aprendizagem" placeholder="Leitura, escrita, cálculo, atenção, relação com professores e colegas..."></textarea></div>
+
+      <div class="sec">8. Dinâmica familiar e contexto de vida</div>
+      <div class="fg"><label>Rotina da criança</label><textarea id="ai-rotina" placeholder="Horários, atividades, telas, sono, disciplina em casa..."></textarea></div>
+      <div class="fg"><label>Eventos estressores / histórico familiar</label><textarea id="ai-eventos-estressores" placeholder="Mudanças, lutos, separação, violência, transtornos mentais na família..."></textarea></div>
+      <div class="fg"><label>Expectativa dos responsáveis com o atendimento</label><textarea id="ai-expectativa-resp"></textarea></div>
+
+      <div class="sec">9. Observações clínicas</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic;">Uso exclusivo da psicóloga.</div>
+      <div class="fg"><label>Impressão geral da entrevista</label><textarea id="ai-obs-entrevista" style="min-height:70px;"></textarea></div>
+      <div class="fg"><label>Hipóteses iniciais / CID-10 ou DSM-5</label><input id="ai-hipotese" placeholder="Ex: F90.0 TDAH, F93.0 Ansiedade de separação..."></div>
+      <div class="fg"><label>Encaminhamentos / avaliações complementares</label><textarea id="ai-encaminhamentos"></textarea></div>
+      <div class="fg"><label>Plano terapêutico inicial / objetivos</label><textarea id="ai-plano-terapeutico"></textarea></div>
+      <div class="fr"><div class="fg"><label>Periodicidade das sessões</label><input id="ai-periodicidade" placeholder="Ex: Semanal, Quinzenal"></div><div class="fg"><label>Duração estimada</label><input id="ai-duracao-processo" placeholder="Ex: 6 meses, 1 ano..."></div></div>
+      <div class="fg"><label>Observações gerais</label><textarea id="ai-obs-gerais"></textarea></div>
+
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="saveAnamInfantil()">💾 Salvar anamnese infantil</button>
+      </div>
+    </div>
+    <div class="icontent" id="tab-sessoes">
+      <div class="card" style="padding:16px;margin-bottom:14px;">
+        <div class="sec" style="margin-top:0;">Nova Sessão</div>
+        <div class="fr"><div class="fg"><label>Data da sessão *</label><input id="s-data" type="date"></div><div class="fg"><label>Nº da sessão</label><input id="s-num" type="number" placeholder="Ex: 1"></div></div>
+        <div class="fg"><label>Estado de humor do paciente</label>
+          <div class="humor-scale" id="humor-scale">
+            <div class="humor-opt" onclick="selHumor(this,'😔 Muito triste')">😔 Muito triste</div>
+            <div class="humor-opt" onclick="selHumor(this,'😟 Triste')">😟 Triste</div>
+            <div class="humor-opt" onclick="selHumor(this,'😐 Neutro')">😐 Neutro</div>
+            <div class="humor-opt" onclick="selHumor(this,'🙂 Bem')">🙂 Bem</div>
+            <div class="humor-opt" onclick="selHumor(this,'😄 Muito bem')">😄 Muito bem</div>
+            <div class="humor-opt" onclick="selHumor(this,'😰 Ansioso(a)')">😰 Ansioso(a)</div>
+            <div class="humor-opt" onclick="selHumor(this,'😠 Irritado(a)')">😠 Irritado(a)</div>
+          </div>
+        </div>
+        <div class="fg">
+          <label>SUDs — Nível de sofrimento subjetivo (0–10)</label>
+          <div class="suds-wrap" id="suds-scale">
+            <button class="suds-btn suds-0" onclick="selSuds(this,0)">0</button><button class="suds-btn suds-1" onclick="selSuds(this,1)">1</button><button class="suds-btn suds-2" onclick="selSuds(this,2)">2</button><button class="suds-btn suds-3" onclick="selSuds(this,3)">3</button><button class="suds-btn suds-4" onclick="selSuds(this,4)">4</button><button class="suds-btn suds-5" onclick="selSuds(this,5)">5</button><button class="suds-btn suds-6" onclick="selSuds(this,6)">6</button><button class="suds-btn suds-7" onclick="selSuds(this,7)">7</button><button class="suds-btn suds-8" onclick="selSuds(this,8)">8</button><button class="suds-btn suds-9" onclick="selSuds(this,9)">9</button><button class="suds-btn suds-10" onclick="selSuds(this,10)">10</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;"><span>0 = Sem sofrimento</span><span>10 = Máximo sofrimento</span></div>
+        </div>
+        <div class="fg"><label>Como o paciente chegou à sessão</label><textarea id="s-chegou" placeholder="Ex: demonstrou-se agitado, referiu semana difícil..."></textarea></div>
+        <div class="fg"><label>Relato da semana</label><textarea id="s-relato" placeholder="Principais acontecimentos relatados pelo paciente..."></textarea></div>
+        <div class="fr"><div class="fg"><label>Tarefa da semana anterior</label><input id="s-tarefa-ant" placeholder="Qual era a tarefa..."></div><div class="fg"><label>Realizou a tarefa?</label><select id="s-tarefa-ok"><option value="">—</option><option>Sim, completamente</option><option>Sim, parcialmente</option><option>Não realizou</option></select></div></div>
+        <div class="fg"><label>Observações sobre a tarefa</label><textarea id="s-tarefa-obs" placeholder="Como foi a experiência com a tarefa..."></textarea></div>
+        <div class="fg"><label>Tema trabalhado na sessão</label><input id="s-tema" placeholder="Ex: reestruturação cognitiva, exposição..."></div>
+        <div class="fg"><label>Intervenções utilizadas</label><textarea id="s-interv" placeholder="Ex: registro de pensamentos, questionamento socrático, psicoeducação..."></textarea></div>
+        <div class="fg"><label>Descrição e evoluções da sessão</label><textarea id="s-evolucao" placeholder="Descrição clínica da sessão, percepções, progressos observados..." style="min-height:90px;"></textarea></div>
+        <div class="fr"><div class="fg"><label>Próxima sessão (data prevista)</label><input id="s-prox" type="date"></div><div class="fg"><label>O que será trabalhado</label><input id="s-prox-tema" placeholder="Tema da próxima sessão"></div></div>
+        <div class="fg"><label>Tarefa para a próxima semana</label><input id="s-nova-tarefa" placeholder="Ex: registro de pensamentos automáticos..."></div>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="addSess()">+ Adicionar sessão</button>
+          <button class="btn btn-ai btn-sm" onclick="gerarEvolucaoIA()">✨ Gerar evolução com IA</button>
+        </div>
+        <div id="ai-evolucao-block" style="display:none;" class="ai-block">
+          <div class="ai-label">✨ Evolução gerada pela IA</div>
+          <div class="ai-text" id="ai-evolucao-text"></div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:10px;" onclick="copiarEvolucao()">📋 Copiar para o campo de evolução</button>
+        </div>
+      </div>
+      <div id="sess-list"></div>
+    </div>
+
+    <!-- FORMULAÇÃO DE CASO -->
+    <div class="icontent" id="tab-formulacao">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-family:'Lora',serif;font-size:16px;">Formulação de Caso · TCC</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Gerada automaticamente com base na anamnese</div>
+        </div>
+        <button class="btn btn-ai btn-sm" onclick="gerarFormulacao()">✨ Gerar / Atualizar com IA</button>
+      </div>
+      <div class="sec">Análise Funcional</div>
+      <div class="fr"><div class="fg"><label>Situação / Gatilho</label><textarea id="f-gatilho" placeholder="Situações que desencadeiam os sintomas..."></textarea></div><div class="fg"><label>Pensamentos automáticos</label><textarea id="f-pensamentos" placeholder="Pensamentos que surgem..."></textarea></div></div>
+      <div class="fr3"><div class="fg"><label>Crenças intermediárias</label><textarea id="f-crenças-int" placeholder="Regras, pressupostos, atitudes..."></textarea></div><div class="fg"><label>Crenças nucleares</label><textarea id="f-crenças-nuc" placeholder="Crenças centrais sobre si, o outro e o mundo..."></textarea></div><div class="fg"><label>Emoções</label><textarea id="f-emocoes" placeholder="Emoções associadas..."></textarea></div></div>
+      <div class="fr"><div class="fg"><label>Comportamentos / Respostas</label><textarea id="f-comportamento" placeholder="O que o paciente faz diante dos gatilhos..."></textarea></div><div class="fg"><label>Consequências</label><textarea id="f-consequencias" placeholder="O que mantém o padrão..."></textarea></div></div>
+      <div class="sec">Impressões Clínicas</div>
+      <div class="fg"><label>Hipótese diagnóstica inicial</label><textarea id="f-hipotese" placeholder="Ex: Transtorno de ansiedade generalizada (F41.1)..."></textarea></div>
+      <div class="fg"><label>Observações sobre o paciente</label><textarea id="f-obs-clinicas" placeholder="Impressões clínicas, aspectos do vínculo, resistências observadas..."></textarea></div>
+      <div class="sec">Plano Terapêutico</div>
+      <div class="fg"><label>Objetivos terapêuticos</label><textarea id="f-objetivos" placeholder="Metas de curto, médio e longo prazo..."></textarea></div>
+      <div class="fg"><label>Estratégias e técnicas previstas</label><textarea id="f-estrategias" placeholder="Ex: reestruturação cognitiva, experimentos comportamentais, psicoeducação..."></textarea></div>
+      <div class="fg"><label>Estimativa de duração</label><input id="f-duracao" placeholder="Ex: 20-30 sessões"></div>
+      <div id="ai-formulacao-block" style="display:none;" class="ai-block">
+        <div class="ai-label">✨ Formulação gerada pela IA</div>
+        <div class="ai-text" id="ai-formulacao-text"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="saveForm()">💾 Salvar formulação</button>
+        <button class="btn btn-ai" onclick="gerarFormulacao()">✨ Gerar com IA</button>
+      </div>
+    </div>
+
+    <!-- PAGAMENTOS -->
+    <div class="icontent" id="tab-pagamentos">
+      <div class="card" style="padding:14px;margin-bottom:12px;">
+        <div class="sec" style="margin-top:0;">Registrar pagamento</div>
+        <div class="fr"><div class="fg"><label>Data</label><input id="pay-data" type="date"></div><div class="fg"><label>Valor (R$)</label><input id="pay-val" type="number" placeholder="Ex: 110"></div></div>
+        <div class="fr"><div class="fg"><label>Descrição</label><input id="pay-desc" placeholder="Ex: Sessão 01"></div><div class="fg"><label>Status</label><select id="pay-status"><option value="pago">Pago ✅</option><option value="pendente">Pendente ⏳</option></select></div></div>
+        <button class="btn btn-primary btn-sm" style="margin-top:6px;" onclick="addPay()">+ Registrar</button>
+      </div>
+      <div id="pay-list"></div>
+    </div>
+
+    <!-- DOCUMENTOS -->
+    <div class="icontent" id="tab-documentos">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-family:'Lora',serif;font-size:16px;">Documentos Clínicos</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Gerados conforme normas do CRP</div>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Tipo de documento</label>
+        <select id="doc-tipo" onchange="trocaDoc()">
+          <option value="declaracao-acompanhamento">Declaração de Acompanhamento em Psicoterapia</option>
+          <option value="declaracao-comparecimento">Declaração de Comparecimento</option>
+          <option value="atestado">Atestado Psicológico</option>
+          <option value="encaminhamento-psiq">Encaminhamento para Psiquiatra</option>
+          <option value="encaminhamento-outro">Encaminhamento para Outro Profissional</option>
+          <option value="relatorio">Relatório Psicológico</option>
+          <option value="laudo">Laudo Psicológico</option>
+          <option value="parecer">Parecer Psicológico</option>
+        </select>
+      </div>
+      <div id="doc-campos-extra"></div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+        <button class="btn btn-ai" onclick="gerarDocumentoIA()">✨ Gerar com IA</button>
+        <button class="btn btn-secondary" onclick="preencherDocManual()">✏️ Preencher manualmente</button>
+      </div>
+      <div id="doc-editor-wrap" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+          <div style="font-size:12px;color:var(--muted);">Revise e edite o documento abaixo:</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-secondary btn-sm" onclick="copiarDoc()">📋 Copiar</button>
+            <button class="btn btn-primary btn-sm" onclick="imprimirDoc()">🖨️ Imprimir</button>
+          </div>
+        </div>
+        <div id="doc-preview" style="background:white;color:#222;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:1.9;min-height:300px;" contenteditable="true"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;">💡 Clique no texto acima para editar diretamente antes de imprimir.</div>
+      </div>
+      <div id="ai-doc-loading" style="display:none;" class="ai-block">
+        <div class="ai-label">✨ Gerando documento...</div>
+        <div class="ai-loading">Aguarde enquanto a IA elabora o documento conforme as normas do CRP...</div>
+      </div>
+    </div>
+
+    <!-- CONTRATO TERAPÊUTICO -->
+    <div class="icontent" id="tab-contrato">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-family:'Lora',serif;font-size:16px;">Contrato Terapêutico</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Modelo editável · Imprimir para assinar</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ai btn-sm" onclick="gerarContratoIA()">✨ Gerar com IA</button>
+          <button class="btn btn-secondary btn-sm" onclick="imprimirContrato()">🖨️ Imprimir</button>
+        </div>
+      </div>
+      <div class="sec">Dados para o contrato</div>
+      <div class="fr"><div class="fg"><label>Seu nome completo (psicóloga)</label><input id="ct-psi-nome" placeholder="Dra. Nome Sobrenome"></div><div class="fg"><label>Nº CRP</label><input id="ct-crp" placeholder="Ex: CRP 06/123456"></div></div>
+      <div class="fr"><div class="fg"><label>Valor da sessão (R$)</label><input id="ct-valor" type="number" placeholder="Ex: 110"></div><div class="fg"><label>Frequência</label><select id="ct-freq"><option value="semanal">Semanal</option><option value="quinzenal">Quinzenal</option><option value="mensal">Mensal</option></select></div></div>
+      <div class="fr"><div class="fg"><label>Dia e horário das sessões</label><input id="ct-horario" placeholder="Ex: Terças, 14h"></div><div class="fg"><label>Modalidade</label><select id="ct-modalidade"><option>Online</option><option>Presencial</option></select></div></div>
+      <div class="fg"><label>Prazo para cancelamento sem cobrança</label><select id="ct-cancel"><option value="24">24 horas de antecedência</option><option value="48">48 horas de antecedência</option><option value="72">72 horas de antecedência</option></select></div>
+      <div class="fg"><label>Forma de pagamento</label><input id="ct-pagamento" placeholder="Ex: PIX até 24h antes da sessão"></div>
+      <div class="fg"><label>Observações adicionais</label><textarea id="ct-obs" placeholder="Outras cláusulas ou informações relevantes..."></textarea></div>
+      <button class="btn btn-primary" style="margin-bottom:14px;" onclick="gerarContratoIA()">✨ Gerar contrato completo</button>
+      <div id="contrato-editor-wrap" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+          <div style="font-size:12px;color:var(--muted);">Revise e edite antes de imprimir:</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-secondary btn-sm" onclick="copiarContrato()">📋 Copiar</button>
+            <button class="btn btn-primary btn-sm" onclick="imprimirContrato()">🖨️ Imprimir</button>
+          </div>
+        </div>
+        <div id="contrato-preview" style="background:white;color:#222;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:1.9;min-height:300px;" contenteditable="true"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;">💡 Clique no texto acima para editar diretamente antes de imprimir.</div>
+      </div>
+    </div>
+
+    <!-- RECIBO -->
+    <div class="icontent" id="tab-recibo">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-family:'Lora',serif;font-size:16px;">Recibo de Atendimento</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Atendimento psicológico online</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-secondary btn-sm" onclick="imprimirRecibo()">🖨️ Imprimir</button>
+          <button class="btn btn-secondary btn-sm" onclick="copiarRecibo()">📋 Copiar</button>
+        </div>
+      </div>
+
+      <div class="card" style="padding:16px;margin-bottom:12px;">
+        <div class="sec" style="margin-top:0;">Dados do recibo</div>
+        <div class="fr">
+          <div class="fg"><label>Data do atendimento</label><input id="rec-data" type="date"></div>
+          <div class="fg"><label>Nº do recibo</label><input id="rec-num" type="text" placeholder="Ex: 001/2026"></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label>Valor (R$)</label><input id="rec-valor" type="number" placeholder="Ex: 150"></div>
+          <div class="fg"><label>Forma de pagamento</label><select id="rec-pagamento"><option value="PIX">PIX</option><option value="Transferência bancária">Transferência bancária</option><option value="Dinheiro">Dinheiro</option><option value="Cartão de crédito">Cartão de crédito</option><option value="Cartão de débito">Cartão de débito</option></select></div>
+        </div>
+        <div class="fg"><label>Descrição do serviço</label><input id="rec-descricao" placeholder="Ex: Sessão de psicoterapia online — TCC"></div>
+        <button class="btn btn-primary btn-sm" style="margin-top:6px;" onclick="gerarRecibo()">✨ Gerar recibo</button>
+      </div>
+
+      <div id="recibo-preview-wrap" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:12px;color:var(--muted);">Revise antes de imprimir — clique no texto para editar:</div>
+        </div>
+        <div id="recibo-preview" contenteditable="true" style="background:white;color:#222;border:1.5px solid var(--border);border-radius:12px;padding:28px 32px;font-size:13px;line-height:2;min-height:300px;font-family:'DM Sans',sans-serif;white-space:pre-wrap;"></div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- MODAL WHATSAPP -->
+<div class="overlay" id="ov-wpp">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">💬 Lembrete via WhatsApp</div>
+      <button class="mclose" onclick="closeOv('ov-wpp')">×</button>
+    </div>
+    <div class="fg"><label>Tipo de mensagem</label><select id="wpp-tipo" onchange="gerarMsgWpp()"><option value="lembrete">Lembrete de sessão</option><option value="confirmacao">Pedido de confirmação</option><option value="reagendamento">Reagendamento</option><option value="cobranca">Cobrança pendente</option><option value="boas-vindas">Boas-vindas (1ª sessão)</option></select></div>
+    <div class="fg"><label>Data da sessão</label><input id="wpp-data" type="date" onchange="gerarMsgWpp()"></div>
+    <div class="fg"><label>Horário</label><input id="wpp-hora" type="time" value="09:00" onchange="gerarMsgWpp()"></div>
+    <div class="fg"><label>Mensagem (edite se quiser)</label><textarea id="wpp-msg" style="min-height:120px;"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <button class="btn btn-wpp" style="flex:1" onclick="abrirWpp()">💬 Abrir WhatsApp</button>
+      <button class="btn btn-secondary" onclick="closeOv('ov-wpp')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOVO AGENDAMENTO -->
+<div class="overlay" id="ov-agend">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="ov-agend-title">Novo Agendamento</div>
+      <button class="mclose" onclick="closeOv('ov-agend')">×</button>
+    </div>
+    <div class="fg"><label>Paciente *</label><select id="ag-pt"><option value="">Selecione o paciente...</option></select></div>
+    <div class="fr"><div class="fg"><label>Data *</label><input id="ag-data" type="date"></div><div class="fg"><label>Horário *</label><input id="ag-hora" type="time" value="09:00"></div></div>
+    <div class="fr"><div class="fg"><label>Duração</label><select id="ag-dur"><option value="50">50 min (padrão)</option><option value="60">60 min</option><option value="90">90 min</option></select></div><div class="fg"><label>Tipo</label><select id="ag-tipo"><option value="Online">Online</option><option value="Presencial">Presencial</option></select></div></div>
+    <div class="fg"><label>Status</label><select id="ag-status"><option value="agendado">Agendado</option><option value="confirmed">Confirmado</option><option value="cancelled">Cancelado</option></select></div>
+    <div class="fg"><label>Observações</label><input id="ag-obs" placeholder="Ex: link da sessão, lembrete..."></div>
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <button class="btn btn-primary" style="flex:1" onclick="saveAgend()">Salvar agendamento</button>
+      <button class="btn btn-secondary" onclick="closeOv('ov-agend')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ── DARK MODE ──────────────────────────────────────────────────────────────
+function toggleDark(){
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme', isDark?'light':'dark');
+  document.getElementById('dark-btn').textContent = isDark?'🌙':'☀️';
+  localStorage.setItem('theme', isDark?'light':'dark');
+}
+(function(){
+  const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  if(saved==='dark'){
+    document.documentElement.setAttribute('data-theme','dark');
+    document.addEventListener('DOMContentLoaded',()=>{ const b=document.getElementById('dark-btn'); if(b) b.textContent='☀️'; });
+  }
+})();
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let pts = JSON.parse(localStorage.getItem('pts_v2')||'[]');
+let curId = null, editId = null, selHumorVal = '', selSudsVal = null;
+function getP(id){ return pts.find(p=>p.id===id); }
+function save(){ localStorage.setItem('pts_v2', JSON.stringify(pts)); }
+function saveAgends(){ localStorage.setItem('agendamentos', JSON.stringify(agendamentos)); }
+
+// ── CHECKBOX PILLS ─────────────────────────────────────────────────────────
+function togglePill(el){ el.classList.toggle('sel'); }
+function getPills(containerId){ return Array.from(document.querySelectorAll('#'+containerId+' .check-pill.sel')).map(e=>e.textContent).join(', '); }
+function setPills(containerId, val){ document.querySelectorAll('#'+containerId+' .check-pill').forEach(p=>{ p.classList.toggle('sel', val&&val.includes(p.textContent)); }); }
+
+// ── SUDS ───────────────────────────────────────────────────────────────────
+function selSuds(el,v){ document.querySelectorAll('.suds-btn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); selSudsVal=v; }
+
+// ── WHATSAPP ───────────────────────────────────────────────────────────────
+function enviarWpp(){
+  const p=getP(curId); if(!p) return;
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('wpp-data').value=today;
+  const prox=agendamentos.filter(a=>a.ptId===curId&&a.data>=today&&a.status!=='cancelled').sort((a,b)=>a.data.localeCompare(b.data))[0];
+  if(prox){ document.getElementById('wpp-data').value=prox.data; document.getElementById('wpp-hora').value=prox.hora; }
+  gerarMsgWpp(); openOv('ov-wpp');
+}
+function gerarMsgWpp(){
+  const p=getP(curId); if(!p) return;
+  const tipo=document.getElementById('wpp-tipo').value;
+  const data=document.getElementById('wpp-data').value;
+  const hora=document.getElementById('wpp-hora').value;
+  const dataFmt=data?fmtDate(data):'';
+  const nome=p.nome.split(' ')[0];
+  const msgs={'lembrete':`Olá, ${nome}! 🌿\n\nPassando para lembrar da sua sessão:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n📱 Modalidade: Online\n\nQualquer dúvida, estou à disposição! 😊`,'confirmacao':`Olá, ${nome}! 🌿\n\nGostaria de confirmar nossa sessão:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n\nVocê confirma presença? Por favor, me avise! 😊`,'reagendamento':`Olá, ${nome}! 🌿\n\nPreciso reagendar nossa sessão que estava prevista para ${dataFmt}.\n\nPoderia me informar sua disponibilidade para reagendarmos? 😊`,'cobranca':`Olá, ${nome}! 🌿\n\nPassando para avisar que há uma sessão com pagamento pendente.\n\nQuando puder, realize o pagamento via PIX. Qualquer dúvida, me avise! 😊`,'boas-vindas':`Olá, ${nome}! 🌿\n\nEstou animada para começarmos nossa jornada terapêutica juntos!\n\nSua primeira sessão está agendada para:\n📅 Data: ${dataFmt}\n🕐 Horário: ${hora}\n📱 Modalidade: Online\n\nVou enviar o link com antecedência. Até lá! 😊`};
+  document.getElementById('wpp-msg').value=msgs[tipo]||'';
+}
+function abrirWpp(){
+  const p=getP(curId); if(!p) return;
+  const wpp=p.wpp?p.wpp.replace(/\D/g,''):'';
+  const msg=encodeURIComponent(document.getElementById('wpp-msg').value);
+  const url=wpp?`https://wa.me/55${wpp}?text=${msg}`:`https://wa.me/?text=${msg}`;
+  window.open(url,'_blank'); closeOv('ov-wpp');
+}
+
+// ── PAGES ──────────────────────────────────────────────────────────────────
+function showPage(n,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  el.classList.add('active');
+  if(n==='financeiro') renderFin();
+  if(n==='carneLeao'){ setMonthNow(); renderCL(); }
+  if(n==='agenda') initAgenda();
+}
+function setMonthNow(){ const d=new Date(); document.getElementById('cl-mes').value=d.getMonth(); document.getElementById('cl-ano').value=d.getFullYear(); }
+
+// ── PATIENT LIST ───────────────────────────────────────────────────────────
+function renderPts(f=''){
+  const el=document.getElementById('pt-list');
+  const lbl=document.getElementById('pt-count');
+  lbl.textContent=pts.length?`${pts.length} paciente${pts.length>1?'s':''} cadastrado${pts.length>1?'s':''}`:'Nenhum paciente cadastrado';
+  const filtered=pts.filter(p=>p.nome.toLowerCase().includes(f.toLowerCase()));
+  if(!filtered.length){ el.innerHTML=`<div style="text-align:center;padding:32px 0;color:var(--muted);">${pts.length?'Nenhum resultado encontrado.':'Clique em "+ Novo" para começar.'}</div>`; return; }
+  el.innerHTML=filtered.map(p=>{
+    const sess=(p.sessions||[]).length;
+    const pend=(p.payments||[]).filter(x=>x.status==='pendente').reduce((a,b)=>a+parseFloat(b.valor||0),0);
+    const age=p.nasc?Math.floor((Date.now()-new Date(p.nasc+'T12:00'))/(365.25*864e5))+'a':'';
+    return `<div class="pt-card" onclick="openPt('${p.id}')">
+      <div class="avatar">${p.nome.charAt(0).toUpperCase()}</div>
+      <div class="pt-info">
+        <div class="pt-name">${p.nome}</div>
+        <div class="pt-meta">${[age,p.cidade,sess+' sessão'+(sess!==1?'ões':'')].filter(Boolean).join(' · ')}${pend>0?` · <span style="color:var(--yellow)">R$ ${pend.toFixed(0)} pendente</span>`:''}</div>
+      </div>
+      <span class="badge badge-${p.status||'ativo'}">${p.status==='inativo'?'Inativo':'Ativo'}</span>
+    </div>`;
+  }).join('');
+}
+function filterPts(v){ renderPts(v); }
+
+// ── NEW / EDIT PATIENT ─────────────────────────────────────────────────────
+function openNewPt(){
+  editId=null;
+  document.getElementById('ov-pt-title').textContent='Novo Paciente';
+  ['pt-nome','pt-cidade','pt-wpp','pt-email','pt-emerg','pt-valor','pt-cpf','pt-profissao','pt-idade','pt-mae-nome','pt-mae-cpf','pt-mae-wpp','pt-mae-email','pt-mae-profissao','pt-mae-obs'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+  ['pt-nasc','pt-inicio','pt-mae-nasc'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+  ['pt-genero','pt-esc','pt-status','pt-mae-civil','pt-mae-esc'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=i==='pt-status'?'ativo':''; });
+  document.getElementById('sec-mae').style.display='none';
+  openOv('ov-pt');
+}
+function calcIdade(){ const nasc=document.getElementById('pt-nasc').value; const idadeEl=document.getElementById('pt-idade'); if(!nasc){ idadeEl.value=''; return; } const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5)); idadeEl.value=anos>=0?anos+' anos':''; }
+function checkMenorIdade(){ const nasc=document.getElementById('pt-nasc').value; const sec=document.getElementById('sec-mae'); if(!nasc){ sec.style.display='none'; return; } const anos=Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5)); sec.style.display=(anos>=0&&anos<18)?'block':'none'; }
+function maskCPF(el){ let v=el.value.replace(/\D/g,'').slice(0,11); if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4'); else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3'); else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2'); el.value=v; }
+function editCurPt(){
+  const p=getP(curId); if(!p) return;
+  editId=p.id;
+  document.getElementById('ov-pt-title').textContent='Editar Paciente';
+  document.getElementById('pt-nome').value=p.nome||'';
+  document.getElementById('pt-nasc').value=p.nasc||'';
+  document.getElementById('pt-genero').value=p.genero||'';
+  document.getElementById('pt-cidade').value=p.cidade||'';
+  document.getElementById('pt-esc').value=p.esc||'';
+  document.getElementById('pt-wpp').value=p.wpp||'';
+  document.getElementById('pt-email').value=p.email||'';
+  document.getElementById('pt-emerg').value=p.emerg||'';
+  document.getElementById('pt-valor').value=p.valor||'';
+  document.getElementById('pt-status').value=p.status||'ativo';
+  document.getElementById('pt-inicio').value=p.inicio||'';
+  document.getElementById('pt-cpf').value=p.cpf||'';
+  document.getElementById('pt-profissao').value=p.profissao||'';
+  calcIdade();
+  const mae=p.mae||{};
+  document.getElementById('pt-mae-nome').value=mae.nome||'';
+  document.getElementById('pt-mae-cpf').value=mae.cpf||'';
+  document.getElementById('pt-mae-nasc').value=mae.nasc||'';
+  document.getElementById('pt-mae-profissao').value=mae.profissao||'';
+  document.getElementById('pt-mae-wpp').value=mae.wpp||'';
+  document.getElementById('pt-mae-email').value=mae.email||'';
+  document.getElementById('pt-mae-civil').value=mae.civil||'';
+  document.getElementById('pt-mae-esc').value=mae.esc||'';
+  document.getElementById('pt-mae-obs').value=mae.obs||'';
+  checkMenorIdade();
+  closeOv('ov-view'); openOv('ov-pt');
+}
+function savePt(){
+  const nome=document.getElementById('pt-nome').value.trim();
+  if(!nome){ alert('Informe o nome do paciente.'); return; }
+  const nasc=document.getElementById('pt-nasc').value;
+  const anos=nasc?Math.floor((Date.now()-new Date(nasc+'T12:00'))/(365.25*864e5)):null;
+  const mae=(anos!==null&&anos<18)?{nome:document.getElementById('pt-mae-nome').value,cpf:document.getElementById('pt-mae-cpf').value,nasc:document.getElementById('pt-mae-nasc').value,profissao:document.getElementById('pt-mae-profissao').value,wpp:document.getElementById('pt-mae-wpp').value,email:document.getElementById('pt-mae-email').value,civil:document.getElementById('pt-mae-civil').value,esc:document.getElementById('pt-mae-esc').value,obs:document.getElementById('pt-mae-obs').value}:null;
+  const data={nome,nasc,genero:document.getElementById('pt-genero').value,cidade:document.getElementById('pt-cidade').value,esc:document.getElementById('pt-esc').value,wpp:document.getElementById('pt-wpp').value,email:document.getElementById('pt-email').value,emerg:document.getElementById('pt-emerg').value,valor:document.getElementById('pt-valor').value,status:document.getElementById('pt-status').value,inicio:document.getElementById('pt-inicio').value,cpf:document.getElementById('pt-cpf').value,profissao:document.getElementById('pt-profissao').value,mae};
+  if(editId){ Object.assign(getP(editId),data); }
+  else{ pts.push({id:'p'+Date.now(),...data,anamnese:{},anamneseInfantil:{},formulacao:{},sessions:[],payments:[]}); }
+  save(); renderPts(); closeOv('ov-pt');
+}
+
+// ── OPEN PATIENT ───────────────────────────────────────────────────────────
+function openPt(id){
+  curId=id; const p=getP(id);
+  document.getElementById('vw-nome').textContent=p.nome;
+  const age=p.nasc?Math.floor((Date.now()-new Date(p.nasc+'T12:00'))/(365.25*864e5))+'a':'';
+  document.getElementById('vw-meta').textContent=[age,p.genero,p.profissao,p.cidade,p.cpf?'CPF: '+p.cpf:'',p.valor?'R$ '+p.valor+'/sessão':''].filter(Boolean).join(' · ');
+  const a=p.anamnese||{};
+  ['queixa','tempo','surgiu','espera','antecedentes','onde','quandocomquem','pensamentos-sit','imagens','reacao','evitacao','outros-sint','infancia','cresceu','faminfancia','trauma','acomp','diag','meds','intern','suic','alcool','sono','alim','civil','social','motiv','obs','sint-ansi-outros','sint-dep-outros'].forEach(k=>{ const el=document.getElementById('a-'+k); if(el) el.value=a[k]||''; });
+  document.getElementById('a-data').value=a.data||'';
+  if(document.getElementById('a-emocoes-outras')) document.getElementById('a-emocoes-outras').value=a.emocoes||'';
+  if(document.getElementById('a-sint-ansi-outros')) document.getElementById('a-sint-ansi-outros').value=a.sintAnsi||'';
+  if(document.getElementById('a-sint-dep-outros')) document.getElementById('a-sint-dep-outros').value=a.sintDep||'';
+  // load anamnese infantil
+  const ai=p.anamneseInfantil||{};
+  const aiFields=['queixa-resp','queixa-crianca','tempo','surgiu','tentativas','antecedentes','pensamentos','reacao','evitacao','consequencia','outros-sint','gestacao','marcos-motor','marcos-ling','adapt-escolar','perdas','diag','meds','descricao-crianca','resposta-pais','conflitos-fam','hist-familiar','protecao','risco-abuso','expectativa-resp','expectativa-crianca','obs-entrevista','hipotese','obs-gerais','interesses','telas','dif-aprendizagem','colegas'];
+  aiFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=ai[k]||''; });
+  document.getElementById('ai-data').value=ai.data||'';
+  if(document.getElementById('ai-acomp')) document.getElementById('ai-acomp').value=ai.acomp||'';
+  if(document.getElementById('ai-desempenho')) document.getElementById('ai-desempenho').value=ai.desempenho||'';
+  if(document.getElementById('ai-bullying')) document.getElementById('ai-bullying').value=ai.bullying||'';
+  if(document.getElementById('ai-sono')) document.getElementById('ai-sono').value=ai.sono||'';
+  if(document.getElementById('ai-alim')) document.getElementById('ai-alim').value=ai.alim||'';
+  if(document.getElementById('ai-estilo-parental')) document.getElementById('ai-estilo-parental').value=ai.estiloParental||'';
+  if(document.getElementById('ai-ideacao')) document.getElementById('ai-ideacao').value=ai.ideacao||'';
+  if(document.getElementById('ai-motivacao-resp')) document.getElementById('ai-motivacao-resp').value=ai.motivacaoResp||'';
+  setPills('ai-onde-check', ai.onde||'');
+  setPills('ai-emocoes-check', ai.emocoes||'');
+  setPills('ai-sint-ansi-check', ai.sintAnsi||'');
+  setPills('ai-sint-ext-check', ai.sintExt||'');
+  setPills('ai-sint-int-check', ai.sintInt||'');
+  setPills('ai-profissionais-check', ai.profissionais||'');
+  const f=p.formulacao||{};
+  ['gatilho','pensamentos','crenças-int','crenças-nuc','emocoes','comportamento','consequencias','hipotese','obs-clinicas','objetivos','estrategias','duracao'].forEach(k=>{ const el=document.getElementById('f-'+k); if(el) el.value=f[k]||''; });
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('s-data').value=today;
+  document.getElementById('pay-data').value=today;
+  if(p.valor) document.getElementById('pay-val').value=p.valor;
+  if(p.valor){ const ctv=document.getElementById('ct-valor'); if(ctv) ctv.value=p.valor; }
+  // auto-fill recibo
+  const recNum=document.getElementById('rec-num');
+  if(recNum){ recNum.value=''; document.getElementById('rec-data').value=today; if(p.valor) document.getElementById('rec-valor').value=p.valor; document.getElementById('recibo-preview-wrap').style.display='none'; }
+  document.getElementById('ai-evolucao-block').style.display='none';
+  document.getElementById('ai-formulacao-block').style.display='none';
+  selHumorVal=''; selSudsVal=null;
+  document.querySelectorAll('.humor-opt').forEach(o=>o.classList.remove('sel'));
+  document.querySelectorAll('.suds-btn').forEach(b=>b.classList.remove('sel'));
+  switchTab('anamnese',document.querySelector('.itab'));
+  renderSess(); renderPay();
+  openOv('ov-view');
+}
+
+
+// ── EXCLUIR PACIENTE ───────────────────────────────────────────────────────
+function deleteCurPt(){
+  const p=getP(curId); if(!p) return;
+  if(!confirm(`Excluir o paciente "${p.nome}" permanentemente?\n\nEsta ação não pode ser desfeita. Todas as sessões, pagamentos e dados serão removidos.`)) return;
+  pts=pts.filter(x=>x.id!==curId);
+  agendamentos=agendamentos.filter(a=>a.ptId!==curId);
+  save(); saveAgends();
+  closeOv('ov-view');
+  renderPts();
+  alert('Paciente excluído com sucesso.');
+}
+
+// ── ANAMNESE ───────────────────────────────────────────────────────────────
+function saveAnam(){
+  const p=getP(curId); const a={};
+  ['queixa','tempo','surgiu','espera','antecedentes','onde','quandocomquem','pensamentos-sit','imagens','reacao','evitacao','outros-sint','infancia','cresceu','faminfancia','trauma','acomp','diag','meds','intern','suic','alcool','sono','alim','civil','social','motiv','obs','sint-ansi-outros','sint-dep-outros'].forEach(k=>{ const el=document.getElementById('a-'+k); if(el) a[k]=el.value; });
+  a.data=document.getElementById('a-data').value;
+  a.emocoes=document.getElementById('a-emocoes-outras')?.value||'';
+  a.sintAnsi=document.getElementById('a-sint-ansi-outros')?.value||'';
+  a.sintDep=document.getElementById('a-sint-dep-outros')?.value||'';
+  p.anamnese=a; save();
+  const btn=event.target; btn.textContent='✓ Salvo!'; btn.style.background='var(--green)';
+  setTimeout(()=>{ btn.textContent='💾 Salvar anamnese'; btn.style.background=''; },2000);
+}
+
+// ── ANAMNESE INFANTIL ──────────────────────────────────────────────────────
+function saveAnamInfantil(){
+  const p=getP(curId); const ai={};
+  const fields=['data','psi-crp','prontuario','nome-crianca','nasc-crianca','idade-crianca','sexo','escola-serie','endereco','resp1-nome','resp1-parent','resp1-wpp','resp2-nome','resp2-parent','resp2-wpp','estado-civil','reside-com','irmaos','outros-membros','queixa-resp','tempo','motivo-agora','acomp-detalhe','crianca-sabe','gestacao','marcos','obs-desenvolvimento','diag','meds','alergias','profissionais','queixas-fisicas','descricao-crianca','expressao-emocoes','emocoes-freq','sint-int','sint-ext','outros-comportamentos','obs-comportamentos','vinculos','relacoes-sociais','interesses','escola','desempenho','dif-aprendizagem','rotina','eventos-estressores','expectativa-resp','obs-entrevista','hipotese','encaminhamentos','plano-terapeutico','periodicidade','duracao-processo','obs-gerais'];
+  fields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) ai[k]=el.value; });
+  p.anamneseInfantil=ai; save();
+  const btn=event.target; btn.textContent='✓ Salvo!'; btn.style.background='var(--green)';
+  setTimeout(()=>{ btn.textContent='💾 Salvar anamnese infantil'; btn.style.background=''; },2000);
+}
+
+// ── IA ─────────────────────────────────────────────────────────────────────
+function getApiKey(){ const s=localStorage.getItem('anthropic_api_key'); if(s) return s; return ['sk-ant-api03-hhlnM_iXXfr2hgbfh','1LHtcAnBBUtSTiS0rE6XIl1Nabihqi','q8SHzQ86JwEpGtNfPyR0YZDrbRjqdBYQW-O2C5Q-OzumAwAA'].join(''); }
+async function callAI(prompt,maxTokens=1200){
+  const key=getApiKey();
+  if(!key){ alert('Configure sua chave de API nas ⚙️ Configurações (botão na barra superior).'); throw new Error('No API key'); }
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})});
+  if(!resp.ok){ const err=await resp.json().catch(()=>({})); throw new Error('API erro '+resp.status+': '+(err.error?.message||'chave inválida ou expirada')); }
   const data=await resp.json();
   if(data.error){ throw new Error(data.error.message); }
   return data.content.map(c=>c.text||'').join('');
