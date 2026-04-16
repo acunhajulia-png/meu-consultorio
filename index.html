@@ -1314,28 +1314,22 @@ async function callAI(prompt,maxTokens=1200){
   return data.content.map(c=>c.text||'').join('');
 }
 function parseAIJson(text){
-  // Remove markdown fences
-  let clean=text.replace(/```json|```/g,'').trim();
-  // Try direct parse first
+  let clean=text.replace(/```json/g,'').replace(/```/g,'').trim();
   try{ return JSON.parse(clean); }catch(e){}
-  // Try extracting JSON object with regex
-  const match=clean.match(/\{[\s\S]*\}/);
-  if(match){ try{ return JSON.parse(match[0]); }catch(e){} }
-  // Try fixing common issues: unescaped quotes inside values, trailing commas
   try{
-    // Fix unescaped newlines in string values
-    let fixed=clean.replace(/"([^"]*?)\n([^"]*?)"/g,(m,a,b)=>'"'+a+' '+b+'"');
-    // Fix trailing commas
-    fixed=fixed.replace(/,(\s*[}\]])/g,'$1');
+    const start=clean.indexOf('{');
+    const end=clean.lastIndexOf('}');
+    if(start>=0&&end>start){ return JSON.parse(clean.slice(start,end+1)); }
+  }catch(e){}
+  try{
+    let fixed=clean;
+    fixed=fixed.replace(/([{,]\s*"[^"]+"):\s*"((?:[^"\\]|\\.)*)"/g,function(m,k,v){
+      return k+':"'+v.replace(/\n/g,' ').replace(/\r/g,'')+'"';
+    });
+    fixed=fixed.replace(/,\s*}/g,'}').replace(/,\s*]/g,']');
     return JSON.parse(fixed);
   }catch(e){}
-  // Last resort: extract key-value pairs manually
-  const result={};
-  const kvRegex=/"(\w+)"\s*:\s*"((?:[^"\]|\.)*)"/g;
-  let m;
-  while((m=kvRegex.exec(clean))!==null){ result[m[1]]=m[2].replace(/\n/g,' ').replace(/\"/g,'"'); }
-  if(Object.keys(result).length>0) return result;
-  throw new Error('Não foi possível processar a resposta da IA. Tente com um relato mais curto.');
+  throw new Error('Erro ao interpretar resposta da IA. Tente novamente.');
 }
 
 // ── PREENCHER ANAMNESE ADULTO COM IA ───────────────────────────────────────
