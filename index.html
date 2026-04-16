@@ -915,7 +915,7 @@ function openPt(id){
   const ai=p.anamneseInfantil||{};
   const aiFields=['queixa-resp','queixa-crianca','tempo','surgiu','tentativas','antecedentes','pensamentos','reacao','evitacao','consequencia','outros-sint','gestacao','marcos-motor','marcos-ling','adapt-escolar','perdas','diag','meds','descricao-crianca','resposta-pais','conflitos-fam','hist-familiar','protecao','risco-abuso','expectativa-resp','expectativa-crianca','obs-entrevista','hipotese','obs-gerais','interesses','telas','dif-aprendizagem','colegas'];
   aiFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=ai[k]||''; });
-  document.getElementById('ai-data').value=ai.data||today;
+  const todayStr=new Date().toISOString().split('T')[0]; document.getElementById('ai-data').value=ai.data||todayStr;
   // Auto-fill from patient cadastro
   if(!ai['nome-crianca']){ document.getElementById('ai-nome-crianca').value=p.nome||''; }
   if(!ai['nasc-crianca']){ document.getElementById('ai-nasc-crianca').value=p.nasc||''; }
@@ -1926,7 +1926,7 @@ function openPt(id){
   const ai=p.anamneseInfantil||{};
   const aiFields=['queixa-resp','queixa-crianca','tempo','surgiu','tentativas','antecedentes','pensamentos','reacao','evitacao','consequencia','outros-sint','gestacao','marcos-motor','marcos-ling','adapt-escolar','perdas','diag','meds','descricao-crianca','resposta-pais','conflitos-fam','hist-familiar','protecao','risco-abuso','expectativa-resp','expectativa-crianca','obs-entrevista','hipotese','obs-gerais','interesses','telas','dif-aprendizagem','colegas'];
   aiFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=ai[k]||''; });
-  document.getElementById('ai-data').value=ai.data||today;
+  const todayStr=new Date().toISOString().split('T')[0]; document.getElementById('ai-data').value=ai.data||todayStr;
   // Auto-fill from patient cadastro
   if(!ai['nome-crianca']){ document.getElementById('ai-nome-crianca').value=p.nome||''; }
   if(!ai['nasc-crianca']){ document.getElementById('ai-nasc-crianca').value=p.nasc||''; }
