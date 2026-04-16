@@ -506,6 +506,7 @@ textarea{resize:vertical;min-height:72px;}
 
       <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="saveAnamInfantil()">💾 Salvar anamnese infantil</button>
+        <button class="btn btn-danger" onclick="limparAnamInfantil()">🗑 Limpar anamnese</button>
       </div>
     </div>
     <div class="icontent" id="tab-sessoes">
@@ -914,21 +915,18 @@ function openPt(id){
   const ai=p.anamneseInfantil||{};
   const aiFields=['queixa-resp','queixa-crianca','tempo','surgiu','tentativas','antecedentes','pensamentos','reacao','evitacao','consequencia','outros-sint','gestacao','marcos-motor','marcos-ling','adapt-escolar','perdas','diag','meds','descricao-crianca','resposta-pais','conflitos-fam','hist-familiar','protecao','risco-abuso','expectativa-resp','expectativa-crianca','obs-entrevista','hipotese','obs-gerais','interesses','telas','dif-aprendizagem','colegas'];
   aiFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=ai[k]||''; });
-  document.getElementById('ai-data').value=ai.data||'';
-  if(document.getElementById('ai-acomp')) document.getElementById('ai-acomp').value=ai.acomp||'';
-  if(document.getElementById('ai-desempenho')) document.getElementById('ai-desempenho').value=ai.desempenho||'';
-  if(document.getElementById('ai-bullying')) document.getElementById('ai-bullying').value=ai.bullying||'';
-  if(document.getElementById('ai-sono')) document.getElementById('ai-sono').value=ai.sono||'';
-  if(document.getElementById('ai-alim')) document.getElementById('ai-alim').value=ai.alim||'';
-  if(document.getElementById('ai-estilo-parental')) document.getElementById('ai-estilo-parental').value=ai.estiloParental||'';
-  if(document.getElementById('ai-ideacao')) document.getElementById('ai-ideacao').value=ai.ideacao||'';
-  if(document.getElementById('ai-motivacao-resp')) document.getElementById('ai-motivacao-resp').value=ai.motivacaoResp||'';
-  setPills('ai-onde-check', ai.onde||'');
-  setPills('ai-emocoes-check', ai.emocoes||'');
-  setPills('ai-sint-ansi-check', ai.sintAnsi||'');
-  setPills('ai-sint-ext-check', ai.sintExt||'');
-  setPills('ai-sint-int-check', ai.sintInt||'');
-  setPills('ai-profissionais-check', ai.profissionais||'');
+  document.getElementById('ai-data').value=ai.data||today;
+  // Auto-fill from patient cadastro
+  if(!ai['nome-crianca']){ document.getElementById('ai-nome-crianca').value=p.nome||''; }
+  if(!ai['nasc-crianca']){ document.getElementById('ai-nasc-crianca').value=p.nasc||''; }
+  if(!ai['idade-crianca']){
+    if(p.nasc){ const a=Math.floor((Date.now()-new Date(p.nasc+'T12:00'))/(365.25*864e5)); const m=Math.floor(((Date.now()-new Date(p.nasc+'T12:00'))%(365.25*864e5))/(30.44*864e5)); document.getElementById('ai-idade-crianca').value=a+' anos e '+m+' meses'; }
+  }
+  if(!ai['sexo']&&p.genero){ document.getElementById('ai-sexo').value=p.genero; }
+  if(!ai['endereco']&&p.cidade){ document.getElementById('ai-endereco').value=p.cidade; }
+  // Load saved fields
+  const aiSavedFields=['queixa-resp','tempo','motivo-agora','acomp-detalhe','crianca-sabe','gestacao','marcos','obs-desenvolvimento','diag','meds','alergias','profissionais','queixas-fisicas','descricao-crianca','expressao-emocoes','emocoes-freq','sint-int','sint-ext','outros-comportamentos','obs-comportamentos','vinculos','relacoes-sociais','interesses','escola','desempenho','dif-aprendizagem','rotina','eventos-estressores','expectativa-resp','obs-entrevista','hipotese','encaminhamentos','plano-terapeutico','periodicidade','duracao-processo','obs-gerais','escola-serie','resp1-nome','resp1-parent','resp1-wpp','resp2-nome','resp2-parent','resp2-wpp','estado-civil','reside-com','irmaos','outros-membros','psi-crp','prontuario'];
+  aiSavedFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el&&ai[k]) el.value=ai[k]; });
   const f=p.formulacao||{};
   ['gatilho','pensamentos','crenças-int','crenças-nuc','emocoes','comportamento','consequencias','hipotese','obs-clinicas','objetivos','estrategias','duracao'].forEach(k=>{ const el=document.getElementById('f-'+k); if(el) el.value=f[k]||''; });
   const today=new Date().toISOString().split('T')[0];
@@ -949,6 +947,20 @@ function openPt(id){
   openOv('ov-view');
 }
 
+
+
+// ── LIMPAR ANAMNESE INFANTIL ───────────────────────────────────────────────
+function limparAnamInfantil(){
+  if(!confirm('Limpar todos os campos da anamnese infantil?')) return;
+  const p=getP(curId); if(!p) return;
+  p.anamneseInfantil={};
+  save();
+  // Clear all fields but keep patient name/dob
+  const fields=['queixa-resp','tempo','motivo-agora','acomp-detalhe','crianca-sabe','gestacao','marcos','obs-desenvolvimento','diag','meds','alergias','profissionais','queixas-fisicas','descricao-crianca','expressao-emocoes','emocoes-freq','sint-int','sint-ext','outros-comportamentos','obs-comportamentos','vinculos','relacoes-sociais','interesses','escola','desempenho','dif-aprendizagem','rotina','eventos-estressores','expectativa-resp','obs-entrevista','hipotese','encaminhamentos','plano-terapeutico','periodicidade','duracao-processo','obs-gerais','escola-serie','resp1-nome','resp1-parent','resp1-wpp','resp2-nome','resp2-parent','resp2-wpp','estado-civil','reside-com','irmaos','outros-membros','prontuario'];
+  fields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=''; });
+  const btn=event.target; btn.textContent='✓ Limpo!'; btn.style.background='var(--green)';
+  setTimeout(()=>{ btn.textContent='🗑 Limpar anamnese'; btn.style.background=''; },2000);
+}
 
 // ── EXCLUIR PACIENTE ───────────────────────────────────────────────────────
 function deleteCurPt(){
@@ -1914,21 +1926,18 @@ function openPt(id){
   const ai=p.anamneseInfantil||{};
   const aiFields=['queixa-resp','queixa-crianca','tempo','surgiu','tentativas','antecedentes','pensamentos','reacao','evitacao','consequencia','outros-sint','gestacao','marcos-motor','marcos-ling','adapt-escolar','perdas','diag','meds','descricao-crianca','resposta-pais','conflitos-fam','hist-familiar','protecao','risco-abuso','expectativa-resp','expectativa-crianca','obs-entrevista','hipotese','obs-gerais','interesses','telas','dif-aprendizagem','colegas'];
   aiFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=ai[k]||''; });
-  document.getElementById('ai-data').value=ai.data||'';
-  if(document.getElementById('ai-acomp')) document.getElementById('ai-acomp').value=ai.acomp||'';
-  if(document.getElementById('ai-desempenho')) document.getElementById('ai-desempenho').value=ai.desempenho||'';
-  if(document.getElementById('ai-bullying')) document.getElementById('ai-bullying').value=ai.bullying||'';
-  if(document.getElementById('ai-sono')) document.getElementById('ai-sono').value=ai.sono||'';
-  if(document.getElementById('ai-alim')) document.getElementById('ai-alim').value=ai.alim||'';
-  if(document.getElementById('ai-estilo-parental')) document.getElementById('ai-estilo-parental').value=ai.estiloParental||'';
-  if(document.getElementById('ai-ideacao')) document.getElementById('ai-ideacao').value=ai.ideacao||'';
-  if(document.getElementById('ai-motivacao-resp')) document.getElementById('ai-motivacao-resp').value=ai.motivacaoResp||'';
-  setPills('ai-onde-check', ai.onde||'');
-  setPills('ai-emocoes-check', ai.emocoes||'');
-  setPills('ai-sint-ansi-check', ai.sintAnsi||'');
-  setPills('ai-sint-ext-check', ai.sintExt||'');
-  setPills('ai-sint-int-check', ai.sintInt||'');
-  setPills('ai-profissionais-check', ai.profissionais||'');
+  document.getElementById('ai-data').value=ai.data||today;
+  // Auto-fill from patient cadastro
+  if(!ai['nome-crianca']){ document.getElementById('ai-nome-crianca').value=p.nome||''; }
+  if(!ai['nasc-crianca']){ document.getElementById('ai-nasc-crianca').value=p.nasc||''; }
+  if(!ai['idade-crianca']){
+    if(p.nasc){ const a=Math.floor((Date.now()-new Date(p.nasc+'T12:00'))/(365.25*864e5)); const m=Math.floor(((Date.now()-new Date(p.nasc+'T12:00'))%(365.25*864e5))/(30.44*864e5)); document.getElementById('ai-idade-crianca').value=a+' anos e '+m+' meses'; }
+  }
+  if(!ai['sexo']&&p.genero){ document.getElementById('ai-sexo').value=p.genero; }
+  if(!ai['endereco']&&p.cidade){ document.getElementById('ai-endereco').value=p.cidade; }
+  // Load saved fields
+  const aiSavedFields=['queixa-resp','tempo','motivo-agora','acomp-detalhe','crianca-sabe','gestacao','marcos','obs-desenvolvimento','diag','meds','alergias','profissionais','queixas-fisicas','descricao-crianca','expressao-emocoes','emocoes-freq','sint-int','sint-ext','outros-comportamentos','obs-comportamentos','vinculos','relacoes-sociais','interesses','escola','desempenho','dif-aprendizagem','rotina','eventos-estressores','expectativa-resp','obs-entrevista','hipotese','encaminhamentos','plano-terapeutico','periodicidade','duracao-processo','obs-gerais','escola-serie','resp1-nome','resp1-parent','resp1-wpp','resp2-nome','resp2-parent','resp2-wpp','estado-civil','reside-com','irmaos','outros-membros','psi-crp','prontuario'];
+  aiSavedFields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el&&ai[k]) el.value=ai[k]; });
   const f=p.formulacao||{};
   ['gatilho','pensamentos','crenças-int','crenças-nuc','emocoes','comportamento','consequencias','hipotese','obs-clinicas','objetivos','estrategias','duracao'].forEach(k=>{ const el=document.getElementById('f-'+k); if(el) el.value=f[k]||''; });
   const today=new Date().toISOString().split('T')[0];
@@ -1949,6 +1958,20 @@ function openPt(id){
   openOv('ov-view');
 }
 
+
+
+// ── LIMPAR ANAMNESE INFANTIL ───────────────────────────────────────────────
+function limparAnamInfantil(){
+  if(!confirm('Limpar todos os campos da anamnese infantil?')) return;
+  const p=getP(curId); if(!p) return;
+  p.anamneseInfantil={};
+  save();
+  // Clear all fields but keep patient name/dob
+  const fields=['queixa-resp','tempo','motivo-agora','acomp-detalhe','crianca-sabe','gestacao','marcos','obs-desenvolvimento','diag','meds','alergias','profissionais','queixas-fisicas','descricao-crianca','expressao-emocoes','emocoes-freq','sint-int','sint-ext','outros-comportamentos','obs-comportamentos','vinculos','relacoes-sociais','interesses','escola','desempenho','dif-aprendizagem','rotina','eventos-estressores','expectativa-resp','obs-entrevista','hipotese','encaminhamentos','plano-terapeutico','periodicidade','duracao-processo','obs-gerais','escola-serie','resp1-nome','resp1-parent','resp1-wpp','resp2-nome','resp2-parent','resp2-wpp','estado-civil','reside-com','irmaos','outros-membros','prontuario'];
+  fields.forEach(k=>{ const el=document.getElementById('ai-'+k); if(el) el.value=''; });
+  const btn=event.target; btn.textContent='✓ Limpo!'; btn.style.background='var(--green)';
+  setTimeout(()=>{ btn.textContent='🗑 Limpar anamnese'; btn.style.background=''; },2000);
+}
 
 // ── EXCLUIR PACIENTE ───────────────────────────────────────────────────────
 function deleteCurPt(){
