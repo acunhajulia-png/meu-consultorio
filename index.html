@@ -335,6 +335,15 @@ textarea{resize:vertical;min-height:72px;}
         <button class="mclose" onclick="closeOv('ov-view')">×</button>
       </div>
     </div>
+    <!-- CARD DE DADOS DO PACIENTE — visível sem precisar editar -->
+    <div id="vw-dados-card" style="background:var(--sage-light);border-radius:12px;padding:14px 16px;margin-bottom:14px;border:1.5px solid rgba(78,122,106,.15);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--sage-dark);font-weight:600;">Dados do Paciente</div>
+        <button class="btn btn-secondary btn-sm" onclick="editCurPt()" style="font-size:11px;padding:4px 10px;">✏️ Editar dados</button>
+      </div>
+      <div id="vw-dados-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;font-size:13px;"></div>
+    </div>
+
     <div class="itabs" id="itabs-container">
       <!-- PATCH: abas dinâmicas por idade, renomeado para Infantojuvenil -->
       <button class="itab active" id="tab-btn-anamnese" onclick="switchTab('anamnese',this)">📋 Anamnese</button>
@@ -531,19 +540,6 @@ textarea{resize:vertical;min-height:72px;}
         <div class="fr">
           <div class="fg"><label>Data da sessão *</label><input id="s-data" type="date"></div>
           <div class="fg"><label>Nº da sessão</label><input id="s-num" type="number" placeholder="Ex: 1"></div>
-        </div>
-        <!-- compareceu + pagamento na mesma linha -->
-        <div class="fg">
-          <label>Compareceu · Pagamento</label>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
-            <div class="humor-opt" id="comp-sim" onclick="selCompareceu('sim')" style="flex:1;text-align:center;min-width:80px;">✅ Compareceu</div>
-            <div class="humor-opt" id="comp-nao" onclick="selCompareceu('nao')" style="flex:1;text-align:center;min-width:70px;">❌ Faltou</div>
-            <div class="humor-opt" id="comp-remarcou" onclick="selCompareceu('remarcou')" style="flex:1;text-align:center;min-width:80px;">🔄 Remarcou</div>
-            <div style="width:1.5px;background:var(--border);border-radius:2px;margin:0 2px;"></div>
-            <div class="humor-opt" id="pag-pago" onclick="selPagSess('pago')" style="flex:1;text-align:center;min-width:65px;">💚 Pago</div>
-            <div class="humor-opt" id="pag-pendente" onclick="selPagSess('pendente')" style="flex:1;text-align:center;min-width:80px;">⏳ Pendente</div>
-            <div class="humor-opt" id="pag-isento" onclick="selPagSess('isento')" style="flex:1;text-align:center;min-width:65px;">🎁 Isento</div>
-          </div>
         </div>
         <div class="fg"><label>Estado de humor do paciente</label>
           <div class="humor-scale" id="humor-scale">
@@ -948,6 +944,29 @@ function openPt(id){
   document.getElementById('vw-nome').textContent=p.nome;
   const age=p.nasc?Math.floor((Date.now()-new Date(p.nasc+'T12:00'))/(365.25*864e5))+'a':'';
   document.getElementById('vw-meta').textContent=[age,p.genero,p.profissao,p.cidade,p.cpf?'CPF: '+p.cpf:'',p.valor?'R$ '+p.valor+'/sessão':''].filter(Boolean).join(' · ');
+
+  // PATCH: preenche card de dados visível no topo do prontuário
+  const dados = [
+    {l:'WhatsApp', v:p.wpp},
+    {l:'E-mail', v:p.email},
+    {l:'CPF', v:p.cpf},
+    {l:'Cidade', v:p.cidade},
+    {l:'Profissão', v:p.profissao},
+    {l:'Gênero', v:p.genero},
+    {l:'Escolaridade', v:p.esc},
+    {l:'Nascimento', v:p.nasc?fmtDate(p.nasc):''},
+    {l:'Início', v:p.inicio?fmtDate(p.inicio):''},
+    {l:'Valor/sessão', v:p.valor?'R$ '+p.valor:''},
+    {l:'Emergência', v:p.emerg},
+  ].filter(d=>d.v);
+  // Adiciona dados do responsável se menor
+  if(p.mae&&p.mae.nome){
+    dados.push({l:'Responsável', v:p.mae.nome});
+    if(p.mae.wpp) dados.push({l:'WPP responsável', v:p.mae.wpp});
+  }
+  document.getElementById('vw-dados-grid').innerHTML = dados.length
+    ? dados.map(d=>`<div style="background:var(--card);border-radius:8px;padding:8px 10px;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;">${d.l}</div><div style="font-size:13px;font-weight:500;">${d.v}</div></div>`).join('')
+    : '<div style="font-size:12px;color:var(--muted);">Nenhum dado adicional cadastrado.</div>';
 
   // Calcula idade formatada
   const idadeFormatada = p.nasc ? (()=>{
@@ -1482,11 +1501,40 @@ function renderCal(){
   grid.innerHTML=html;
 }
 function selDay(ds){ selDate=ds; const[y,m,d]=ds.split('-'); document.getElementById('agenda-dia-title').textContent=`${d}/${m}/${y}`; calYear=parseInt(y); calMonth=parseInt(m)-1; renderCal(); renderAgendaList(); }
+function togglePagAgend(id){
+  const a=agendamentos.find(x=>x.id===id); if(!a) return;
+  const opts=['pendente','pago','isento'];
+  const cur=opts.indexOf(a.pagamento||'pendente');
+  a.pagamento=opts[(cur+1)%opts.length];
+  saveAgends(); renderAgendaList();
+}
 function renderAgendaList(){
   const el=document.getElementById('agenda-list');
   const evts=agendamentos.filter(a=>a.data===selDate).sort((a,b)=>a.hora.localeCompare(b.hora));
   if(!evts.length){ el.innerHTML=`<div style="text-align:center;padding:28px 0;color:var(--muted);">Sem sessões neste dia.</div>`; return; }
-  el.innerHTML=evts.map(ag=>{ const pt=pts.find(p=>p.id===ag.ptId); const statusLabel={agendado:'📋 Agendado',confirmed:'✅ Confirmado',cancelled:'❌ Cancelado',compareceu:'✅ Compareceu',faltou:'❌ Faltou'}[ag.status]||ag.status; return `<div class="agenda-item ${ag.status}"><div class="agenda-time">${ag.hora}</div><div class="agenda-info"><div class="agenda-name">${pt?pt.nome:ag.ptNome||'Paciente'}</div><div class="agenda-meta">${ag.tipo||'Online'} · ${ag.dur||50}min · ${statusLabel}${ag.obs?' · '+ag.obs:''}</div></div><div class="agenda-actions">${ag.status!=='compareceu'&&ag.status!=='faltou'?`<button class="btn btn-sm" style="background:var(--green);color:#fff;" onclick="compareceuAgend('${ag.id}')">✅</button><button class="btn btn-sm" style="background:var(--red);color:#fff;" onclick="faltouAgend('${ag.id}')">❌</button>`:''}<button class="btn btn-wpp btn-sm" onclick="wppFromAgenda('${ag.ptId}','${ag.data}','${ag.hora}')">💬</button>${ag.status!=='cancelled'&&ag.status!=='compareceu'&&ag.status!=='faltou'?`<button class="btn btn-danger btn-sm" onclick="cancelAgend('${ag.id}')">✕</button>`:''}<button class="btn btn-danger btn-sm" onclick="delAgend('${ag.id}')">🗑</button></div></div>`; }).join('');
+  el.innerHTML=evts.map(ag=>{
+    const pt=pts.find(p=>p.id===ag.ptId);
+    const statusLabel={agendado:'📋 Agendado',confirmed:'✅ Confirmado',cancelled:'❌ Cancelado',compareceu:'✅ Compareceu',faltou:'❌ Faltou'}[ag.status]||ag.status;
+    const pagLabel={pago:'💚 Pago',pendente:'⏳ Pendente',isento:'🎁 Isento'}[ag.pagamento||'']||'';
+    const pagColor={pago:'var(--green)',pendente:'var(--yellow)',isento:'#8888cc'}[ag.pagamento||'']||'var(--muted)';
+    const compareceuBtns = ag.status!=='compareceu'&&ag.status!=='faltou'
+      ? `<button class="btn btn-sm" style="background:var(--green);color:#fff;" onclick="compareceuAgend('${ag.id}')">✅ Compareceu</button><button class="btn btn-sm" style="background:var(--red);color:#fff;" onclick="faltouAgend('${ag.id}')">❌ Faltou</button>`
+      : `<span style="font-size:12px;font-weight:600;color:${ag.status==='compareceu'?'var(--green)':'var(--red)'}">${ag.status==='compareceu'?'✅ Compareceu':'❌ Faltou'}</span>`;
+    const pagBtn = `<button class="btn btn-sm" style="background:var(--sage-light);color:${pagColor};border:1.5px solid ${pagColor};" onclick="togglePagAgend('${ag.id}')">${pagLabel||'💳 Pagamento'}</button>`;
+    return `<div class="agenda-item ${ag.status}">
+      <div class="agenda-time">${ag.hora}</div>
+      <div class="agenda-info">
+        <div class="agenda-name">${pt?pt.nome:ag.ptNome||'Paciente'}</div>
+        <div class="agenda-meta">${ag.tipo||'Online'} · ${ag.dur||50}min · ${statusLabel}${ag.obs?' · '+ag.obs:''}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">${compareceuBtns} ${pagBtn}</div>
+      </div>
+      <div class="agenda-actions">
+        <button class="btn btn-wpp btn-sm" onclick="wppFromAgenda('${ag.ptId}','${ag.data}','${ag.hora}')">💬</button>
+        ${ag.status!=='cancelled'&&ag.status!=='compareceu'&&ag.status!=='faltou'?`<button class="btn btn-danger btn-sm" onclick="cancelAgend('${ag.id}')">✕</button>`:''}
+        <button class="btn btn-danger btn-sm" onclick="delAgend('${ag.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 function openNovoAgend(){ document.getElementById('ag-pt').innerHTML='<option value="">Selecione o paciente...</option>'+pts.map(p=>`<option value="${p.id}">${p.nome}</option>`).join(''); document.getElementById('ag-data').value=selDate; document.getElementById('ag-hora').value='09:00'; document.getElementById('ag-status').value='agendado'; document.getElementById('ag-obs').value=''; document.getElementById('ov-agend-title').textContent='Novo Agendamento'; openOv('ov-agend'); }
 function saveAgend(){ const ptId=document.getElementById('ag-pt').value; const data=document.getElementById('ag-data').value; const hora=document.getElementById('ag-hora').value; if(!ptId||!data||!hora){alert('Preencha paciente, data e horário.');return;} const pt=pts.find(p=>p.id===ptId); agendamentos.push({id:'ag'+Date.now(),ptId,ptNome:pt?pt.nome:'',data,hora,dur:document.getElementById('ag-dur').value,tipo:document.getElementById('ag-tipo').value,status:document.getElementById('ag-status').value,obs:document.getElementById('ag-obs').value}); saveAgends(); selDate=data; const[y,m,d]=data.split('-'); calYear=parseInt(y); calMonth=parseInt(m)-1; renderCal(); renderAgendaList(); closeOv('ov-agend'); }
