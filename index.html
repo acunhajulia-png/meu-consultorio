@@ -535,7 +535,16 @@ textarea{resize:vertical;min-height:72px;}
 
     <!-- SESSÕES -->
     <div class="icontent" id="tab-sessoes">
-      <div class="card" style="padding:16px;margin-bottom:14px;">
+     <div class="ai-fill-box" style="margin-bottom:14px;">
+  <div class="ai-label">✨ Preencher sessão com IA</div>
+  <textarea id="ai-fill-sess-texto" placeholder="Descreva livremente como foi a sessão..." style="min-height:90px;border-color:var(--border);"></textarea>
+  <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+    <button class="btn btn-ai btn-sm" onclick="preencherSessaoIA()">✨ Preencher sessão com IA</button>
+    <span class="ai-fill-hint">Escreva ou cole o relato — a IA identifica e preenche cada campo.</span>
+  </div>
+  <div id="ai-fill-sess-status" style="display:none;" class="ai-loading"></div>
+</div>
+ <div class="card" style="padding:16px;margin-bottom:14px;">
         <div class="sec" style="margin-top:0;" id="sess-form-title">Nova Sessão</div>
         <div class="fr">
           <div class="fg"><label>Data da sessão *</label><input id="s-data" type="date"></div>
@@ -763,6 +772,7 @@ textarea{resize:vertical;min-height:72px;}
     <div class="fr"><div class="fg"><label>Duração</label><select id="ag-dur"><option value="50">50 min (padrão)</option><option value="60">60 min</option><option value="90">90 min</option></select></div><div class="fg"><label>Tipo</label><select id="ag-tipo"><option value="Online">Online</option><option value="Presencial">Presencial</option></select></div></div>
     <div class="fg"><label>Status</label><select id="ag-status"><option value="agendado">Agendado</option><option value="confirmed">Confirmado</option><option value="cancelled">Cancelado</option></select></div>
     <div class="fg"><label>Observações</label><input id="ag-obs" placeholder="Ex: link da sessão, lembrete..."></div>
+        <input type="hidden" id="ag-edit-id" value="">
     <div style="display:flex;gap:10px;margin-top:10px;">
       <button class="btn btn-primary" style="flex:1" onclick="saveAgend()">Salvar agendamento</button>
       <button class="btn btn-secondary" onclick="closeOv('ov-agend')">Cancelar</button>
@@ -1537,9 +1547,6 @@ function renderAgendaList(){
     </div>`;
   }).join('');
 }
-function saveAgend(){ const editId=document.getElementById('ag-edit-id').value; const ptId=document.getElementById('ag-pt').value; const data=document.getElementById('ag-data').value; const hora=document.getElementById('ag-hora').value; if(!ptId||!data||!hora){alert('Preencha paciente, data e horário.');return;} const pt=pts.find(p=>p.id===ptId); if(editId){ const idx=agendamentos.findIndex(a=>a.id===editId); if(idx!==-1){ agendamentos[idx]={...agendamentos[idx],ptId,ptNome:pt?pt.nome:'',data,hora,dur:document.getElementById('ag-dur').value,tipo:document.getElementById('ag-tipo').value,status:document.getElementById('ag-status').value,obs:document.getElementById('ag-obs').value}; } } else { agendamentos.push({id:'ag'+Date.now(),ptId,ptNome:pt?pt.nome:'',data,hora,dur:document.getElementById('ag-dur').value,tipo:document.getElementById('ag-tipo').value,status:document.getElementById('ag-status').value,obs:document.getElementById('ag-obs').value}); } saveAgends(); selDate=data; const[y,m,d]=data.split('-'); calYear=parseInt(y); calMonth=parseInt(m)-1; renderCal(); renderAgendaList(); document.getElementById('ag-edit-id').value=''; closeOv('ov-agend'); }
-function saveAgend(){ const ptId=document.getElementById('ag-pt').value; const data=document.getElementById('ag-data').value; const hora=document.getElementById('ag-hora').value; if(!ptId||!data||!hora){alert('Preencha paciente, data e horário.');return;} const pt=pts.find(p=>p.id===ptId); agendamentos.push({id:'ag'+Date.now(),ptId,ptNome:pt?pt.nome:'',data,hora,dur:document.getElementById('ag-dur').value,tipo:document.getElementById('ag-tipo').value,status:document.getElementById('ag-status').value,obs:document.getElementById('ag-obs').value}); saveAgends(); selDate=data; const[y,m,d]=data.split('-'); calYear=parseInt(y); calMonth=parseInt(m)-1; renderCal(); renderAgendaList(); closeOv('ov-agend'); }
-function wppFromAgenda(ptId,data,hora){ curId=ptId; document.getElementById('wpp-tipo').value='lembrete'; document.getElementById('wpp-data').value=data; document.getElementById('wpp-hora').value=hora; gerarMsgWpp(); openOv('ov-wpp'); }
 function compareceuAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a) a.status='compareceu'; saveAgends(); renderCal(); renderAgendaList(); }
 function faltouAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a) a.status='faltou'; saveAgends(); renderCal(); renderAgendaList(); }
 function cancelAgend(id){ const a=agendamentos.find(x=>x.id===id); if(a) a.status='cancelled'; saveAgends(); renderCal(); renderAgendaList(); }
