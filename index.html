@@ -1190,8 +1190,7 @@ async function gerarEvolucaoIA(){
   const a=p.anamnese||{};
   const prompt=`Você é uma psicóloga clínica especialista em TCC. Escreva uma evolução de prontuário clínico em português formal.
 
-Paciente: ${p.nome}${a.queixa?'
-Queixa principal: '+a.queixa:''}
+Paciente: ${p.nome}${a.queixa?'\nQueixa principal: '+a.queixa:''}
 Humor: ${selHumorVal||'não informado'}
 Como chegou: ${document.getElementById('s-chegou').value||'não informado'}
 Relato da semana: ${document.getElementById('s-relato').value||'não informado'}
@@ -1407,10 +1406,7 @@ async function gerarDocumentoIA(){
   const prompt=`Você é uma psicóloga clínica. Elabore: ${tipoLabel}.
 
 Dados:
-Nome: ${p.nome}${p.nasc?'
-Nascimento: '+fmtDate(p.nasc):''}${p.cidade?'
-Cidade: '+p.cidade:''}${p.inicio?'
-Em atendimento desde: '+fmtDate(p.inicio):''}
+Nome: ${p.nome}${p.nasc?'\nNascimento: '+fmtDate(p.nasc):''}${p.cidade?'\nCidade: '+p.cidade:''}${p.inicio?'\nEm atendimento desde: '+fmtDate(p.inicio):''}
 ${f.hipotese?'Hipótese diagnóstica (uso interno): '+f.hipotese:''}
 
 Instruções: ${instrucoesPorTipo[tipo]||'Elabore de forma técnica e ética.'}
