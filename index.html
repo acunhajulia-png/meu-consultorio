@@ -1010,8 +1010,7 @@ CAMPOS:
 queixa: tempo: surgiu: espera: antecedentes: onde: quandocomquem: pensamentos_sit: reacao: evitacao: outros_sint: sint_ansi: sint_dep: infancia: cresceu: faminfancia: trauma: diag: meds: alcool: social: motiv: obs:`;
   try{
     const text=await callAI(prompt);
-    const lines=text.split('
-'); const dados={};
+    const lines=text.split('\n'); const dados={};
     lines.forEach(line=>{ const idx=line.indexOf(':'); if(idx>0){ const k=line.slice(0,idx).trim(); const v=line.slice(idx+1).trim(); if(v) dados[k]=v; } });
     const map={'queixa':'a-queixa','tempo':'a-tempo','surgiu':'a-surgiu','espera':'a-espera','antecedentes':'a-antecedentes','onde':'a-onde','quandocomquem':'a-quandocomquem','pensamentos_sit':'a-pensamentos-sit','reacao':'a-reacao','evitacao':'a-evitacao','outros_sint':'a-outros-sint','sint_ansi':'a-sint-ansi-outros','sint_dep':'a-sint-dep-outros','infancia':'a-infancia','cresceu':'a-cresceu','faminfancia':'a-faminfancia','trauma':'a-trauma','diag':'a-diag','meds':'a-meds','alcool':'a-alcool','social':'a-social','motiv':'a-motiv','obs':'a-obs'};
     Object.entries(map).forEach(([k,id])=>{ const el=document.getElementById(id); if(el&&dados[k]) el.value=dados[k]; });
@@ -1034,8 +1033,7 @@ CAMPOS:
 queixa_resp: tempo: motivo_agora: acomp_detalhe: crianca_sabe: gestacao: marcos: obs_desenvolvimento: diag: meds: alergias: profissionais: queixas_fisicas: descricao_crianca: expressao_emocoes: emocoes_freq: sint_int: sint_ext: outros_comportamentos: vinculos: relacoes_sociais: interesses: desempenho: dif_aprendizagem: rotina: eventos_estressores: expectativa_resp: obs_entrevista: hipotese: obs_gerais:`;
   try{
     const text=await callAI(prompt);
-    const lines=text.split('
-'); const d={};
+    const lines=text.split('\n'); const d={};
     lines.forEach(line=>{ const idx=line.indexOf(':'); if(idx>0){ const k=line.slice(0,idx).trim(); const v=line.slice(idx+1).trim(); if(v) d[k]=v; } });
     const map={'queixa_resp':'ai-queixa-resp','tempo':'ai-tempo','motivo_agora':'ai-motivo-agora','acomp_detalhe':'ai-acomp-detalhe','crianca_sabe':'ai-crianca-sabe','gestacao':'ai-gestacao','marcos':'ai-marcos','obs_desenvolvimento':'ai-obs-desenvolvimento','diag':'ai-diag','meds':'ai-meds','alergias':'ai-alergias','profissionais':'ai-profissionais','queixas_fisicas':'ai-queixas-fisicas','descricao_crianca':'ai-descricao-crianca','expressao_emocoes':'ai-expressao-emocoes','emocoes_freq':'ai-emocoes-freq','sint_int':'ai-sint-int','sint_ext':'ai-sint-ext','outros_comportamentos':'ai-outros-comportamentos','vinculos':'ai-vinculos','relacoes_sociais':'ai-relacoes-sociais','interesses':'ai-interesses','desempenho':'ai-desempenho','dif_aprendizagem':'ai-dif-aprendizagem','rotina':'ai-rotina','eventos_estressores':'ai-eventos-estressores','expectativa_resp':'ai-expectativa-resp','obs_entrevista':'ai-obs-entrevista','hipotese':'ai-hipotese','obs_gerais':'ai-obs-gerais'};
     Object.entries(map).forEach(([k,id])=>{ const el=document.getElementById(id); if(el&&d[k]) el.value=d[k]; });
@@ -1357,8 +1355,7 @@ tema: (tema principal trabalhado)
 interv: (intervenções e técnicas de TCC)
 evolucao: (descrição clínica em 2-3 parágrafos corridos, terceira pessoa, estilo prontuário)
 nova_tarefa: (tarefa para a próxima semana)
-prox_tema: (o que será trabalhado na próxima sessão)`; try{ const text=await callAI(prompt,1400); const lines=text.split('
-'); const d={}; lines.forEach(line=>{ const idx=line.indexOf(':'); if(idx>0){ const k=line.slice(0,idx).trim(); const v=line.slice(idx+1).trim(); if(v) d[k]=v; } }); const map={'chegou':'s-chegou','relato':'s-relato','tarefa_ant':'s-tarefa-ant','tarefa_obs':'s-tarefa-obs','tema':'s-tema','interv':'s-interv','evolucao':'s-evolucao','nova_tarefa':'s-nova-tarefa','prox_tema':'s-prox-tema'}; Object.entries(map).forEach(([k,id])=>{ const el=document.getElementById(id); if(el&&d[k]) el.value=d[k]; }); if(d['tarefa_ok']){ const sel=document.getElementById('s-tarefa-ok'); if(sel){ const v=d['tarefa_ok'].toLowerCase(); if(v.includes('completamente')) sel.value='Sim, completamente'; else if(v.includes('parcial')) sel.value='Sim, parcialmente'; else if(v.includes('não')||v.includes('nao')) sel.value='Não realizou'; } } status.textContent='✓ Campos preenchidos! Revise e ajuste.'; status.style.color='var(--green)'; }catch(e){ status.textContent='Erro: '+e.message; status.style.color='var(--red)'; } btn.textContent='✨ Preencher sessão com IA'; btn.disabled=false; }
+prox_tema: (o que será trabalhado na próxima sessão)`; try{ const text=await callAI(prompt,1400); const lines=text.split('\n'); const d={}; lines.forEach(line=>{ const idx=line.indexOf(':'); if(idx>0){ const k=line.slice(0,idx).trim(); const v=line.slice(idx+1).trim(); if(v) d[k]=v; } }); const map={'chegou':'s-chegou','relato':'s-relato','tarefa_ant':'s-tarefa-ant','tarefa_obs':'s-tarefa-obs','tema':'s-tema','interv':'s-interv','evolucao':'s-evolucao','nova_tarefa':'s-nova-tarefa','prox_tema':'s-prox-tema'}; Object.entries(map).forEach(([k,id])=>{ const el=document.getElementById(id); if(el&&d[k]) el.value=d[k]; }); if(d['tarefa_ok']){ const sel=document.getElementById('s-tarefa-ok'); if(sel){ const v=d['tarefa_ok'].toLowerCase(); if(v.includes('completamente')) sel.value='Sim, completamente'; else if(v.includes('parcial')) sel.value='Sim, parcialmente'; else if(v.includes('não')||v.includes('nao')) sel.value='Não realizou'; } } status.textContent='✓ Campos preenchidos! Revise e ajuste.'; status.style.color='var(--green)'; }catch(e){ status.textContent='Erro: '+e.message; status.style.color='var(--red)'; } btn.textContent='✨ Preencher sessão com IA'; btn.disabled=false; }
 
 function trocaDoc(){
   const tipo=document.getElementById('doc-tipo').value;
