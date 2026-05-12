@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Consultório · Psicologia</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+₢
 <style>
 :root {
   --bg:#F7F3EE; --card:#fff; --sage:#7A9E8E; --sage-light:#EAF2EE; --sage-dark:#4E7A6A;
@@ -1448,13 +1448,14 @@ function initFirebase(){
   const firebaseConfig={apiKey:"AIzaSyAKq1Q-5QmUQu_x3mvgzpJXMyzVxNEcQig",authDomain:"clinica-dab42.firebaseapp.com",projectId:"clinica-dab42",storageBucket:"clinica-dab42.firebasestorage.app",messagingSenderId:"924425214099",appId:"1:924425214099:web:c82e6279c6bcdec63b9566"};
   firebase.initializeApp(firebaseConfig);
   const auth=firebase.auth(); const db=firebase.firestore(); let uid=null;
-  window.loginGoogle=function(){ const provider=new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(provider).catch(e=>{ document.getElementById('login-err').style.display='block'; console.error(e); }); };
+  window.loginGoogle=function(){ const provider=new firebase.auth.GoogleAuthProvider(); const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent); if(isMobile){ auth.signInWithRedirect(provider).catch(e=>{ document.getElementById('login-err').style.display='block'; console.error(e); }); } else { auth.signInWithPopup(provider).catch(e=>{ document.getElementById('login-err').style.display='block'; console.error(e); }); } };
   window.logout=function(){ if(!confirm('Sair do sistema?')) return; auth.signOut(); };
   function setSyncing(on){ const dot=document.getElementById('sync-dot'); const lbl=document.getElementById('sync-label'); if(on){dot.classList.add('syncing');lbl.textContent='Sincronizando...';}else{dot.classList.remove('syncing');lbl.textContent='Sincronizado ☁️';} }
   window.save=function(){ localStorage.setItem('pts_v2',JSON.stringify(pts)); localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); if(!uid) return; setSyncing(true); db.collection('usuarios').doc(uid).set({pts,agendamentos,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>setSyncing(false)).catch(e=>{setSyncing(false);console.error('Erro ao salvar:',e);}); };
   window.saveAgends=function(){ localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); if(!uid) return; setSyncing(true); db.collection('usuarios').doc(uid).update({agendamentos,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>setSyncing(false)).catch(()=>window.save()); };
-  auth.onAuthStateChanged(user=>{ if(user){ uid=user.uid; document.getElementById('login-screen').classList.remove('show'); setSyncing(true); db.collection('usuarios').doc(uid).get().then(doc=>{ if(doc.exists){ const data=doc.data(); pts=data.pts||[]; agendamentos=data.agendamentos||[]; localStorage.setItem('pts_v2',JSON.stringify(pts)); localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); }else{ const localPts=JSON.parse(localStorage.getItem('pts_v2')||'[]'); const localAg=JSON.parse(localStorage.getItem('agendamentos')||'[]'); if(localPts.length){pts=localPts;agendamentos=localAg;window.save();} } setSyncing(false); setMonthNow(); renderPts(); }).catch(e=>{setSyncing(false);console.error(e);setMonthNow();renderPts();}); }else{ uid=null; document.getElementById('login-screen').classList.add('show'); } });
+  auth.onAuthStateChanged(user=>{ if(user){ uid=user.uid; document.getElementById('login-screen').classList.remove('show'); setSyncing(true); db.collection('usuarios').doc(uid).onSnapshot(doc=>{ if(doc.exists){ const data=doc.data(); pts=data.pts||[]; agendamentos=data.agendamentos||[]; localStorage.setItem('pts_v2',JSON.stringify(pts)); localStorage.setItem('agendamentos',JSON.stringify(agendamentos)); } else { const localPts=JSON.parse(localStorage.getItem('pts_v2')||'[]'); const localAg=JSON.parse(localStorage.getItem('agendamentos')||'[]'); if(localPts.length){pts=localPts;agendamentos=localAg;window.save();} } setSyncing(false); setMonthNow(); renderPts(); }, e=>{setSyncing(false);console.error(e);setMonthNow();renderPts();}); }else{ uid=null; document.getElementById('login-screen').classList.add('show'); } });
 }
+function wppFromAgenda(ptId,data,hora){ curId=ptId; document.getElementById('wpp-tipo').value='lembrete'; document.getElementById('wpp-data').value=data; document.getElementById('wpp-hora').value=hora; gerarMsgWpp(); openOv('ov-wpp'); }
 function openNovoAgend(){ document.getElementById('ag-pt').innerHTML='<option value="">Selecione o paciente...</option>'+pts.map(p=>`<option value="${p.id}">${p.nome}</option>`).join(''); document.getElementById('ag-data').value=selDate; document.getElementById('ag-hora').value='09:00'; document.getElementById('ag-status').value='agendado'; document.getElementById('ag-obs').value=''; document.getElementById('ov-agend-title').textContent='Novo Agendamento'; document.getElementById('ag-edit-id').value=''; openOv('ov-agend'); }
 </script>
 
