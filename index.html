@@ -1491,12 +1491,20 @@ function initFirebase(){
   // LOGIN GOOGLE: redirect no mobile, popup no desktop
   window.loginGoogle=function(){
     const provider=new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(e=>{
-      document.getElementById('login-err').style.display='block';
-      document.getElementById('login-err').textContent='Erro ao entrar: '+e.message;
-      console.error(e);
-    });
+    const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    if(isMobile){
+      auth.signInWithRedirect(provider).catch(e=>{
+        document.getElementById('login-err').style.display='block';
+        console.error(e);
+      });
+    } else {
+      auth.signInWithPopup(provider).catch(e=>{
+        document.getElementById('login-err').style.display='block';
+        console.error(e);
+      });
+    }
   };
+  auth.getRedirectResult().then(r=>{ if(r&&r.user) console.log('redirect ok'); }).catch(e=>console.error('redirect err:',e));
 
   window.logout=function(){ if(!confirm('Sair do sistema?')) return; auth.signOut(); };
 
