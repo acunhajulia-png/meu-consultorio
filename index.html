@@ -1491,22 +1491,12 @@ function initFirebase(){
   // LOGIN GOOGLE: redirect no mobile, popup no desktop
   window.loginGoogle=function(){
     const provider=new firebase.auth.GoogleAuthProvider();
-    const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    if(isMobile){
-      auth.signInWithRedirect(provider).catch(e=>{
-        document.getElementById('login-err').style.display='block';
-        console.error(e);
-      });
-    } else {
-      auth.signInWithPopup(provider).catch(e=>{
-        document.getElementById('login-err').style.display='block';
-        console.error(e);
-      });
-    }
+    auth.signInWithPopup(provider).catch(e=>{
+      document.getElementById('login-err').style.display='block';
+      document.getElementById('login-err').textContent='Erro ao entrar: '+e.message;
+      console.error(e);
+    });
   };
-
-  // Captura o resultado do redirect (mobile)
-  auth.getRedirectResult().catch(e=>console.error('Redirect error:',e));
 
   window.logout=function(){ if(!confirm('Sair do sistema?')) return; auth.signOut(); };
 
